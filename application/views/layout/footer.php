@@ -45,7 +45,8 @@
 
   $('.select2').select2({
     placeholder: 'Pilih',
-    searchInputPlaceholder: 'Search options'
+    allowClear: true
+    // searchInputPlaceholder: 'Search options'
   });
 
   $('.goToSelectedUrl').on('change', function() {

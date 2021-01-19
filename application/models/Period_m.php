@@ -1,18 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Major_m extends MY_Model {
+class Period_m extends MY_Model {
 
   public function __construct()
   {
     parent::__construct();
-    $this->name = 'majors';
-    $this->alias = 'Jurusan';
+    $this->name = 'periods';
+    $this->alias = 'Periode';
 
     $this->rules = [
       [
         'field' => 'name',
-        'label' => 'Nama Jurusan',
+        'label' => 'Nama Periode',
         'rules' => 'required',
       ],
     ];

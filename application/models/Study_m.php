@@ -28,10 +28,6 @@ class Study_m extends MY_Model {
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
     ->order_by('a.id', 'ASC');
 
-    if($this->get_profile_level_id() != 1){ // jika BUKAN Super Admin
-      $this->db->where('a.is_super_admin_only', '0');
-    }
-
     if(!$show_del){
       $this->db->where('a.is_del', '0');
     }

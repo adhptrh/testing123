@@ -1,18 +1,33 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Major_m extends MY_Model {
+class Exam_schedule_m extends MY_Model {
 
   public function __construct()
   {
     parent::__construct();
-    $this->name = 'majors';
-    $this->alias = 'Jurusan';
+    $this->name = 'exam_schedules';
+    $this->alias = 'Jadwal Ujian';
 
     $this->rules = [
       [
-        'field' => 'name',
-        'label' => 'Nama Jurusan',
+        'field' => 'period_id',
+        'label' => 'Periode',
+        'rules' => 'required',
+      ],
+      [
+        'field' => 'study_id',
+        'label' => 'Mata Uji',
+        'rules' => 'required',
+      ],
+      [
+        'field' => 'start',
+        'label' => 'Jadwal Mulai',
+        'rules' => 'required',
+      ],
+      [
+        'field' => 'finish',
+        'label' => 'Jadwal Selesai',
         'rules' => 'required',
       ],
     ];
@@ -20,7 +35,7 @@ class Major_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.name, a.is_del')
+    $this->db->select('a.id, a.period_id, a.is_del')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
     ->from($this->name . ' a')
@@ -43,6 +58,7 @@ class Major_m extends MY_Model {
 
       $data = $this->db->get()->row_array();
       $data['id'] = enc($data['id']);
+      $data['period_id'] = enc($data['period_id']);
 
 
       return $data;
@@ -64,6 +80,7 @@ class Major_m extends MY_Model {
         }
 
         $data[$k]['id'] = enc($v['id']);
+        $data[$k]['period_id'] = enc($v['period_id']);
       }
 
       return $data;

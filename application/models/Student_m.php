@@ -1,18 +1,28 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Major_m extends MY_Model {
+class Student_m extends MY_Model {
 
   public function __construct()
   {
     parent::__construct();
-    $this->name = 'majors';
-    $this->alias = 'Jurusan';
+    $this->name = 'students';
+    $this->alias = 'Siswa';
 
     $this->rules = [
       [
-        'field' => 'name',
-        'label' => 'Nama Jurusan',
+        'field' => 'major_id',
+        'label' => 'Jurusan',
+        'rules' => 'required',
+      ],
+      [
+        'field' => 'profile_id',
+        'label' => 'Profile',
+        'rules' => 'required',
+      ],
+      [
+        'field' => 'nopes',
+        'label' => 'Nomor Peserta',
         'rules' => 'required',
       ],
     ];
@@ -20,12 +30,16 @@ class Major_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.name, a.is_del')
+    $this->db->select('a.id, a.profile_id, a.nopes, a.is_del')
+    ->select('d.name')
+    ->select('e.id major_id, e.name prodi')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
+    ->join('z_profiles d', 'd.id = a.profile_id', 'left')
+    ->join('majors e', 'e.id = a.major_id', 'left')
     ->order_by('a.id', 'ASC');
 
     if(!$show_del){
@@ -43,6 +57,8 @@ class Major_m extends MY_Model {
 
       $data = $this->db->get()->row_array();
       $data['id'] = enc($data['id']);
+      $data['major_id'] = enc($data['major_id']);
+      $data['profile_id'] = enc($data['profile_id']);
 
 
       return $data;
@@ -64,6 +80,8 @@ class Major_m extends MY_Model {
         }
 
         $data[$k]['id'] = enc($v['id']);
+        $data[$k]['major_id'] = enc($v['major_id']);
+        $data[$k]['profile_id'] = enc($v['profile_id']);
       }
 
       return $data;
