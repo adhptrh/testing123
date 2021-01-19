@@ -3,8 +3,8 @@
 
 function enc($id, $status = 0)
 {
-  $secret_key = '123170';
-  $secret_iv = 'indonesiaku';
+  $secret_key = '017321';
+  $secret_iv = 'bangsaku';
 
   $output = false;
   $encrypt_method = "AES-256-CBC";

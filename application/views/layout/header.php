@@ -14,7 +14,7 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url('template/'); ?>assets/img/favicon.png">
 
-    <title>WebApp Starter</title>
+    <title><?= $header['title']; ?> - CBT</title>
 
     <!-- vendor css -->
     <link href="<?= base_url('template/'); ?>lib/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">

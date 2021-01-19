@@ -33,7 +33,7 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url('template/'); ?>assets/img/favicon.png">
 
-    <title>DashForge Responsive Bootstrap 4 Dashboard Template</title>
+    <title>Login | CBT</title>
 
     <!-- vendor css -->
     <link href="<?= base_url('template/'); ?>lib/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
@@ -50,7 +50,7 @@
     <header class="navbar navbar-header navbar-header-fixed">
       <a href="#" id="mainMenuOpen" class="burger-menu"><i data-feather="menu"></i></a>
       <div class="navbar-brand">
-        <a href="<?= base_url('template/'); ?>index.html" class="df-logo">X<span>Panel</span></a>
+        <a href="<?= base_url('template/'); ?>index.html" class="df-logo">C<span>BT</span></a>
       </div><!-- navbar-brand -->
       <div id="navbarMenu" class="navbar-menu-wrapper">
         <div class="navbar-menu-header">
@@ -67,7 +67,7 @@
         <a href="#" class="btn btn-social"><i class="fab fa-dribbble"></i></a>
         <a href="#" class="btn btn-social"><i class="fab fa-github"></i></a>
         <a href="#" class="btn btn-social"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="btn btn-buy"><i data-feather="shopping-bag"></i> <span>Versi 4.0</span></a>
+        <a href="#" class="btn btn-buy"><i data-feather="shopping-bag"></i> <span>Versi 1.0</span></a>
       </div><!-- navbar-right -->
     </header><!-- navbar -->
 

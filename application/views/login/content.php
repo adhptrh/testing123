@@ -44,8 +44,6 @@
         }
       }
     </style>
-    <!-- Custom styles for this template -->
-    <link href="<?= base_url('template_login/signin.css') ?>" rel="stylesheet">
   </head>
   <body class="text-center">
     <?=

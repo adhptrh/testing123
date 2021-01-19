@@ -1,167 +1,166 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Login extends CI_Controller {
+class Login extends CI_Controller
+{
 
-	public function __construct()
-  {
-    parent::__construct();
-		$this->load->model('User_m', 'model');
-		$this->load->model('Menu_m', 'menu');
-		$this->load->model('Hr_m', 'hr');
-		$this->load->model('Lam_m', 'lam');
-  }
-
-	public function index()
-	{
-		session_destroy();
-		$this->load->view('login/content3');
-	}
-
-	private function validate()
-	{
-		$this->load->library('form_validation');
-
-		$rules = [
-			[
-				'field' => 'username',
-        'label' => 'Username',
-        'rules' => 'required',
-        'errors' => [
-					'required' => '%s harus diisi'
-				]
-			],
-			[
-				'field' => 'password',
-        'label' => 'Password',
-        'rules' => 'required',
-        'errors' => [
-					'required' => '%s harus diisi'
-				]
-			],
-		];
-		$this->form_validation->set_rules($rules);
-
-		if ($this->form_validation->run() == FALSE)
+    public function __construct()
     {
-			return false;
-
+        parent::__construct();
+        $this->load->model('User_m', 'model');
+        $this->load->model('Menu_m', 'menu');
+        $this->load->model('Hr_m', 'hr');
+        $this->load->model('Lam_m', 'lam');
     }
-    else
+
+    public function index()
     {
-      return true;
+        session_destroy();
+        $this->load->view('login/content3');
     }
-	}
 
-	public function authorization()
-	{
-		if($this->validate()){
-			$get_user = $this->model->find(false, ['a.username' => $this->input->post('username')]);
-			// Apakah username terdaftar
-			if($get_user){
-				// Apakah password sesuai
-				if(password_verify($this->input->post('password'), $get_user[0]['password'])){
+    private function validate()
+    {
+        $this->load->library('form_validation');
 
-					// Password benar
-					$this->assign_session($get_user);
+        $rules = [
+            [
+                'field' => 'username',
+                'label' => 'Username',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '%s harus diisi',
+                ],
+            ],
+            [
+                'field' => 'password',
+                'label' => 'Password',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '%s harus diisi',
+                ],
+            ],
+        ];
+        $this->form_validation->set_rules($rules);
 
-					redirect(base_url('/'));
+        if ($this->form_validation->run() == false) {
+            return false;
 
-				}else{
+        } else {
+            return true;
+        }
+    }
 
-					// Password salah
-					$this->session->set_flashdata('message', 'Username atau Password salah');
-					redirect(base_url('login'));
-				}
-			}else{
-				// User tidak terdaftar
-				$this->session->set_flashdata('message', 'Username atau Password salah');
-				redirect(base_url('login'));
-			}
-		}else{
-			$this->index();
-		}
-	}
+    public function authorization()
+    {
+        if ($this->validate()) {
+            $get_user = $this->model->find(false, ['a.username' => $this->input->post('username')]);
+            // Apakah username terdaftar
+            if ($get_user) {
+                // Apakah password sesuai
+                if (password_verify($this->input->post('password'), $get_user[0]['password'])) {
 
-	private function get_token(){
-    /**
-  	 * Mendapatkan token
-  	 *
-  	 */
+                    // Password benar
+                    $this->assign_session($get_user);
 
-     //Generate a random string.
-     $token = openssl_random_pseudo_bytes(32);
+                    redirect(base_url('/'));
 
-     //Convert the binary data into hexadecimal representation.
-     $token = bin2hex($token);
+                } else {
 
-     return $token;
-  }
+                    // Password salah
+                    $this->session->set_flashdata('message', 'Username atau Password salah');
+                    redirect(base_url('login'));
+                }
+            } else {
+                // User tidak terdaftar
+                $this->session->set_flashdata('message', 'Username atau Password salah');
+                redirect(base_url('login'));
+            }
+        } else {
+            $this->index();
+        }
+    }
 
-	private function get_menu($get_hr)
-	{
-		$menudb = $this->menu->find();
+    private function get_token()
+    {
+        /**
+         * Mendapatkan token
+         *
+         */
 
-		$get_lam_read_role = $this->lam->find(false, [
-			'a.level_id' => enc($get_hr[0]['level_id'], 1),
-			'a.xread' => 1,
-		]);
+        //Generate a random string.
+        $token = openssl_random_pseudo_bytes(32);
 
-		foreach ($menudb as $k => $v) {
-			if(enc($v['parent'], 1) != 0){
-				$cek = 0;
-				foreach ($get_lam_read_role as $k1 => $v1) {
-					if(enc($v['id'], 1) == enc($v1['menu_id'], 1)){
-						$cek++;
-					}
-				}
+        //Convert the binary data into hexadecimal representation.
+        $token = bin2hex($token);
 
-				if(!$cek){
-					unset($menudb[$k]);
-				}
-			}
-		}
+        return $token;
+    }
 
-		return $menudb;
-	}
+    private function get_menu($get_hr)
+    {
+        $menudb = $this->menu->find();
 
-	private function assign_session($get_user)
-	{
-		// Human Resources
-		$get_hr = $this->hr->find(false, [
-			'a.profile_id' => enc($get_user[0]['profile_id'], 1),
-		]);
+        $get_lam_read_role = $this->lam->find(false, [
+            'a.level_id' => enc($get_hr[0]['level_id'], 1),
+            'a.xread' => 1,
+        ]);
 
-		// List of Access Modifier
-		$get_lam = $this->lam->find(false, [
-			'a.level_id' => enc($get_hr[0]['level_id'], 1),
-		]);
+        foreach ($menudb as $k => $v) {
+            if (enc($v['parent'], 1) != 0) {
+                $cek = 0;
+                foreach ($get_lam_read_role as $k1 => $v1) {
+                    if (enc($v['id'], 1) == enc($v1['menu_id'], 1)) {
+                        $cek++;
+                    }
+                }
 
-		$profile = array(
-			'profile_id' => $get_user[0]['id'],
-			'name' => $get_hr[0]['name'],
-			'level' => $get_hr[0]['level_name'],
-			'level_id' => $get_hr[0]['level_id'],
-		);
+                if (!$cek) {
+                    unset($menudb[$k]);
+                }
+            }
+        }
 
-		$token = $this->get_token();
+        return $menudb;
+    }
 
-		$this->session->set_userdata([
-			'token' => $token,
-			'profile' => $profile,
-			'lam' => $get_lam,
-			'menu' => $this->get_menu($get_hr),
-		]);
+    private function assign_session($get_user)
+    {
+        // Human Resources
+        $get_hr = $this->hr->find(false, [
+            'a.profile_id' => enc($get_user[0]['profile_id'], 1),
+        ]);
 
-		// Update token di table user
-		$this->store_token($get_user, $token);
-	}
+        // List of Access Modifier
+        $get_lam = $this->lam->find(false, [
+            'a.level_id' => enc($get_hr[0]['level_id'], 1),
+        ]);
 
-	private function store_token($get_user, $token)
-	{
-		$update = $this->model->save([
-			'token' => $token,
-			'id' => enc($get_user[0]['id'], 1),
-		], true); // Update with skip validation
-	}
+        $profile = array(
+            'profile_id' => $get_user[0]['id'],
+            'name' => $get_hr[0]['name'],
+            'level' => $get_hr[0]['level_name'],
+            'level_id' => $get_hr[0]['level_id'],
+        );
+
+        $token = $this->get_token();
+
+        $this->session->set_userdata([
+            'token' => $token,
+            'profile' => $profile,
+            'lam' => $get_lam,
+            'menu' => $this->get_menu($get_hr),
+        ]);
+
+        // Update token di table user
+        $this->store_token($get_user, $token);
+    }
+
+    private function store_token($get_user, $token)
+    {
+        $update = $this->model->save([
+            'token' => $token,
+            'id' => enc($get_user[0]['id'], 1),
+        ], true); // Update with skip validation
+    }
 }

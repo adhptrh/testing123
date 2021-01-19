@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script type="text/javascript">
-  $('.table').DataTable({
+  $('.dtable').DataTable({
     responsive: false,
     "bLengthChange": false,
     language: {
@@ -39,7 +39,6 @@
     }).then((result) => {
       if (result.isConfirmed) {
         window.location.href = $(this).data('href');
-        // console.log($(this).data('href'));
       }
     })
   })
