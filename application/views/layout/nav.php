@@ -9,7 +9,7 @@
   <div class="aside-body">
     <div class="aside-loggedin">
       <div class="d-flex align-items-center justify-content-start">
-        <a href="" class="avatar"><img src="https://via.placeholder.com/500" class="rounded-circle" alt=""></a>
+        <a href="" class="avatar"><img src="<?= base_url('/template/assets/img/user.png'); ?>" class="rounded-circle" alt=""></a>
         <div class="aside-alert-link">
           <a href="" class="new" data-toggle="tooltip" title="You have 2 unread messages"><i data-feather="message-square"></i></a>
           <a href="" class="new" data-toggle="tooltip" title="You have 4 new notifications"><i data-feather="bell"></i></a>

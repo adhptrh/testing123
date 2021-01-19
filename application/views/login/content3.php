@@ -59,8 +59,8 @@
         </div><!-- navbar-menu-header -->
         <ul class="nav navbar-menu">
           <li class="nav-label pd-l-20 pd-lg-l-25 d-lg-none">Main Navigation</li>
-          <li class="nav-item"><a href="#" class="nav-link"><i data-feather="box"></i> Components</a></li>
-          <li class="nav-item"><a href="#" class="nav-link"><i data-feather="archive"></i> Collections</a></li>
+          <!-- <li class="nav-item"><a href="#" class="nav-link"><i data-feather="box"></i> Components</a></li> -->
+          <!-- <li class="nav-item"><a href="#" class="nav-link"><i data-feather="archive"></i> Collections</a></li> -->
         </ul>
       </div><!-- navbar-menu-wrapper -->
       <div class="navbar-right">

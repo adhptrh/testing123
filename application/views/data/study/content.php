@@ -12,7 +12,7 @@
             </div>
           </div>
           <div class="col-md-6 d-none d-md-block">
-            <a href="<?= base_url('reference/level/create'); ?>" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-plus"></i> Tambah</a>
+            <a href="<?= base_url('data/study/create'); ?>" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-plus"></i> Tambah</a>
           </div>
         </div>
 
@@ -41,8 +41,8 @@
                         Pilih
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="<?= base_url('reference/level/edit/' . $v['id']); ?>"><i class="fas fa-edit"></i> Edit</a>
-                        <a class="dropdown-item hapus" href="#" data-href="<?= base_url('reference/level/delete/' . $v['id']); ?>"><i class="fas fa-trash"></i> Hapus</a>
+                        <a class="dropdown-item" href="<?= base_url('data/study/edit/' . $v['id']); ?>"><i class="fas fa-edit"></i> Edit</a>
+                        <a class="dropdown-item hapus" href="#" data-href="<?= base_url('data/study/delete/' . $v['id']); ?>"><i class="fas fa-trash"></i> Hapus</a>
                       </div>
                     </div>
                   </td>
