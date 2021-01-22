@@ -15,7 +15,7 @@
                         class="custom-select select2 <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>">
                         <option></option>
                         <?php foreach ($period as $k => $v): ?>
-
+                        
                         <option value="<?= $v['id'] ?>"><?= $v['name'] ?></option>
 
                         <?php endforeach; ?>

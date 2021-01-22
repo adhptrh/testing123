@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Exam_question_m extends MY_Model {
+class Exam_question_detail_m extends MY_Model {
 
   public function __construct()
   {

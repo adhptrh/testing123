@@ -38,7 +38,7 @@ class Exam_schedule extends MY_Controller {
 						'href' => '#',
 					],
 					[
-						'label' => 'Referensi',
+						'label' => 'Aplikasi',
 						'icon' => 'fa-gear',
 						'href' => '#',
 					],
@@ -70,7 +70,7 @@ class Exam_schedule extends MY_Controller {
 					'href' => '#',
 				],
 				[
-					'label' => 'Referensi',
+					'label' => 'Aplikasi',
 					'icon' => 'fa-gear',
 					'href' => '#',
 				],
@@ -139,7 +139,7 @@ class Exam_schedule extends MY_Controller {
 					'href' => '#',
 				],
 				[
-					'label' => 'Referensi',
+					'label' => 'Aplikasi',
 					'icon' => 'fa-gear',
 					'href' => '#',
 				],

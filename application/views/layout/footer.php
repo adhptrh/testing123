@@ -13,7 +13,10 @@
 <script src="<?= base_url('template/'); ?>lib/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="<?= base_url('template/'); ?>lib/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
 <script src="<?= base_url('template/'); ?>lib/select2/js/select2.min.js"></script>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+<?= $js = (isset($header['js_file']) ? '<script src="' . base_url('template/assets/js/' . $header['js_file'] . '.js') . '">' : '') ?>
 
 <script type="text/javascript">
   $('.dtable').DataTable({

@@ -39,7 +39,8 @@ class Menu_m extends MY_Model {
     ->order_by('a.sort', 'ASC');
 
     if(!$show_del){
-      $this->db->where('a.is_del', '0');
+      $this->db->where('a.is_del', '0')
+      ->where('a.is_hide', '0');
     }
 
     $this->db->order_by('a.id', 'desc');
