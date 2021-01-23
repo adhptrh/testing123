@@ -61,8 +61,21 @@ class Exam_question_detail extends MY_Controller
         $this->temp('app/exam_question_detail/content', [
             'id' => $exam_question_id,
             'old' => $old,
+            'token' => $this->security->get_csrf_hash(),
             'period' => $this->period->find(),
             'study' => $this->study->find(),
+        ]);
+    }
+
+    public function reload($id){
+        $this->filter(2);
+        $exam_question_id = enc($id, 1);
+
+        echo json_encode([
+            // 'token' => $this->security->get_csrf_hash(),
+            'data' => $this->data->find(false, [
+                'exam_question_id' => $exam_question_id
+            ]),
         ]);
     }
 

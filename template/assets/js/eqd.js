@@ -1,6 +1,8 @@
 const button_add = document.getElementsByClassName("add")[0];
 const create_form = document.getElementsByClassName("create")[0];
-const list = document.getElementsByClassName("list")[0];
+const list = document.getElementsByClassName("list")[0]; // Frame of list
+const eq_list = document.getElementById("eq_list"); //list of exam_questions
+const token = document.getElementById("eq_list").getAttribute('data-token');
 let soal = 0,
     opsi_a = 0,
     opsi_b = 0,
@@ -10,7 +12,9 @@ let soal = 0,
     content = 0,
     dsimpan = 0,
     keyword = 0;
-let button_cancel, form;
+let button_cancel, form, item;
+
+getList();
 
 button_add.addEventListener("click", () => {
     load_add_form();
@@ -178,7 +182,8 @@ function save(data) {
                     confirmButtonText: 'Baiklah',
                 })
             } else {
-                // Code back to list here
+                close_form();
+                getList();
             }
         }
     })
@@ -203,4 +208,43 @@ function load_add_form(e) {
         .catch((error) => {
             console.warn(error);
         });
+}
+
+function getList() {
+    $.ajax({
+        url: '../reload/' + button_add.getAttribute('data-id'),
+        method: 'get',
+        data: {
+            // token: token,
+        },
+        dataType: 'json',
+        success: function(response) {
+            makeSoal(response.data)
+        }
+    })
+}
+
+function makeSoal(data) {
+    item = '';
+    let no = 1;
+    data.forEach(function(value, index) {
+        item += '<h5>No. ' + no++ + '</h5>';
+        item += '<p>' + value['question'] + '</p>'
+        item += '<h6>Opsi A</h6>'
+        item += '<p>' + value['opsi_a'] + '</p>'
+        item += '<h6>Opsi B</h6>'
+        item += '<p>' + value['opsi_b'] + '</p>'
+        item += '<h6>Opsi C</h6>'
+        item += '<p>' + value['opsi_c'] + '</p>'
+        item += '<h6>Opsi D</h6>'
+        item += '<p>' + value['opsi_d'] + '</p>'
+        item += '<h6>Opsi E</h6>'
+        item += '<p>' + value['opsi_e'] + '</p>'
+        item += '<h6>Kunci Jawaban</h6>'
+        item += '<p>' + value['keyword'] + '</p>'
+        item += '<hr>';
+    })
+
+    eq_list.innerHTML = item;
+
 }

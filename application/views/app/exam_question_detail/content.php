@@ -17,7 +17,8 @@
                         </div>
                     </div>
                     <div class="col-md-6 d-none d-md-block">
-                        <a href="#" data-href="<?= base_url('app/exam_question_detail/create/' . $id); ?>"
+                        <a href="#" data-id="<?= $id ?>"
+                            data-href="<?= base_url('app/exam_question_detail/create/' . $id); ?>"
                             class="add btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i
                                 class="fa fa-plus"></i>
                             Tambah</a>
@@ -26,7 +27,10 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md">
+                    <div class="col-md" id="eq_list" data-token="<?= $token; ?>">
+                        <div class="spinner-border spinner-border-sm" role="status"></div>
+                        <div class="spinner-grow spinner-grow-sm" role="status"></div>
+                        <span>memuat soal ...</span>
                     </div>
                 </div>
             </div>
