@@ -1,12 +1,38 @@
 const button_add = document.getElementsByClassName("add")[0];
 const create_form = document.getElementsByClassName("create")[0];
 const list = document.getElementsByClassName("list")[0];
-let soal, opsi_a, opsi_b, opsi_c, opsi_d, opsi_e, button_cancel, form;
-let dsimpan = '';
+let soal = 0,
+    opsi_a = 0,
+    opsi_b = 0,
+    opsi_c = 0,
+    opsi_d = 0,
+    opsi_e = 0,
+    content = 0,
+    dsimpan = 0,
+    keyword = 0;
+let button_cancel, form;
 
 button_add.addEventListener("click", () => {
     load_add_form();
 })
+
+function setButtonOption() {
+    document.querySelectorAll('.opsi').forEach(item => {
+        item.addEventListener('click', event => {
+            setButtonOptionAllClear();
+            item.classList.add('btn-success')
+            item.classList.remove('btn-outline-success')
+            keyword = item.getAttribute('data-opsi');
+        })
+    })
+}
+
+function setButtonOptionAllClear() {
+    document.querySelectorAll('.opsi').forEach(item => {
+        item.classList.remove('btn-success');
+        item.classList.add('btn-outline-success');
+    })
+}
 
 function close_form(e) {
     (e || window.event).preventDefault();
@@ -100,9 +126,36 @@ function setFormSubmit() {
     form = document.querySelector('form');
     form.onsubmit = function(e) {
         e.preventDefault();
-        save(soal.getContents());
+        if (SetFormSubmitCek()) {
+            save({
+                master_soal_id: document.querySelector('input[name=master_soal_id]').value,
+                soal: soal.getContents(),
+                opsi_a: opsi_a.getContents(),
+                opsi_b: opsi_b.getContents(),
+                opsi_c: opsi_c.getContents(),
+                opsi_d: opsi_d.getContents(),
+                opsi_e: opsi_e.getContents(),
+                keyword: keyword,
+            });
+        }
+
         return false;
     };
+}
+
+function SetFormSubmitCek() {
+    if (soal.getLength() < 2 || opsi_b.getLength() < 2 || opsi_c.getLength() < 2 || opsi_d.getLength() < 2 || opsi_e.getLength() < 2 || opsi_a.getLength() < 2 || keyword == 0) {
+        Swal.fire({
+            title: 'Peringatan',
+            text: "Mohon lengkapi seluruh isian",
+            icon: 'warning',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Baiklah',
+        })
+        return false;
+    } else {
+        return true;
+    }
 }
 
 function save(data) {
@@ -116,6 +169,17 @@ function save(data) {
         dataType: 'json',
         success: function(response) {
             document.querySelector('input[name=token]').value = response.token
+            if (response.status != 200) {
+                Swal.fire({
+                    title: 'Peringatan',
+                    text: "Terjadi kesalahan, silahkan hubungi Administrator",
+                    icon: 'warning',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Baiklah',
+                })
+            } else {
+                // Code back to list here
+            }
         }
     })
 }
@@ -132,6 +196,7 @@ function load_add_form(e) {
 
             setEditor();
             setButtonCancel();
+            setButtonOption();
             setFormSubmit();
 
         })

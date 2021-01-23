@@ -11,13 +11,8 @@ class Exam_question_detail_m extends MY_Model {
 
     $this->rules = [
       [
-        'field' => 'period_id',
-        'label' => 'Periode',
-        'rules' => 'required',
-      ],
-      [
-        'field' => 'study_id',
-        'label' => 'Mata Uji',
+        'field' => 'exam_question_id',
+        'label' => 'Soal ID',
         'rules' => 'required',
       ],
       [

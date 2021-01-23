@@ -6,7 +6,7 @@ class Exam_question_detail extends MY_Controller
 
     /**
      * Peringatan ! selain fungsi index, create, save, edit, update, delete, dan restore
-     * semua function HARUS protected-function
+     * semua function HARUS minimal protected-function
      *
      */
 
@@ -105,12 +105,16 @@ class Exam_question_detail extends MY_Controller
 
         $this->load->view('app/exam_question_detail/create', [
             'token' => $this->security->get_csrf_hash(),
+            'master_soal_id' => $exam_question_id,
         ]);
     }
 
     private function save_image($base64)
     {
-        $this->filter(1);
+        /* Mendefenisikan image
+         * menyimpannya di storage
+         * Return filename
+         */
 
         $rand = uniqid();
         $img = str_replace('data:image/png;base64,', '', $base64);
@@ -132,33 +136,45 @@ class Exam_question_detail extends MY_Controller
         }
     }
 
+    private function content_creation($data)
+    {
+        /* Menguraikan kontent
+         * jika ada object image kemudian disimpan di storage
+         * menggambungkan semua object
+         * return content
+         */
+
+        $contents = '';
+        foreach ($data['ops'] as $k => $v) {
+            if (isset($v['insert']['image'])) {
+                $save_image = $this->save_image($v['insert']['image']);
+                $contents .= ' ' . $save_image;
+            } else {
+                $contents .= ' ' . $v['insert'];
+            }
+        }
+
+        return $contents;
+    }
+
     public function save()
     {
         $this->filter(1);
         $post = $this->input->post('data');
 
-        $content = '';
-        foreach ($post['ops'] as $k => $v) {
-            if (isset($v['insert']['image'])) {
-                $save = $this->save_image($v['insert']['image']);
-                $content .= ' ' . $save;
-            } else {
-                $content .= ' ' . $v['insert'];
-            }
-        }
+        $data = [
+            'exam_question_id' => enc($post['master_soal_id'], 1),
+            'question' => $this->content_creation($post['soal']),
+            'opsi_a' => $this->content_creation($post['opsi_a']),
+            'opsi_b' => $this->content_creation($post['opsi_b']),
+            'opsi_c' => $this->content_creation($post['opsi_c']),
+            'opsi_d' => $this->content_creation($post['opsi_d']),
+            'opsi_e' => $this->content_creation($post['opsi_e']),
+            'keyword' => $post['keyword'],
+        ];
 
-        $create = $this->data->save([
-            'period_id' => '',
-            'study_id' => '',
-            'question' => $content,
-            'opsi_a' => '',
-            'opsi_b' => '',
-            'opsi_c' => '',
-            'opsi_d' => '',
-            'opsi_e' => '',
-            'keyword' => '',
-        ]);
-        
+        $create = $this->data->save($data);
+
         $create['token'] = $this->security->get_csrf_hash();
 
         echo json_encode($create);
