@@ -20,9 +20,10 @@ class Exam_question_detail extends MY_Controller
         $this->load->model('Study_m', 'study');
     }
 
-    function list($exam_question_id, $old = []) {
+    function list($exam_question_id) {
         $this->filter(1);
-        $exam_question = $this->exam_question->find(enc($exam_question_id, 1));
+        $eid = enc($exam_question_id, 1);
+        $exam_question = $this->exam_question->find($eid);
 
         $this->header = [
             'title' => 'Butir Soal',
@@ -60,10 +61,9 @@ class Exam_question_detail extends MY_Controller
 
         $this->temp('app/exam_question_detail/content', [
             'id' => $exam_question_id,
-            'old' => $old,
             'token' => $this->security->get_csrf_hash(),
-            'period' => $this->period->find(),
-            'study' => $this->study->find(),
+            // 'study' => $this->study->find(),
+            'exam_question' => $this->exam_question->find($eid),
         ]);
     }
 

@@ -30,15 +30,19 @@ class Exam_question_m extends MY_Model {
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
     ->select('d.name period')
     ->select('e.name studi')
+    ->select('count(f.id) jsoal')
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
     ->join('periods d', 'd.id = a.period_id', 'left')
     ->join('studies e', 'e.id = a.study_id', 'left')
+    ->join('exam_question_extend_details f', 'f.exam_question_id = a.id', 'left')
+    ->group_by('a.id')
     ->order_by('a.id', 'ASC');
 
     if(!$show_del){
-      $this->db->where('a.is_del', '0');
+      $this->db->where('a.is_del', '0')
+      ->where('f.is_del', '0');
     }
 
     $this->db->order_by('a.id', 'desc');

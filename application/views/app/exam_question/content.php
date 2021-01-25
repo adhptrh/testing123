@@ -23,7 +23,6 @@
                     <?= $pesan = ($this->session->flashdata('message')) ? $this->session->flashdata('message') : '' ?>
                 </div>
 
-
                 <div class="table-responsive">
                     <table class="dtable table table-striped">
                         <thead>
@@ -62,7 +61,7 @@
                                 </td>
                                 <td><?= $v['period']?></td>
                                 <td><?= $v['studi']?></td>
-                                <td>100</td>
+                                <td><?= $v['jsoal']?></td>
                                 <td><?= $v['created_by'] . '<br><small>'. $v['created_at'] .'</small>' ?></td>
                             </tr>
                             <?php endforeach; ?>

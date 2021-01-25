@@ -3,6 +3,8 @@ const create_form = document.getElementsByClassName("create")[0];
 const list = document.getElementsByClassName("list")[0]; // Frame of list
 const eq_list = document.getElementById("eq_list"); //list of exam_questions
 const token = document.getElementById("eq_list").getAttribute('data-token');
+const falert = document.getElementById("falert");
+const malert = document.getElementById("malert");
 let soal = 0,
     opsi_a = 0,
     opsi_b = 0,
@@ -183,7 +185,9 @@ function save(data) {
                 })
             } else {
                 close_form();
-                getList();
+                falert.classList.toggle('d-none');
+                malert.innerHTML = response.message;
+                window.scrollTo(0, 0);
             }
         }
     })
@@ -228,7 +232,15 @@ function makeSoal(data) {
     item = '';
     let no = 1;
     data.forEach(function(value, index) {
-        item += '<h5>No. ' + no++ + '</h5>';
+        item += '<div class="card mg-t-20">';
+        item += '<div class="card-header d-flex align-items-center justify-content-between">';
+        item += '<h6 class="mg-t-10">No. ' + no++ + '</h6>';
+        item += '<div class="d-flex align-items-center tx-18">';
+        item += '<button class="btn btn-xs btn-info col-md mg-r-10">Edit</button>';
+        item += '<button class="btn btn-xs btn-warning col-md">Hapus</button>';
+        item += '</div>';
+        item += '</div>';
+        item += '<div class="card-body">';
         item += '<p>' + value['question'] + '</p>'
         item += '<h6>Opsi A</h6>'
         item += '<p>' + value['opsi_a'] + '</p>'
@@ -242,7 +254,8 @@ function makeSoal(data) {
         item += '<p>' + value['opsi_e'] + '</p>'
         item += '<h6>Kunci Jawaban</h6>'
         item += '<p>' + value['keyword'] + '</p>'
-        item += '<hr>';
+        item += '</div>';
+        item += '</div>';
     })
 
     eq_list.innerHTML = item;
