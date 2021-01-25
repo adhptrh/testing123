@@ -5,6 +5,7 @@ const eq_list = document.getElementById("eq_list"); //list of exam_questions
 const token = document.getElementById("eq_list").getAttribute('data-token');
 const falert = document.getElementById("falert");
 const malert = document.getElementById("malert");
+const span_jsoal = document.getElementById("jsoal");
 let soal = 0,
     opsi_a = 0,
     opsi_b = 0,
@@ -14,6 +15,7 @@ let soal = 0,
     content = 0,
     dsimpan = 0,
     keyword = 0;
+
 let button_cancel, form, item;
 
 getList();
@@ -29,6 +31,44 @@ function setButtonOption() {
             item.classList.add('btn-success')
             item.classList.remove('btn-outline-success')
             keyword = item.getAttribute('data-opsi');
+        })
+    })
+}
+
+function xdelete(data) {
+    Swal.fire({
+        title: 'Peringatan',
+        text: "Apakah Anda yakin akan menghapus data ini? ",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, hapus saja!',
+        cancelButtonText: 'Batal',
+    }).then((result) => {
+        $.ajax({
+            url: '../delete/' + data.getAttribute('data-id'),
+            method: 'post',
+            data: {
+                token: document.querySelector('#eq_list').getAttribute('data-token'),
+            },
+            dataType: 'json',
+            success: function(response) {
+                document.querySelector('#eq_list').setAttribute('data-token', response.token);
+                if (response.status != 200) {
+                    Swal.fire({
+                        title: 'Peringatan',
+                        text: "Terjadi kesalahan, silahkan hubungi Administrator",
+                        icon: 'warning',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Baiklah',
+                    })
+                } else {
+                    falert.classList.remove('d-none');
+                    malert.innerHTML = response.message;
+                    getList();
+                }
+            }
         })
     })
 }
@@ -187,7 +227,7 @@ function save(data) {
                 close_form();
                 falert.classList.toggle('d-none');
                 malert.innerHTML = response.message;
-                window.scrollTo(0, 0);
+                getList();
             }
         }
     })
@@ -223,7 +263,8 @@ function getList() {
         },
         dataType: 'json',
         success: function(response) {
-            makeSoal(response.data)
+            makeSoal(response.data);
+            span_jsoal.innerHTML = response.data.length;
         }
     })
 }
@@ -237,7 +278,7 @@ function makeSoal(data) {
         item += '<h6 class="mg-t-10">No. ' + no++ + '</h6>';
         item += '<div class="d-flex align-items-center tx-18">';
         item += '<button class="btn btn-xs btn-info col-md mg-r-10">Edit</button>';
-        item += '<button class="btn btn-xs btn-warning col-md">Hapus</button>';
+        item += '<button data-id="' + value['id'] + '" onclick="xdelete(this)" class="btn btn-xs btn-warning col-md delete">Hapus</button>';
         item += '</div>';
         item += '</div>';
         item += '<div class="card-body">';
@@ -259,5 +300,4 @@ function makeSoal(data) {
     })
 
     eq_list.innerHTML = item;
-
 }

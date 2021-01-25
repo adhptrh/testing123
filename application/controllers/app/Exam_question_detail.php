@@ -20,8 +20,9 @@ class Exam_question_detail extends MY_Controller
         $this->load->model('Study_m', 'study');
     }
 
-    function list($exam_question_id) {
+    public function list($exam_question_id) {
         $this->filter(1);
+
         $eid = enc($exam_question_id, 1);
         $exam_question = $this->exam_question->find($eid);
 
@@ -62,7 +63,6 @@ class Exam_question_detail extends MY_Controller
         $this->temp('app/exam_question_detail/content', [
             'id' => $exam_question_id,
             'token' => $this->security->get_csrf_hash(),
-            // 'study' => $this->study->find(),
             'exam_question' => $this->exam_question->find($eid),
         ]);
     }
@@ -72,7 +72,6 @@ class Exam_question_detail extends MY_Controller
         $exam_question_id = enc($id, 1);
 
         echo json_encode([
-            // 'token' => $this->security->get_csrf_hash(),
             'data' => $this->data->find(false, [
                 'exam_question_id' => $exam_question_id
             ]),
@@ -206,6 +205,10 @@ class Exam_question_detail extends MY_Controller
     public function delete($id)
     {
         $this->filter(4);
+
+        $delete = $this->data->delete($id);
+        $delete['token'] = $this->security->get_csrf_hash();
+        echo json_encode($delete);
     }
 
     public function restore($id)
