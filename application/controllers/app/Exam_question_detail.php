@@ -75,45 +75,13 @@ class Exam_question_detail extends MY_Controller
             'data' => $this->data->find(false, [
                 'exam_question_id' => $exam_question_id
             ]),
+            'base_url' => base_url(),
         ]);
     }
 
-    public function create($exam_question_id, $old = [])
+    public function create($exam_question_id)
     {
         $this->filter(1);
-
-        $this->header = [
-            'title' => 'Butir Soal',
-            'sub_title' => 'Tambah Butir Soal',
-            'nav_active' => 'app/exam_question',
-            'breadcrumb' => [
-                [
-                    'label' => 'XPanel',
-                    'icon' => 'fa-home',
-                    'href' => '#',
-                ],
-                [
-                    'label' => 'Aplikasi',
-                    'icon' => 'fa-gear',
-                    'href' => '#',
-                ],
-                [
-                    'label' => 'Soal',
-                    'icon' => 'fa-gear',
-                    'href' => '#',
-                ],
-                [
-                    'label' => 'Butir Soal',
-                    'icon' => 'fa-list',
-                    'href' => base_url('app/exam_question_detail'),
-                ],
-                [
-                    'label' => 'Tambah',
-                    'icon' => '',
-                    'href' => '#',
-                ],
-            ],
-        ];
 
         $this->load->view('app/exam_question_detail/create', [
             'token' => $this->security->get_csrf_hash(),
@@ -192,14 +160,40 @@ class Exam_question_detail extends MY_Controller
         echo json_encode($create);
     }
 
-    public function edit($id, $old = [])
+    public function edit($id)
     {
         $this->filter(3);
+
+        $data = $this->data->find(enc($id, 1));
+
+        $this->load->view('app/exam_question_detail/edit', [
+            'token' => $this->security->get_csrf_hash(),
+            'data' => $data,
+        ]);
     }
 
     public function update()
     {
         $this->filter(3);
+        $post = $this->input->post('data');
+
+        $data = [
+            'id' => enc($post['id'], 1),
+            'exam_question_id' => enc($post['master_soal_id'], 1),
+            'question' => $this->content_creation($post['soal']),
+            'opsi_a' => $this->content_creation($post['opsi_a']),
+            'opsi_b' => $this->content_creation($post['opsi_b']),
+            'opsi_c' => $this->content_creation($post['opsi_c']),
+            'opsi_d' => $this->content_creation($post['opsi_d']),
+            'opsi_e' => $this->content_creation($post['opsi_e']),
+            'keyword' => $post['keyword'],
+        ];
+
+        $update = $this->data->save($data);
+
+        $update['token'] = $this->security->get_csrf_hash();
+
+        echo json_encode($update);
     }
 
     public function delete($id)

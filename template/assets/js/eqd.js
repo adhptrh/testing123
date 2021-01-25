@@ -14,7 +14,8 @@ let soal = 0,
     opsi_e = 0,
     content = 0,
     dsimpan = 0,
-    keyword = 0;
+    keyword = 0,
+    base_url = 'http://localhost/';
 
 let button_cancel, form, item;
 
@@ -71,6 +72,27 @@ function xdelete(data) {
             }
         })
     })
+}
+
+function xedit(data) {
+    fetch(base_url + '/app/exam_question_detail/edit/' + data.getAttribute('data-id'))
+        .then((response) => response.text())
+        .then((html) => {
+            create_form.classList.toggle('d-none');
+            list.classList.toggle('d-none');
+            create_form.innerHTML = html;
+
+            setEditor();
+            setButtonCancel();
+            setButtonOption();
+            setFormSubmit('update');
+
+            keyword = document.getElementsByClassName("btn-keyword")[0].getAttribute('data-opsi');
+
+        })
+        .catch((error) => {
+            console.warn(error);
+        });
 }
 
 function setButtonOptionAllClear() {
@@ -168,12 +190,12 @@ function setButtonCancel() {
     });
 }
 
-function setFormSubmit() {
+function setFormSubmit(method = 'save') {
     form = document.querySelector('form');
     form.onsubmit = function(e) {
         e.preventDefault();
         if (SetFormSubmitCek()) {
-            save({
+            data = {
                 master_soal_id: document.querySelector('input[name=master_soal_id]').value,
                 soal: soal.getContents(),
                 opsi_a: opsi_a.getContents(),
@@ -182,7 +204,14 @@ function setFormSubmit() {
                 opsi_d: opsi_d.getContents(),
                 opsi_e: opsi_e.getContents(),
                 keyword: keyword,
-            });
+            }
+
+            if (method == 'save') {
+                save(data);
+            } else {
+                data['id'] = document.querySelector('input[name=id]').value;
+                save(data, 'update');
+            }
         }
 
         return false;
@@ -204,9 +233,9 @@ function SetFormSubmitCek() {
     }
 }
 
-function save(data) {
+function save(data, method = 'save') {
     $.ajax({
-        url: '../save',
+        url: '../' + method,
         method: 'post',
         data: {
             data: JSON.parse(JSON.stringify(data)),
@@ -214,7 +243,7 @@ function save(data) {
         },
         dataType: 'json',
         success: function(response) {
-            document.querySelector('input[name=token]').value = response.token
+            document.querySelector('#eq_list').setAttribute('data-token', response.token);
             if (response.status != 200) {
                 Swal.fire({
                     title: 'Peringatan',
@@ -225,7 +254,7 @@ function save(data) {
                 })
             } else {
                 close_form();
-                falert.classList.toggle('d-none');
+                falert.classList.remove('d-none');
                 malert.innerHTML = response.message;
                 getList();
             }
@@ -263,8 +292,10 @@ function getList() {
         },
         dataType: 'json',
         success: function(response) {
+            base_url = response.base_url;
             makeSoal(response.data);
             span_jsoal.innerHTML = response.data.length;
+            document.getElementById('top_content').scrollIntoView();
         }
     })
 }
@@ -277,12 +308,12 @@ function makeSoal(data) {
         item += '<div class="card-header d-flex align-items-center justify-content-between">';
         item += '<h6 class="mg-t-10">No. ' + no++ + '</h6>';
         item += '<div class="d-flex align-items-center tx-18">';
-        item += '<button class="btn btn-xs btn-info col-md mg-r-10">Edit</button>';
+        item += '<button data-id="' + value['id'] + '" onclick="xedit(this)" class="btn btn-xs btn-info col-md mg-r-10">Edit</button>';
         item += '<button data-id="' + value['id'] + '" onclick="xdelete(this)" class="btn btn-xs btn-warning col-md delete">Hapus</button>';
         item += '</div>';
         item += '</div>';
         item += '<div class="card-body">';
-        item += '<p>' + value['question'] + '</p>'
+        item += '<p>' + imageShow(value['question']) + '</p>'
         item += '<h6>Opsi A</h6>'
         item += '<p>' + value['opsi_a'] + '</p>'
         item += '<h6>Opsi B</h6>'
@@ -300,4 +331,9 @@ function makeSoal(data) {
     })
 
     eq_list.innerHTML = item;
+}
+
+function imageShow(data) {
+    data = data.replace(/upload\/img/g, "<img src='" + base_url + "upload/img");
+    return data.replace(/.png/g, ".png'>");
 }

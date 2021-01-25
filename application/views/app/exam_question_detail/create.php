@@ -1,7 +1,7 @@
 <div class="card-header">
     <h6 class="mb-0">Tambah Butir Soal</h6>
 </div>
-<?=form_open('#');?>
+<?= form_open('#') ?>
 <div class="card-body">
     <div class="row">
         <div class="col-md-12">
@@ -50,7 +50,6 @@
 </div>
 <div class="card-footer">
     <a href="#" class="btn btn-sm btn-danger batal" type="button" name="">Batal</a>
-    <div id="notif_error_f" class="alert alert-danger d-none" role="alert"><i class="fa fa-exclamation-triangle"></i> <span id="notif_error_c">Notifikasi</span></div>
     <button class="btn btn-sm btn-primary float-right" type="submit" name="">Simpan</button>
 </div>
 <?=form_close();?>

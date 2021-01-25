@@ -1,6 +1,7 @@
+<div id="top_content"></div>
 <div class="row row-xs">
     <div class="col-md">
-        <div class="card create d-none">
+        <div data-base-url="<?= base_url(); ?>" class="card create d-none">
             form create here
         </div>
 

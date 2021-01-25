@@ -1,28 +1,60 @@
-<div class="row row-xs">
-  <div class="col-md-12">
-    <div class="card">
-      <div class="card-body">
-        <?= form_open(base_url('app/exam_question/update')); ?>
-        <div class="align-items-center alert alert-warning <?= $hide = ($this->session->flashdata('update_info_message')) ? '' : 'd-none' ?>">
-          <i data-feather="alert-circle" class="mg-r-10"></i><?= $this->session->flashdata('update_info_message');  ?>
-        </div>
-
-        <div class="form-group d-none">
-          <label>ID</label>
-          <input name="id" type="text" class="form-control" value="<?= $isi = (isset($old['id'])) ? $old['id'] : $data['id']; ?>" readonly>
-        </div>
-
-        <div class="form-group">
-          <label>Nama</label>
-          <input name="name" type="text" class="form-control <?= $has_error = (form_error('name')) ? 'is-invalid' : '' ?>" value="<?= $isi = (isset($old['name'])) ? $old['name'] : $data['name']; ?>" >
-          <?= $has_error = (form_error('name')) ? '<div class="invalid-feedback">' . form_error('name') . '</div>' : '' ?>
-        </div>
-      </div>
-      <div class="card-footer">
-        <a href="<?= base_url('app/exam_schedule') ?>" class="btn btn-sm btn-danger" type="button" name="">Batal</a>
-        <button class="btn btn-sm btn-primary float-right" type="submit" name="">Simpan</button>
-      </div>
-    <?= form_close(); ?>
-    </div>
-  </div>
+<div class="card-header">
+    <h6 class="mb-0">Edit Butir Soal</h6>
 </div>
+<?= form_open('#') ?>
+<div class="card-body">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> Gunakan ekstensi
+                <strong>*.png</strong> jika ingin menyertakan gambar pada soal atau jawaban.
+            </div>
+        </div>
+        <div class="col-md-12 form-group d-none">
+            <h6 class="mg-b-10">ID</h6>
+            <input class="form-control" name="id" value="<?= $data['id'] ?>" readonly>
+        </div>
+
+        <div class="col-md-12 form-group d-none">
+            <h6 class="mg-b-10">Master Soal ID</h6>
+            <input class="form-control" name="master_soal_id" value="<?= $data['exam_question_id'] ?>" readonly>
+        </div>
+
+        <div class="col-md-12">
+            <h6 class="mg-b-10">Soal</h6>
+            <div class="editor" id="soal"><?= $data['question'] ?></div>
+        </div>
+        <div class="col-md-12 mg-t-25">
+            <h6 class="mg-b-10">Opsi A</h6>
+            <div class="editor" id="opsi_a"><?= $data['opsi_a'] ?></div>
+        </div>
+        <div class="col-md-12 mg-t-25">
+            <h6 class="mg-b-10">Opsi B</h6>
+            <div class="editor" id="opsi_b"><?= $data['opsi_b'] ?></div>
+        </div>
+        <div class="col-md-12 mg-t-25">
+            <h6 class="mg-b-10">Opsi C</h6>
+            <div class="editor" id="opsi_c"><?= $data['opsi_c'] ?></div>
+        </div>
+        <div class="col-md-12 mg-t-25">
+            <h6 class="mg-b-10">Opsi D</h6>
+            <div class="editor" id="opsi_d"><?= $data['opsi_d'] ?></div>
+        </div>
+        <div class="col-md-12 mg-t-25">
+            <h6 class="mg-b-10">Opsi E</h6>
+            <div class="editor" id="opsi_e"><?= $data['opsi_e'] ?></div>
+        </div>
+        <div class="col-md-12 mg-t-25">
+            <h6 class="mg-b-10">Kunci Jawaban</h6>
+            <button data-opsi="opsi_a" type="button" class="btn <?= $btn = ($data['keyword'] == 'opsi_a') ? 'btn-success btn-keyword' : 'btn-outline-success'; ?> btn-sm opsi">Opsi A</button>
+            <button data-opsi="opsi_b" type="button" class="btn <?= $btn = ($data['keyword'] == 'opsi_b') ? 'btn-success btn-keyword' : 'btn-outline-success'; ?> btn-sm opsi">Opsi B</button>
+            <button data-opsi="opsi_c" type="button" class="btn <?= $btn = ($data['keyword'] == 'opsi_c') ? 'btn-success btn-keyword' : 'btn-outline-success'; ?> btn-sm opsi">Opsi C</button>
+            <button data-opsi="opsi_d" type="button" class="btn <?= $btn = ($data['keyword'] == 'opsi_d') ? 'btn-success btn-keyword' : 'btn-outline-success'; ?> btn-sm opsi">Opsi D</button>
+            <button data-opsi="opsi_e" type="button" class="btn <?= $btn = ($data['keyword'] == 'opsi_e') ? 'btn-success btn-keyword' : 'btn-outline-success'; ?> btn-sm opsi">Opsi E</button>
+        </div>
+    </div>
+</div>
+<div class="card-footer">
+    <a href="#" class="btn btn-sm btn-danger batal" type="button" name="">Batal</a>
+    <button class="btn btn-sm btn-primary float-right" type="submit" name="">Simpan</button>
+</div>
+<?= form_close() ?>
