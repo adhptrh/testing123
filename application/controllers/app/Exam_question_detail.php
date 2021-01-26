@@ -20,7 +20,7 @@ class Exam_question_detail extends MY_Controller
         $this->load->model('Study_m', 'study');
     }
 
-    public function list($exam_question_id) {
+    function list($exam_question_id) {
         $this->filter(1);
 
         $eid = enc($exam_question_id, 1);
@@ -67,13 +67,14 @@ class Exam_question_detail extends MY_Controller
         ]);
     }
 
-    public function reload($id){
+    public function reload($id)
+    {
         $this->filter(2);
         $exam_question_id = enc($id, 1);
 
         echo json_encode([
             'data' => $this->data->find(false, [
-                'exam_question_id' => $exam_question_id
+                'exam_question_id' => $exam_question_id,
             ]),
             'base_url' => base_url(),
         ]);
@@ -166,10 +167,35 @@ class Exam_question_detail extends MY_Controller
 
         $data = $this->data->find(enc($id, 1));
 
+        // $data = str_replace("upload/img", "<img src='" . base_url("upload/img"), $data);
+        // $data = str_replace(".png", ".png'>", $data);
+
         $this->load->view('app/exam_question_detail/edit', [
             'token' => $this->security->get_csrf_hash(),
             'data' => $data,
         ]);
+    }
+
+    public function data_for_edit($id)
+    {
+        $this->filter(3);
+        $data = $this->data->find(enc($id, 1));
+        echo json_encode([
+            'soal' => $this->data->str_to_quill($data['question']),
+            'opsi_a' => '',
+            'opsi_b' => '',
+            'opsi_c' => '',
+            'opsi_d' => '',
+            'opsi_e' => '',
+            'kunci' => $data['keyword'],
+        ]);
+        // $data = $this->data->str_to_quill($str);
+
+        // // DEBUG
+        // echo '<pre>';
+        // print_r($data);
+        // echo '</pre>';
+        // die();
     }
 
     public function update()

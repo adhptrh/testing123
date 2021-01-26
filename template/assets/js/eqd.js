@@ -83,6 +83,7 @@ function xedit(data) {
             create_form.innerHTML = html;
 
             setEditor();
+            loadExamDetail(data.getAttribute('data-id'));
             setButtonCancel();
             setButtonOption();
             setFormSubmit('update');
@@ -183,10 +184,25 @@ function setEditor() {
     });
 }
 
+function loadExamDetail(data) {
+    $.ajax({
+        url: '../data_for_edit/' + data,
+        method: 'post',
+        data: {
+            token: document.querySelector('input[name=token]').value,
+        },
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
+        }
+    })
+}
+
 function setButtonCancel() {
     button_cancel = document.getElementsByClassName("batal")[0];
     button_cancel.addEventListener('click', () => {
         close_form();
+        document.getElementById('top_content').scrollIntoView();
     });
 }
 

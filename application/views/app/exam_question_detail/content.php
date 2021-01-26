@@ -35,7 +35,6 @@
                 </div>
             </div>
 
-
             <div class="" id="eq_list" data-token="<?= $token; ?>">
                 <br>
                 <div class="spinner-border spinner-border-sm" role="status"></div>

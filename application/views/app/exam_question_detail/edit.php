@@ -11,7 +11,7 @@
         </div>
         <div class="col-md-12 form-group d-none">
             <h6 class="mg-b-10">ID</h6>
-            <input class="form-control" name="id" value="<?= $data['id'] ?>" readonly>
+            <input id="id_butir_soal" class="form-control" name="id" value="<?= $data['id'] ?>" readonly>
         </div>
 
         <div class="col-md-12 form-group d-none">
