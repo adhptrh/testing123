@@ -137,6 +137,7 @@ class Exam_question_detail_m extends MY_Model
             // Insert text
             $pos_all[0]['start'] = 0;
             $pos_all[0]['end'] = $str_length;
+            $pos_all[0]['type'] = 0;
 
         } elseif (count($pos_image) == 1) { // jika hanya ada 1 image
             foreach ($pos_image as $k => $v) {
@@ -146,16 +147,19 @@ class Exam_question_detail_m extends MY_Model
                         $n = count($pos_all);
                         $pos_all[$n]['start'] = $v['start'];
                         $pos_all[$n]['end'] = $v['end'];
+                        $pos_all[$n]['type'] = 1;
 
                         // Insert text
                         $pos_all[$n + 1]['start'] = ($v['end'] + 1);
                         $pos_all[$n + 1]['end'] = $str_length;
+                        $pos_all[$n + 1]['type'] = 0;
 
                     } else { // Jika setelahnya tidak ada content
                         // Insert image
                         $n = count($pos_all);
                         $pos_all[$n]['start'] = $v['start'];
                         $pos_all[$n]['end'] = $v['end'];
+                        $pos_all[$n]['type'] = 1;
                     }
                 } else { // Jika pas sebelumnya ada text
                     if ($v['end'] < $str_length) { // Jika setelahnya masih ada content
@@ -163,24 +167,29 @@ class Exam_question_detail_m extends MY_Model
                         $n = count($pos_all);
                         $pos_all[$n]['start'] = 0;
                         $pos_all[$n]['end'] = ($v['start'] - 1);
+                        $pos_all[$n]['type'] = 0;
 
                         // Insert image
                         $pos_all[$n + 1]['start'] = $v['start'];
                         $pos_all[$n + 1]['end'] = $v['end'];
+                        $pos_all[$n + 1]['type'] = 1;
 
                         // Insert text
                         $pos_all[$n + 2]['start'] = ($v['end'] + 1);
                         $pos_all[$n + 2]['end'] = $str_length;
+                        $pos_all[$n + 2]['type'] = 0;
 
                     } else { // Jika setelahnya tidak ada content
                         // Insert text
                         $n = count($pos_all);
                         $pos_all[$n]['start'] = 0;
                         $pos_all[$n]['end'] = ($v['start'] - 1);
+                        $pos_all[$n]['type'] = 0;
 
                         // Insert image
                         $pos_all[$n + 1]['start'] = $v['start'];
                         $pos_all[$n + 1]['end'] = $v['end'];
+                        $pos_all[$n + 1]['type'] = 1;
                     }
                 }
             }
@@ -193,15 +202,18 @@ class Exam_question_detail_m extends MY_Model
                         // Insert image
                         $pos_all[$k]['start'] = $v['start'];
                         $pos_all[$k]['end'] = $v['end'];
+                        $pos_all[$k]['type'] = 1;
 
                     } else { // Posisi image setelah content text
                         // Insert text
                         $pos_all[$k]['start'] = 0;
                         $pos_all[$k]['end'] = ($v['start'] - 1);
+                        $pos_all[$k]['type'] = 0;
 
                         // Insert image
                         $pos_all[$k + 1]['start'] = $v['start'];
                         $pos_all[$k + 1]['end'] = $v['end'];
+                        $pos_all[$k + 1]['type'] = 1;
                     }
                 } elseif ($v['start'] != $end_pos_image['start']) { // Jika yang selanjutnya tetapi bukan yang terakhir
 
@@ -210,16 +222,19 @@ class Exam_question_detail_m extends MY_Model
                         $n = count($pos_all);
                         $pos_all[$n]['start'] = $v['start'];
                         $pos_all[$n]['end'] = $v['end'];
+                        $pos_all[$n]['type'] = 1;
 
                     } else { // Jika pas sebelumnya gak ada image
                         // Insert text
                         $n = count($pos_all);
                         $pos_all[$n]['start'] = ($pos_all[$n - 1]['end'] + 1);
                         $pos_all[$n]['end'] = ($v['start'] - 1);
+                        $pos_all[$n]['type'] = 0;
 
                         // Insert image
                         $pos_all[$n + 1]['start'] = $v['start'];
                         $pos_all[$n + 1]['end'] = $v['end'];
+                        $pos_all[$n + 1]['type'] = 1;
                     }
                 } else { // JIka yang terakhir
 
@@ -229,16 +244,19 @@ class Exam_question_detail_m extends MY_Model
                             $n = count($pos_all);
                             $pos_all[$n]['start'] = $v['start'];
                             $pos_all[$n]['end'] = $v['end'];
+                            $pos_all[$n]['type'] = 1;
 
                             // Insert text
                             $pos_all[$n + 1]['start'] = ($v['end'] + 1);
                             $pos_all[$n + 1]['end'] = $str_length;
+                            $pos_all[$n + 1]['type'] = 0;
 
                         } else { // Jika setelahnya tidak ada content
                             // Insert image
                             $n = count($pos_all);
                             $pos_all[$n]['start'] = $v['start'];
                             $pos_all[$n]['end'] = $v['end'];
+                            $pos_all[$n]['type'] = 1;
                         }
                     } else { // Jika pas sebelumnya gak ada image
                         if ($v['end'] < $str_length) { // Jika setelahnya masih ada content
@@ -246,24 +264,29 @@ class Exam_question_detail_m extends MY_Model
                             $n = count($pos_all);
                             $pos_all[$n]['start'] = ($pos_all[$n - 1]['end'] + 1);
                             $pos_all[$n]['end'] = ($v['start'] - 1);
+                            $pos_all[$n]['type'] = 0;
 
                             // Insert image
                             $pos_all[$n + 1]['start'] = $v['start'];
                             $pos_all[$n + 1]['end'] = $v['end'];
+                            $pos_all[$n + 1]['type'] = 1;
 
                             // Insert text
                             $pos_all[$n + 2]['start'] = ($v['end'] + 1);
                             $pos_all[$n + 2]['end'] = $str_length;
+                            $pos_all[$n + 2]['type'] = 0;
 
                         } else { // Jika setelahnya tidak ada content
                             // Insert text
                             $n = count($pos_all);
                             $pos_all[$n]['start'] = ($pos_all[$n]['end'] + 1);
                             $pos_all[$n]['end'] = ($v['start'] - 1);
+                            $pos_all[$n]['type'] = 0;
 
                             // Insert image
                             $pos_all[$n + 1]['start'] = $v['start'];
                             $pos_all[$n + 1]['end'] = $v['end'];
+                            $pos_all[$n + 1]['type'] = 1;
                         }
                     }
 
@@ -271,17 +294,27 @@ class Exam_question_detail_m extends MY_Model
             }
         }
 
-        // Menyisip str image
-        foreach ($pos_image as $k => $v) {
-            $pos_image[$k]['content'] = substr($str, $v['start'], ($v['end'] - $v['start']));
-        }
-
         // Concate all item
+        $content = [];
         foreach ($pos_all as $k => $v) {
-            $pos_all[$k]['content'] = substr($str, $v['start'], ($v['end'] - $v['start']));
+            // $pos_all[$k]['content'] = substr($str, $v['start'], ($v['end'] - $v['start']));
+
+            if($v['type'] == 0){
+                $data = [
+                    'insert' => substr($str, $v['start'], ($v['end'] - $v['start'])),
+                ];
+            }else{
+                $data = [
+                    'insert' => [
+                        'image' => "../../../" . substr($str, $v['start'], ($v['end'] - $v['start'])),
+                    ],
+                ];
+            }
+
+            $content[$k] = $data;
         }
 
-       return $pos_all;
+       return $content;
     }
 
 }

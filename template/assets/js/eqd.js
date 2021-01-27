@@ -193,7 +193,13 @@ function loadExamDetail(data) {
         },
         dataType: 'json',
         success: function(response) {
-            console.log(response);
+            soal.setContents(response.soal);
+            opsi_a.setContents(response.opsi_a);
+            opsi_b.setContents(response.opsi_b);
+            opsi_c.setContents(response.opsi_c);
+            opsi_d.setContents(response.opsi_d);
+            opsi_e.setContents(response.opsi_e);
+            document.querySelector('input[name=token]').value = response.token;
         }
     })
 }
@@ -250,6 +256,8 @@ function SetFormSubmitCek() {
 }
 
 function save(data, method = 'save') {
+    // console.log(document.querySelector('input[name=token]').value);
+    // console.log(method);
     $.ajax({
         url: '../' + method,
         method: 'post',
@@ -331,17 +339,17 @@ function makeSoal(data) {
         item += '<div class="card-body">';
         item += '<p>' + imageShow(value['question']) + '</p>'
         item += '<h6>Opsi A</h6>'
-        item += '<p>' + value['opsi_a'] + '</p>'
+        item += '<p>' + imageShow(value['opsi_a']) + '</p>'
         item += '<h6>Opsi B</h6>'
-        item += '<p>' + value['opsi_b'] + '</p>'
+        item += '<p>' + imageShow(value['opsi_b']) + '</p>'
         item += '<h6>Opsi C</h6>'
-        item += '<p>' + value['opsi_c'] + '</p>'
+        item += '<p>' + imageShow(value['opsi_c']) + '</p>'
         item += '<h6>Opsi D</h6>'
-        item += '<p>' + value['opsi_d'] + '</p>'
+        item += '<p>' + imageShow(value['opsi_d']) + '</p>'
         item += '<h6>Opsi E</h6>'
-        item += '<p>' + value['opsi_e'] + '</p>'
+        item += '<p>' + imageShow(value['opsi_e']) + '</p>'
         item += '<h6>Kunci Jawaban</h6>'
-        item += '<p>' + value['keyword'] + '</p>'
+        item += '<p>' + imageShow(value['keyword']) + '</p>'
         item += '</div>';
         item += '</div>';
     })

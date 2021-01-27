@@ -6,7 +6,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> Gunakan ekstensi
-                <strong>*.png</strong> jika ingin menyertakan gambar pada soal atau jawaban.</div>
+                <strong>*.png</strong> jika ingin menyertakan gambar pada soal atau jawaban.
+            </div>
         </div>
         <div class="col-md-12 form-group d-none">
             <h6 class="mg-b-10">Master Soal ID</h6>

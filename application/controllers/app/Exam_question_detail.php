@@ -182,20 +182,14 @@ class Exam_question_detail extends MY_Controller
         $data = $this->data->find(enc($id, 1));
         echo json_encode([
             'soal' => $this->data->str_to_quill($data['question']),
-            'opsi_a' => '',
-            'opsi_b' => '',
-            'opsi_c' => '',
-            'opsi_d' => '',
-            'opsi_e' => '',
+            'opsi_a' => $this->data->str_to_quill($data['opsi_a']),
+            'opsi_b' => $this->data->str_to_quill($data['opsi_b']),
+            'opsi_c' => $this->data->str_to_quill($data['opsi_c']),
+            'opsi_d' => $this->data->str_to_quill($data['opsi_d']),
+            'opsi_e' => $this->data->str_to_quill($data['opsi_e']),
             'kunci' => $data['keyword'],
+            'token' => $this->security->get_csrf_hash(),
         ]);
-        // $data = $this->data->str_to_quill($str);
-
-        // // DEBUG
-        // echo '<pre>';
-        // print_r($data);
-        // echo '</pre>';
-        // die();
     }
 
     public function update()
