@@ -256,8 +256,6 @@ function SetFormSubmitCek() {
 }
 
 function save(data, method = 'save') {
-    // console.log(document.querySelector('input[name=token]').value);
-    // console.log(method);
     $.ajax({
         url: '../' + method,
         method: 'post',

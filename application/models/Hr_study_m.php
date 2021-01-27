@@ -1,23 +1,23 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Hr_m extends MY_Model {
+class Hr_study_m extends MY_Model {
 
   public function __construct()
   {
     parent::__construct();
-    $this->name = 'z_human_resources';
-    $this->alias = 'pegawai';
+    $this->name = 'human_resource_extend_studies';
+    $this->alias = 'Mata Uji';
 
     $this->rules = [
       [
-        'field' => 'level_id',
-        'label' => 'Level',
+        'field' => 'hr_id',
+        'label' => 'Karyawan/Guru',
         'rules' => 'required',
       ],
       [
-        'field' => 'profile_id',
-        'label' => 'Pengguna',
+        'field' => 'study_id',
+        'label' => 'Mata Uji',
         'rules' => 'required',
       ],
     ];
@@ -25,28 +25,13 @@ class Hr_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.is_del, a.level_id, a.profile_id')
-    ->select('b.name created_by, b.created_at')
-    ->select('c.name updated_by, c.updated_at')
-    ->select('d.name')
-    ->select('e.name level_name')
-    ->select('f.username, f.id user_id')
-    ->select('g.study')
+    $this->db->select('a.id, a.study_id, a.is_del')
+    ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
+    ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
-    ->join('z_profiles d', 'd.id = a.profile_id', 'left')
-    ->join('z_levels e', 'e.id = a.level_id', 'left')
-    ->join('z_users f', 'f.profile_id = a.profile_id', 'left')
-    ->join('(
-      SELECT    a.id, a.hr_id,
-                GROUP_CONCAT(b.name SEPARATOR "<br/>") study
-      FROM      human_resource_extend_studies a
-      JOIN      studies b ON b.id = a.study_id
-      WHERE     a.is_del = "0"
-      GROUP BY  a.hr_id
-    ) g', 'g.hr_id = a.id', 'left')
-  ->order_by('a.id', 'ASC');
+    ->order_by('a.id', 'ASC');
 
     if(!$show_del){
       $this->db->where('a.is_del', '0');
@@ -62,11 +47,9 @@ class Hr_m extends MY_Model {
       ]);
 
       $data = $this->db->get()->row_array();
-
       $data['id'] = enc($data['id']);
-      $data['level_id'] = enc($data['level_id']);
-      $data['profile_id'] = enc($data['profile_id']);
-      $data['user_id'] = enc($data['user_id']);
+      $data['study_id'] = enc($data['study_id']);
+
 
       return $data;
 
@@ -87,9 +70,7 @@ class Hr_m extends MY_Model {
         }
 
         $data[$k]['id'] = enc($v['id']);
-        $data[$k]['level_id'] = enc($v['level_id']);
-        $data[$k]['profile_id'] = enc($v['profile_id']);
-        $data[$k]['user_id'] = enc($v['user_id']);
+        $data[$k]['study_id'] = enc($v['study_id']);
       }
 
       return $data;

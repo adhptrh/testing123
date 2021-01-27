@@ -1,18 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Study_m extends MY_Model {
+class Order_m extends MY_Model {
 
   public function __construct()
   {
     parent::__construct();
-    $this->name = 'studies';
-    $this->alias = 'Mata Uji';
+    $this->name = 'orders';
+    $this->alias = 'Sesi';
 
     $this->rules = [
       [
         'field' => 'name',
-        'label' => 'Nama Mata Uji',
+        'label' => 'Nama Sesi',
         'rules' => 'required',
       ],
     ];
@@ -57,21 +57,10 @@ class Study_m extends MY_Model {
       $data = $this->db->get()->result_array();
 
       foreach ($data as $k => $v) {
-        if(is_array($selected_id)){ // Untuk multi select
-          foreach ($selected_id as $k1 => $v1) {
-            if($v1 == $v['id']){
-              $data[$k]['selected'] = 'selected'; // Men-setting selected untuk select2
-              break;
-            }else{
-              $data[$k]['selected'] = '';
-            }
-          }
+        if($selected_id == $v['id']){
+          $data[$k]['selected'] = 'selected'; // Men-setting selected untuk select2
         }else{
-          if($selected_id == $v['id']){
-            $data[$k]['selected'] = 'selected'; // Men-setting selected untuk select2
-          }else{
-            $data[$k]['selected'] = '';
-          }
+          $data[$k]['selected'] = '';
         }
 
         $data[$k]['id'] = enc($v['id']);

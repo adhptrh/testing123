@@ -28,6 +28,7 @@
                   <th style="width:20%">Aksi</th>
                   <th>Nama</th>
                   <th>Level</th>
+                  <th>Mata Uji</th>
                   <th>Dibuat</th>
                 </tr>
               </thead>
@@ -48,6 +49,7 @@
                     </td>
                     <td><?=$v['name'] . '<br><small>' . $v['username'] . '</small>'?></td>
                     <td><?=$v['level_name']?></td>
+                    <td><?=$v['study']?></td>
                     <td><?=$v['created_by'] . '<br><small>' . $v['created_at'] . '</small>'?></td>
                   </tr>
                 <?php endforeach;?>
