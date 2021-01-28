@@ -8,7 +8,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
                 </div>
-                <input type="text" class="form-control" placeholder="Cari di sini" aria-label="Username" aria-describedby="basic-addon1">
+                <input type="text" class="form-control dtp_cari" placeholder="Cari di sini" aria-label="Username" aria-describedby="basic-addon1">
               </div>
             </div>
             <div class="col-md-6 d-none d-md-block">

@@ -8,11 +8,11 @@
               <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
               </div>
-              <input type="text" class="form-control" placeholder="Cari di sini" aria-label="Username" aria-describedby="basic-addon1">
+              <input type="text" class="form-control dtp_cari" placeholder="Cari di sini" aria-label="Username" aria-describedby="basic-addon1">
             </div>
           </div>
           <div class="col-md-6 d-none d-md-block">
-            <a href="<?= base_url('reference/grade/create'); ?>" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-plus"></i> Tambah</a>
+            <a href="<?= base_url('reference/grade_ref/create'); ?>" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-plus"></i> Tambah</a>
           </div>
         </div>
 
@@ -42,8 +42,8 @@
                         Pilih
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="<?= base_url('reference/grade/edit/' . $v['id']); ?>"><i class="fas fa-edit"></i> Edit</a>
-                        <a class="dropdown-item hapus" href="#" data-href="<?= base_url('reference/grade/delete/' . $v['id']); ?>"><i class="fas fa-trash"></i> Hapus</a>
+                        <a class="dropdown-item" href="<?= base_url('reference/grade_ref/edit/' . $v['id']); ?>"><i class="fas fa-edit"></i> Edit</a>
+                        <a class="dropdown-item hapus" href="#" data-href="<?= base_url('reference/grade_ref/delete/' . $v['id']); ?>"><i class="fas fa-trash"></i> Hapus</a>
                       </div>
                     </div>
                   </td>

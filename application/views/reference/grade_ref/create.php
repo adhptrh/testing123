@@ -2,7 +2,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <?= form_open(base_url('reference/grade/save')); ?>
+                <?= form_open(base_url('reference/grade_ref/save')); ?>
                 <div
                     class="align-items-center alert alert-warning <?= $hide = ($this->session->flashdata('create_info_message')) ? '' : 'd-none' ?>">
                     <i data-feather="alert-circle"
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="<?= base_url('reference/grade') ?>" class="btn btn-sm btn-danger" type="button"
+                <a href="<?= base_url('reference/grade_ref') ?>" class="btn btn-sm btn-danger" type="button"
                     name="">Batal</a>
                 <button class="btn btn-sm btn-primary float-right" type="submit" name="">Simpan</button>
             </div>

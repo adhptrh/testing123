@@ -12,7 +12,7 @@
             </div>
           </div>
           <div class="col-md-6 d-none d-md-block">
-            <a href="<?= base_url('data/student/create'); ?>" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-plus"></i> Tambah</a>
+            <a href="<?= base_url('data/grade/create'); ?>" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-plus"></i> Tambah</a>
           </div>
         </div>
 
@@ -27,9 +27,9 @@
               <tr>
                 <th>#</th>
                 <th style="width:20%">Aksi</th>
+                <th>Periode</th>
                 <th>Jurusan</th>
-                <th>Name</th>
-                <th>Nomor Peserta</th>
+                <th>Kelas</th>
                 <th>Dibuat</th>
               </tr>
             </thead>
@@ -43,14 +43,14 @@
                         Pilih
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="<?= base_url('data/student/edit/' . $v['id']); ?>"><i class="fas fa-edit"></i> Edit</a>
-                        <a class="dropdown-item hapus" href="#" data-href="<?= base_url('data/student/delete/' . $v['id']); ?>"><i class="fas fa-trash"></i> Hapus</a>
+                        <a class="dropdown-item" href="<?= base_url('data/grade/edit/' . $v['id']); ?>"><i class="fas fa-edit"></i> Edit</a>
+                        <a class="dropdown-item hapus" href="#" data-href="<?= base_url('data/grade/delete/' . $v['id']); ?>"><i class="fas fa-trash"></i> Hapus</a>
                       </div>
                     </div>
                   </td>
-                  <td><?= $v['prodi'] ?></td>
-                  <td><?= $v['name'] ?></td>
-                  <td><?= $v['nopes'] ?></td>
+                  <td><?= $v['periode']; ?></td>
+                  <td><?= $v['jurusan']; ?></td>
+                  <td><?= $v['kelas']; ?></td>
                   <td><?= $v['created_by'] . '<br><small>'. $v['created_at'] .'</small>' ?></td>
                 </tr>
               <?php endforeach; ?>
