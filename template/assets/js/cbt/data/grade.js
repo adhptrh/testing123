@@ -23,10 +23,6 @@ function setGrade(data) {
     grade = opsi;
 }
 
-function setTgrade(data) {
-    grade = data;
-}
-
 setToken(token_form.value);
 
 bmajor.onchange = () => {

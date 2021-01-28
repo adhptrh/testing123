@@ -28,7 +28,7 @@ class Exam_question_detail extends MY_Controller
 
         $this->header = [
             'title' => 'Butir Soal',
-            'js_file' => 'eqd',
+            'js_file' => 'app/exam_question_detail/eqd',
             'sub_title' => 'Tambah Butir Soal',
             'nav_active' => 'app/exam_question',
             'breadcrumb' => [

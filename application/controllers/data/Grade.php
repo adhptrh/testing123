@@ -57,6 +57,23 @@ class Grade extends MY_Controller
         ]);
     }
 
+    public function get_json(){
+        $this->filter(2);
+        $post = $this->input->post('filter');
+
+        if(isset($post['period'])){
+            $filter = [
+                'a.period_id' => enc($post['period'], 1)
+            ];
+        }
+
+        $data = [
+            'token' => $this->security->get_csrf_hash(),
+			'grade' => $this->data->find(false, $filter),
+		];
+        echo json_encode($data);
+    }
+
     public function create($old = [])
     {
         $this->filter(1);
@@ -65,7 +82,7 @@ class Grade extends MY_Controller
             'title' => 'Kelas',
             'sub_title' => 'Tambah Kelas',
             'nav_active' => 'data/grade',
-            'js_file' => 'grade',
+            'js_file' => 'data/grade',
             'breadcrumb' => [
                 [
                     'label' => 'XPanel',
@@ -137,7 +154,7 @@ class Grade extends MY_Controller
 
         $this->header = [
 			'title' => 'Kelas',
-			'js_file' => 'grade',
+			'js_file' => 'data/grade',
             'sub_title' => 'Ubah Kelas',
             'nav_active' => 'data/grade',
             'breadcrumb' => [

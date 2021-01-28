@@ -16,7 +16,7 @@
 <script src="<?= base_url('template/'); ?>lib/select2/js/select2.min.js"></script>
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<?= $js = (isset($header['js_file']) ? '<script src="' . base_url('template/assets/js/' . $header['js_file'] . '.js') . '"></script>' : '') ?>
+<?= $js = (isset($header['js_file']) ? '<script src="' . base_url('template/assets/js/cbt/' . $header['js_file'] . '.js') . '"></script>' : '') ?>
 
 <script type="text/javascript">
 var t = $('.dtable').DataTable({

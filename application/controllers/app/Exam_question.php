@@ -15,7 +15,9 @@ class Exam_question extends MY_Controller
         parent::__construct();
         $this->controller_id = 13;
         $this->load->model('Exam_question_m', 'data');
+        $this->load->model('Exam_question_grade_m', 'eq_grade');
         $this->load->model('Study_m', 'study');
+        $this->load->model('Grade_m', 'grade');
         $this->load->model('Period_m', 'period');
     }
 
@@ -63,6 +65,7 @@ class Exam_question extends MY_Controller
         $this->header = [
             'title' => 'Soal',
             'sub_title' => 'Tambah Soal',
+            'js_file' => 'app/eq',
             'nav_active' => 'app/exam_question',
             'breadcrumb' => [
                 [
@@ -90,6 +93,7 @@ class Exam_question extends MY_Controller
 
         $this->temp('app/exam_question/create', [
             'old' => $old,
+            'grade' => $this->grade->find(),
             'period' => $this->period->find(),
             'study' => $this->study->find(),
         ]);
@@ -114,15 +118,41 @@ class Exam_question extends MY_Controller
             }
             $this->create($this->input->post());
         } else {
+
+            $this->db->trans_begin();
+
+            // Input examp_questions
             $save = [
                 'period_id' => enc($this->input->post('period'), 1),
                 'study_id' => enc($this->input->post('study'), 1),
             ];
 
             $save = $this->data->save($save);
+            $exam_question_id = $this->db->insert_id();
+
             if ($save['status'] == '200') {
-                $this->session->set_flashdata('message', $save['message']);
-                redirect(base_url('app/exam_question'));
+
+                // Input examp_question_extend_grades
+                $grades = $this->input->post('grade');
+
+                $data = [];
+                foreach ($grades as $k => $v) {
+                    $data[] = [
+                        'grade_id' => enc($v, 1),
+                        'exam_question_id' => $exam_question_id,
+                    ];
+                }
+
+                $save = $this->eq_grade->save_batch($data);
+
+                if ($save['status'] == '200') {
+                    $this->db->trans_commit();
+                    $this->session->set_flashdata('message', $save['message']);
+                    redirect(base_url('app/exam_question'));
+                } else {
+                    $this->create($this->input->post());
+                }
+
             } else {
                 $this->create($this->input->post());
             }
@@ -175,9 +205,9 @@ class Exam_question extends MY_Controller
 
         // Cek Soal apakah sudah ada
         $cek = $this->data->find(0, [
-			'a.period_id' => enc($this->input->post('period'), 1),
-			'a.study_id' => enc($this->input->post('study'), 1)
-		], true);
+            'a.period_id' => enc($this->input->post('period'), 1),
+            'a.study_id' => enc($this->input->post('study'), 1),
+        ], true);
 
         if ($cek && enc($cek[0]['id'], 1) != enc($this->input->post('id'), 1)) {
             if ($cek[0]['is_del'] == '1') {

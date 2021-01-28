@@ -31,6 +31,7 @@
                                 <th style="width:20%">Aksi</th>
                                 <th>Periode</th>
                                 <th>Mata Uji</th>
+                                <th>Kelas</th>
                                 <th>Soal Tersedia</th>
                                 <th>Dibuat</th>
                             </tr>
@@ -61,6 +62,7 @@
                                 </td>
                                 <td><?= $v['period']?></td>
                                 <td><?= $v['studi']?></td>
+                                <td><?= $v['grade']?></td>
                                 <td><?= $v['jsoal']?></td>
                                 <td><?= $v['created_by'] . '<br><small>'. $v['created_at'] .'</small>' ?></td>
                             </tr>

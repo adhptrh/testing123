@@ -1,5 +1,5 @@
 <div class="row row-xs">
-  <div class="col-md-12">
+  <div class="col-md-6">
     <div class="card">
       <div class="card-body">
         <?= form_open(base_url('data/study/update')); ?>

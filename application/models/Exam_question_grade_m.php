@@ -1,23 +1,23 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Exam_question_m extends MY_Model {
+class Exam_question_grade_m extends MY_Model {
 
   public function __construct()
   {
     parent::__construct();
-    $this->name = 'exam_questions';
-    $this->alias = 'Soal';
+    $this->name = 'exam_question_extend_grades';
+    $this->alias = 'Distribusi Soal terhadap Kelas';
 
     $this->rules = [
       [
-        'field' => 'period_id',
-        'label' => 'Periode',
+        'field' => 'grade_id',
+        'label' => 'Kelas',
         'rules' => 'required',
       ],
       [
-        'field' => 'study_id',
-        'label' => 'Mata Uji',
+        'field' => 'exam_question_id',
+        'label' => 'Soal',
         'rules' => 'required',
       ],
     ];
@@ -25,38 +25,19 @@ class Exam_question_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.period_id, a.study_id, a.is_del')
+    $this->db->select('a.id,a.is_del')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
-    ->select('d.name period')
-    ->select('e.name studi')
-    ->select('f.jsoal')
-    ->select('g.grade')
+    ->select('count(f.id) jsoal')
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
-    ->join('periods d', 'd.id = a.period_id', 'left')
-    ->join('studies e', 'e.id = a.study_id', 'left')
-    ->join('(
-      SELECT    a.id, a.exam_question_id, count(a.id) jsoal
-      FROM      exam_question_extend_details a
-      WHERE     a.is_del = "0"
-      GROUP BY  a.exam_question_id
-    ) f', 'f.exam_question_id = a.id', 'left')
-    ->join('(
-      SELECT    a.id, a.exam_question_id,
-                GROUP_CONCAT(c.name SEPARATOR "<br/>") grade
-      FROM      exam_question_extend_grades a
-      JOIN      grade_extend_periods b ON b.id = a.grade_id
-      JOIN      grades c ON c.id = b.grade_id
-      WHERE     a.is_del = "0"
-      GROUP BY  a.exam_question_id
-    ) g', 'g.exam_question_id = a.id', 'left')
     ->group_by('a.id')
     ->order_by('a.id', 'ASC');
 
     if(!$show_del){
-      $this->db->where('a.is_del', '0');
+      $this->db->where('a.is_del', '0')
+      ->where('f.is_del', '0');
     }
 
     $this->db->order_by('a.id', 'desc');
@@ -70,8 +51,6 @@ class Exam_question_m extends MY_Model {
 
       $data = $this->db->get()->row_array();
       $data['id'] = enc($data['id']);
-      $data['period_id'] = enc($data['period_id']);
-      $data['study_id'] = enc($data['study_id']);
 
 
       return $data;
@@ -93,8 +72,6 @@ class Exam_question_m extends MY_Model {
         }
 
         $data[$k]['id'] = enc($v['id']);
-        $data[$k]['period_id'] = enc($v['period_id']);
-        $data[$k]['study_id'] = enc($v['study_id']);
       }
 
       return $data;
