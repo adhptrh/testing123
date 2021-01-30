@@ -209,4 +209,9 @@ class MY_Controller extends CI_Controller
         }
     }
 
+    public function ptime($tanggal = "12-06-1987", $format = "Y-m-d")
+    {
+        return date($format, strtotime($tanggal));
+    }
+
 }

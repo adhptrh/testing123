@@ -11,14 +11,14 @@
 
                 <div class="form-group d-none">
                     <label>ID</label>
-                    <input name="id" type="text" class="form-control"
-                        value="0" readonly>
+                    <input name="id" type="text" class="form-control" value="0" readonly>
                 </div>
 
                 <div class="form-group">
                     <?php $var = 'period'; ?>
                     <label>Periode</label>
-                    <select id="bperiod" name="<?= $var; ?>" class="custom-select select2 <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>">
+                    <select id="bperiod" name="<?= $var; ?>"
+                        class="custom-select select2 <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>">
                         <option></option>
                         <?php foreach ($period as $k => $v): ?>
 
@@ -32,7 +32,8 @@
                 <div class="form-group">
                     <?php $var = 'grade'; ?>
                     <label>Kelas</label>
-                    <select id="bgrade" name="<?= $var; ?>" class="custom-select select2 <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>">
+                    <select id="bgrade" name="<?= $var; ?>"
+                        class="custom-select select2 <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>">
                         <option></option>
                     </select>
                     <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>

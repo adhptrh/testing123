@@ -15,7 +15,8 @@ class Exam_schedule extends MY_Controller {
 		$this->controller_id = 15;
 		$this->load->model('Exam_schedule_m', 'data');
 		$this->load->model('Period_m', 'period');
-		$this->load->model('Study_m', 'study');
+		$this->load->model('Exam_question_m', 'exam');
+		$this->load->model('Order_m', 'order');
   }
 
 	/**
@@ -55,12 +56,30 @@ class Exam_schedule extends MY_Controller {
 			]);
 	}
 
+	public function get_json(){
+		$this->filter(2);
+		$post = $this->input->post('filter');
+
+		if(isset($post['period'])){
+            $filter = [
+                'a.period_id' => enc($post['period'], 1)
+            ];
+        }
+
+        $data = [
+            'token' => $this->security->get_csrf_hash(),
+			'exam' => $this->exam->find(false, $filter),
+		];
+        echo json_encode($data);
+	}
+
 	public function create($old = [])
 	{
 		$this->filter(1);
 
 		$this->header = [
 			'title' => 'Jadwal Ujian',
+			'js_file' => 'app/es',
 			'sub_title' => 'Tambah Jadwal Ujian',
 			'nav_active' => 'app/exam_schedule',
 			'breadcrumb' => [
@@ -90,7 +109,7 @@ class Exam_schedule extends MY_Controller {
 		$this->temp('app/exam_schedule/create', [
 			'old' => $old,
 			'period' => $this->period->find(),
-			'study' => $this->study->find(),
+			'order' => $this->order->find(),
 		]);
 	}
 
@@ -99,7 +118,11 @@ class Exam_schedule extends MY_Controller {
 		$this->filter(1);
 
 		// Cek Jadwal Ujian apakah sudah ada
-		$data = $this->data->find(0, ['a.name' => $this->input->post('name')], true);
+		$data = $this->data->find(0, [
+			'a.exam_question_id' => enc($this->input->post('exam'), 1),
+			'a.order_id' => enc($this->input->post('order'), 1),
+			'a.date' => $this->ptime($this->input->post('date')),
+		], true);
 
 		if($data){
 		  if($data[0]['is_del'] == '1'){
@@ -111,10 +134,15 @@ class Exam_schedule extends MY_Controller {
 			$this->create($this->input->post());
 		}else{
 			$save = [
-				'name' => $this->input->post('name'),
+				'exam_question_id' => enc($this->input->post('exam'), 1),
+				'order_id' => enc($this->input->post('order'), 1),
+				'date' => $this->ptime($this->input->post('date')),
+				'start' => $this->input->post('start'),
+				'finish' => $this->input->post('finish'),
 			];
 
 			$save = $this->data->save($save);
+
 			if($save['status'] == '200'){
 				$this->session->set_flashdata('message', $save['message']);
 				redirect(base_url('app/exam_schedule'));

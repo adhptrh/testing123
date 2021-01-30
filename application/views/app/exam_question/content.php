@@ -61,7 +61,7 @@
                                     </div>
                                 </td>
                                 <td><?= $v['period']?></td>
-                                <td><?= $v['studi']?></td>
+                                <td><?= $v['exam']?></td>
                                 <td><?= $v['grade']?></td>
                                 <td><?= $v['jsoal']?></td>
                                 <td><?= $v['created_by'] . '<br><small>'. $v['created_at'] .'</small>' ?></td>

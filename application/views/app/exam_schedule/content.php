@@ -26,10 +26,12 @@
             <thead>
               <tr>
                 <th>#</th>
-                <th style="width:20%">Aksi</th>
-                <th>Periode</th>
-                <th>Waktu Mulai</th>
-                <th>Waktu Selesai</th>
+                <th>Aksi</th>
+                <th>Soal</th>
+                <th>Kelas</th>
+                <th>Tanggal</th>
+                <th>Sesi</th>
+                <th>Waktu</th>
                 <th>Token</th>
                 <th>Dibuat</th>
               </tr>
@@ -46,13 +48,15 @@
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="<?= base_url('app/exam_schedule/edit/' . $v['id']); ?>"><i class="fas fa-edit"></i> Edit</a>
                         <a class="dropdown-item hapus" href="#" data-href="<?= base_url('app/exam_schedule/delete/' . $v['id']); ?>"><i class="fas fa-trash"></i> Hapus</a>
+                        <a class="dropdown-item token" href="#" data-href=""><i class="fas fa-key"></i> Token</a>
                       </div>
                     </div>
                   </td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
+                  <td><?= $v['study'] ?></td>
+                  <td><?= $v['grade'] ?></td>
+                  <td><?= $v['date'] ?></td>
+                  <td><?= $v['order'] ?></td>
+                  <td><?= $v['start'] . ' - ' . $v['finish'] ?></td>
                   <td>-</td>
                   <td><?= $v['created_by'] . '<br><small>'. $v['created_at'] .'</small>' ?></td>
                 </tr>
