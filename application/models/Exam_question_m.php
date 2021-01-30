@@ -47,7 +47,7 @@ class Exam_question_m extends MY_Model {
       SELECT    a.id, a.exam_question_id,
                 GROUP_CONCAT(c.name SEPARATOR "<br/>") grade
       FROM      exam_question_extend_grades a
-      JOIN      grade_extend_periods b ON b.id = a.grade_id
+      JOIN      grade_extend_periods b ON b.id = a.grade_period_id
       JOIN      grades c ON c.id = b.grade_id
       WHERE     a.is_del = "0"
       GROUP BY  a.exam_question_id

@@ -43,6 +43,7 @@
                     </select>
                     <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>
                 </div>
+                
                 <div class="form-group">
                     <?php $var = 'grade'; ?>
                     <label>Kelas</label>

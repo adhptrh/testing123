@@ -17,7 +17,7 @@ class Exam_question extends MY_Controller
         $this->load->model('Exam_question_m', 'data');
         $this->load->model('Exam_question_grade_m', 'eq_grade');
         $this->load->model('Study_m', 'study');
-        $this->load->model('Grade_m', 'grade');
+        $this->load->model('Grade_period_m', 'grade');
         $this->load->model('Period_m', 'period');
     }
 
@@ -138,8 +138,8 @@ class Exam_question extends MY_Controller
                 $data = [];
                 foreach ($grades as $k => $v) {
                     $data[] = [
-                        'grade_id' => enc($v, 1),
                         'exam_question_id' => $exam_question_id,
+                        'grade_period_id' => enc($v, 1),
                     ];
                 }
 
@@ -166,6 +166,7 @@ class Exam_question extends MY_Controller
         $this->header = [
             'title' => 'Soal',
             'sub_title' => 'Ubah Soal',
+            'js_file' => 'app/eq',
             'nav_active' => 'app/exam_question',
             'breadcrumb' => [
                 [
@@ -191,8 +192,20 @@ class Exam_question extends MY_Controller
             ],
         ];
 
+        $id = enc($id, 1);
+
+        $grade = $this->eq_grade->find(false, [
+            'a.exam_question_id' => $id,
+        ]);
+
+        $dgrade_selected = [];
+        foreach ($grade as $k => $v) {
+            $dgrade_selected[] = enc($v['grade_period_id'], 1);
+        }
+
         $this->temp('app/exam_question/edit', [
-            'data' => $data = $this->data->find(enc($id, 1)),
+            'data' => $data = $this->data->find($id),
+            'grade' => $this->grade->find(false, false, false, $dgrade_selected),
             'study' => $this->study->find(false, false, false, enc($data['study_id'], 1)),
             'period' => $this->period->find(false, false, false, enc($data['period_id'], 1)),
             'old' => $old,
@@ -202,6 +215,7 @@ class Exam_question extends MY_Controller
     public function update()
     {
         $this->filter(3);
+        $id = enc($this->input->post('id'), 1);
 
         // Cek Soal apakah sudah ada
         $cek = $this->data->find(0, [
@@ -209,7 +223,7 @@ class Exam_question extends MY_Controller
             'a.study_id' => enc($this->input->post('study'), 1),
         ], true);
 
-        if ($cek && enc($cek[0]['id'], 1) != enc($this->input->post('id'), 1)) {
+        if ($cek && enc($cek[0]['id'], 1) != $id) {
             if ($cek[0]['is_del'] == '1') {
 
                 $link = '<a href="' . base_url('app/exam_question/restore/' . $cek[0]['id']) . '" class="btn btn-sm btn-primary">Ya, kembalikan data ini</a>';
@@ -221,16 +235,42 @@ class Exam_question extends MY_Controller
             $this->edit($this->input->post('id'), $this->input->post());
         } else {
 
+            // Update examp_question
             $save = [
-                'id' => enc($this->input->post('id'), 1),
+                'id' => $id,
                 'period_id' => enc($this->input->post('period'), 1),
                 'study_id' => enc($this->input->post('study'), 1),
             ];
 
             $update = $this->data->save($save);
             if ($update['status'] == '200') {
-                $this->session->set_flashdata('message', $update['message']);
-                redirect(base_url('app/exam_question'));
+
+                // Delete examp_question_extend_grades old
+                $delete = $this->eq_grade->delete_where([
+                    'exam_question_id' => $id,
+                ]);
+
+                // Input examp_question_extend_grades
+                $grades = $this->input->post('grade');
+
+                $data = [];
+                foreach ($grades as $k => $v) {
+                    $data[] = [
+                        'exam_question_id' => $id,
+                        'grade_period_id' => enc($v, 1),
+                    ];
+                }
+
+                $save = $this->eq_grade->save_batch($data);
+
+                if ($save['status'] == '200') {
+                    $this->db->trans_commit();
+                    $this->session->set_flashdata('message', $save['message']);
+                    redirect(base_url('app/exam_question'));
+                } else {
+                    $this->edit($this->input->post('id'), $this->input->post());
+                }
+
             } else {
                 $this->edit($this->input->post('id'), $this->input->post());
             }

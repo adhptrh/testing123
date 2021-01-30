@@ -1,23 +1,23 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Exam_question_grade_m extends MY_Model {
+class Grade_period_m extends MY_Model {
 
   public function __construct()
   {
     parent::__construct();
-    $this->name = 'exam_question_extend_grades';
-    $this->alias = 'Distribusi Soal terhadap Kelas';
+    $this->name = 'grade_extend_periods';
+    $this->alias = 'Kelas';
 
     $this->rules = [
       [
-        'field' => 'grade_period_id',
-        'label' => 'Kelas',
+        'field' => 'grade_id',
+        'label' => 'Nama Kelas',
         'rules' => 'required',
       ],
       [
-        'field' => 'exam_question_id',
-        'label' => 'Soal',
+        'field' => 'period_id',
+        'label' => 'Periode',
         'rules' => 'required',
       ],
     ];
@@ -25,13 +25,18 @@ class Exam_question_grade_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.grade_period_id, a.is_del')
+    $this->db->select('a.id, a.grade_id, a.period_id, a.is_del')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
+    ->select('d.name periode')
+    ->select('e.name kelas')
+    ->select('f.name jurusan')
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
-    ->group_by('a.id')
+    ->join('periods d', 'd.id = a.period_id', 'left')
+    ->join('grades e', 'e.id = a.grade_id', 'left')
+    ->join('majors f', 'f.id = e.major_id', 'left')
     ->order_by('a.id', 'ASC');
 
     if(!$show_del){
@@ -49,7 +54,8 @@ class Exam_question_grade_m extends MY_Model {
 
       $data = $this->db->get()->row_array();
       $data['id'] = enc($data['id']);
-      $data['grade_period_id'] = enc($data['grade_period_id']);
+      $data['period_id'] = enc($data['period_id']);
+      $data['grade_id'] = enc($data['grade_id']);
 
 
       return $data;
@@ -82,7 +88,8 @@ class Exam_question_grade_m extends MY_Model {
         }
 
         $data[$k]['id'] = enc($v['id']);
-        $data[$k]['grade_period_id'] = enc($v['grade_period_id']);
+        $data[$k]['period_id'] = enc($v['period_id']);
+        $data[$k]['grade_id'] = enc($v['grade_id']);
       }
 
       return $data;

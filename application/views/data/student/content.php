@@ -27,7 +27,7 @@
               <tr>
                 <th>#</th>
                 <th style="width:20%">Aksi</th>
-                <th>Jurusan</th>
+                <th>Kelas</th>
                 <th>Name</th>
                 <th>Nomor Peserta</th>
                 <th>Dibuat</th>
@@ -48,9 +48,9 @@
                       </div>
                     </div>
                   </td>
-                  <td><?= $v['prodi'] ?></td>
-                  <td><?= $v['name'] ?></td>
-                  <td><?= $v['nopes'] ?></td>
+                  <td><?= $v['kelas'] ?></td>
+                  <td><?= $v['name'] . "<br/><small> NISN : " .$v['nisn']. "</small>"; ?></td>
+                  <td>-</td>
                   <td><?= $v['created_by'] . '<br><small>'. $v['created_at'] .'</small>' ?></td>
                 </tr>
               <?php endforeach; ?>

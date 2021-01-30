@@ -1,9 +1,10 @@
-const bmajor = document.getElementById("bmajor");
 const bgrade = document.getElementById("bgrade");
 const token_form = document.querySelector('input[name=token]');
 const id = document.querySelector('input[name=id]');
+const bperiod = document.getElementById("bperiod");
+
 let token = 0,
-    major = 0,
+    period = 0,
     grade = '';
 
 function setToken(data) {
@@ -11,33 +12,36 @@ function setToken(data) {
     token_form.value = data;
 }
 
-function setMajor(data) {
-    major = data;
+function setPeriod(data) {
+    period = data;
 }
 
 function setGrade(data) {
     opsi = '<option></option>';
     data.forEach((value, index) => {
-        opsi += '<option value="' + value.id + '">' + value.name + '</option>';
+        opsi += '<option value="' + value.id + '">' + value.kelas + '</option>';
     });
     grade = opsi;
 }
 
 setToken(token_form.value);
 
-bmajor.onchange = () => {
-    setMajor(bmajor.value);
+bperiod.onchange = () => {
+    setPeriod(bperiod.value);
     loadGrade();
 }
 
 function loadGrade() {
-    url = (id.value == 0) ? '../../reference/grade/get_json/' + major : '../../../reference/grade/get_json/' + major;
+    url = (id.value == 0) ? '../../data/grade_period/get_json/' : '../../../data/grade_period/get_json/';
 
     $.ajax({
         url: url,
         method: 'post',
         data: {
             token: token,
+            filter: {
+                'period': period
+            }
         },
         dataType: 'json',
         success: function(response) {

@@ -15,8 +15,10 @@ class Student extends MY_Controller
         parent::__construct();
         $this->controller_id = 12;
         $this->load->model('Student_m', 'data');
+        $this->load->model('Student_grade_m', 'student_grade');
+        $this->load->model('Grade_period_m', 'grade');
         $this->load->model('Profile_m', 'profile');
-        $this->load->model('Major_m', 'major');
+        $this->load->model('Period_m', 'period');
     }
 
     public function index()
@@ -57,6 +59,8 @@ class Student extends MY_Controller
 
         $this->header = [
             'title' => 'Siswa',
+            'js_file' => 'data/student',
+            'sub_title' => 'Tambah Siswa',
             'sub_title' => 'Tambah Siswa',
             'nav_active' => 'data/student',
             'breadcrumb' => [
@@ -84,7 +88,7 @@ class Student extends MY_Controller
         ];
 
         $this->temp('data/student/create', [
-            'major' => $this->major->find(),
+            'period' => $this->period->find(),
             'old' => $old,
         ]);
     }
@@ -94,7 +98,7 @@ class Student extends MY_Controller
         $this->filter(1);
 
         // Cek Siswa apakah sudah ada
-        $data = $this->data->find(0, ['a.nopes' => $this->input->post('nopes')], true);
+        $data = $this->data->find(0, ['a.nisn' => $this->input->post('nisn')], true);
 
         if ($data) {
             if ($data[0]['is_del'] == '1') {
@@ -121,19 +125,29 @@ class Student extends MY_Controller
 
                 // Input siswa
                 $save = $this->data->save([
-                    'nopes' => $this->input->post('nopes'),
                     'profile_id' => $profile_id,
-                    'major_id' => enc($this->input->post('major'), 1),
+                    'nisn' => $this->input->post('nisn'),
                 ]);
+
+                $student_id = $this->db->insert_id();
 
                 if ($save['status'] != '200') {
                     $this->db->trans_rollback();
                     $this->session->set_flashdata('create_info_message', $save['message']);
                     $this->create($this->input->post());
                 } else {
-                    $this->db->trans_commit();
-                    $this->session->set_flashdata('message', $save['message']);
-                    redirect('data/student');
+                    // Input student_grade
+                    $save = $this->student_grade->save([
+                        'student_id' => $student_id,
+                        'grade_period_id' => enc($this->input->post('grade'), 1),
+                    ]);
+                    if ($save['status'] == '200') {
+                        $this->db->trans_commit();
+                        $this->session->set_flashdata('message', $save['message']);
+                        redirect(base_url('data/student'));
+                    } else {
+                        $this->create($this->input->post());
+                    }
                 }
 
             }
@@ -146,6 +160,7 @@ class Student extends MY_Controller
 
         $this->header = [
             'title' => 'Siswa',
+            'js_file' => 'data/student',
             'sub_title' => 'Ubah Siswa',
             'nav_active' => 'data/student',
             'breadcrumb' => [
@@ -172,9 +187,12 @@ class Student extends MY_Controller
             ],
         ];
 
+        $data = $this->data->find(enc($id, 1));
+
         $this->temp('data/student/edit', [
             'data' => $data = $this->data->find(enc($id, 1)),
-            'major' => $this->major->find(false, false, false, enc($data['major_id'], 1)),
+            'grade' => $this->grade->find(false, false, false, enc($data['grade_period_id'], 1)),
+            'period' => $this->period->find(false, false, false, enc($data['period_id'], 1)),
             'old' => $old,
         ]);
     }
@@ -186,9 +204,9 @@ class Student extends MY_Controller
         $id = enc($this->input->post('id'), 1);
 
         // Cek Siswa apakah sudah ada
-        $cek = $this->data->find(0, ['a.nopes' => $this->input->post('nopes')], true);
+        $cek = $this->data->find(0, ['a.nisn' => $this->input->post('nisn')], true);
 
-        if ($cek && enc($cek[0]['id'], 1) != enc($this->input->post('id'), 1)) {
+        if ($cek && enc($cek[0]['id'], 1) != $id) {
             if ($cek[0]['is_del'] == '1') {
 
                 $link = '<a href="' . base_url('data/student/restore/' . $cek[0]['id']) . '" class="btn btn-sm btn-primary">Ya, kembalikan data ini</a>';
@@ -203,7 +221,7 @@ class Student extends MY_Controller
             $this->db->trans_begin();
 
             // Input profile
-            $profile = $this->data->find(enc($this->input->post('id'), 1));
+            $profile = $this->data->find($id);
             $profile_id = enc($profile['profile_id'], 1);
 
             $save = $this->profile->save([
@@ -216,13 +234,12 @@ class Student extends MY_Controller
                 $this->session->set_flashdata('update_info_message', $save['message']);
                 $this->edit($this->input->post('id'), $this->input->post());
             } else {
-                
+
                 // Input siswa
                 $save = $this->data->save([
-                    'id' => enc($this->input->post('id'), 1),
-                    'nopes' => $this->input->post('nopes'),
+                    'id' => $id,
+                    'nisn' => $this->input->post('nisn'),
                     'profile_id' => $profile_id,
-                    'major_id' => enc($this->input->post('major'), 1),
                 ]);
 
                 if ($save['status'] != '200') {
@@ -230,9 +247,24 @@ class Student extends MY_Controller
                     $this->session->set_flashdata('update_info_message', $save['message']);
                     $this->edit($this->input->post('id'), $this->input->post());
                 } else {
-                    $this->db->trans_commit();
-                    $this->session->set_flashdata('message', $save['message']);
-                    redirect('data/student');
+                    // delete student_grade old
+                    $this->student_grade->delete_where([
+                        'student_id' => $id,
+                    ]);
+
+                    // Input student_grade
+                    $save = $this->student_grade->save([
+                        'student_id' => $id,
+                        'grade_period_id' => enc($this->input->post('grade'), 1),
+                    ]);
+
+                    if ($save['status'] == '200') {
+                        $this->db->trans_commit();
+                        $this->session->set_flashdata('message', $save['message']);
+                        redirect(base_url('data/student'));
+                    } else {
+                        $this->create($this->input->post());
+                    }
                 }
             }
         }

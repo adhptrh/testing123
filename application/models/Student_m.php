@@ -11,18 +11,13 @@ class Student_m extends MY_Model {
 
     $this->rules = [
       [
-        'field' => 'major_id',
-        'label' => 'Jurusan',
-        'rules' => 'required',
-      ],
-      [
         'field' => 'profile_id',
         'label' => 'Profile',
         'rules' => 'required',
       ],
       [
-        'field' => 'nopes',
-        'label' => 'Nomor Peserta',
+        'field' => 'nisn',
+        'label' => 'NISN',
         'rules' => 'required',
       ],
     ];
@@ -30,16 +25,20 @@ class Student_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.profile_id, a.nopes, a.is_del')
+    $this->db->select('a.id, a.profile_id, a.nisn, a.is_del')
     ->select('d.name')
-    ->select('e.id major_id, e.name prodi')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
+    ->select('g.name kelas')
+    ->select('e.id student_grade_id, e.grade_period_id')
+    ->select('f.period_id')
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
     ->join('z_profiles d', 'd.id = a.profile_id', 'left')
-    ->join('majors e', 'e.id = a.major_id', 'left')
+    ->join('student_extend_grades e', 'e.student_id = a.id', 'left')
+    ->join('grade_extend_periods f', 'f.id = e.grade_period_id', 'left')
+    ->join('grades g', 'g.id = f.grade_id', 'left')
     ->order_by('a.id', 'ASC');
 
     if(!$show_del){
@@ -57,8 +56,10 @@ class Student_m extends MY_Model {
 
       $data = $this->db->get()->row_array();
       $data['id'] = enc($data['id']);
-      $data['major_id'] = enc($data['major_id']);
       $data['profile_id'] = enc($data['profile_id']);
+      $data['student_grade_id'] = enc($data['student_grade_id']);
+      $data['grade_period_id'] = enc($data['grade_period_id']);
+      $data['period_id'] = enc($data['period_id']);
 
 
       return $data;
@@ -80,8 +81,10 @@ class Student_m extends MY_Model {
         }
 
         $data[$k]['id'] = enc($v['id']);
-        $data[$k]['major_id'] = enc($v['major_id']);
         $data[$k]['profile_id'] = enc($v['profile_id']);
+        $data[$k]['student_grade_id'] = enc($v['student_grade_id']);
+        $data[$k]['grade_period_id'] = enc($v['grade_period_id']);
+        $data[$k]['period_id'] = enc($v['period_id']);
       }
 
       return $data;
