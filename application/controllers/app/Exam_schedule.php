@@ -158,6 +158,7 @@ class Exam_schedule extends MY_Controller {
 
 		$this->header = [
 			'title' => 'Jadwal Ujian',
+			'js_file' => 'app/es',
 			'sub_title' => 'Ubah Jadwal Ujian',
 			'nav_active' => 'app/exam_schedule',
 			'breadcrumb' => [
@@ -184,8 +185,14 @@ class Exam_schedule extends MY_Controller {
 			],
 		];
 
+		$data = $this->data->find(enc($id, 1));
+		$period_id = enc($data['period_id'], 1);
+
 		$this->temp('app/exam_schedule/edit', [
-			'data' => $this->data->find(enc($id, 1)),
+			'data' => $data,
+			'period' => $this->period->find(false, false, false, $period_id),
+			'exam' => $this->exam->find(false, ['a.period_id' => $period_id], false, enc($data['exam_question_id'], 1)),
+			'order' => $this->order->find(false, false, false, enc($data['order_id'], 1)),
 			'old' => $old,
 		]);
 	}
@@ -195,7 +202,11 @@ class Exam_schedule extends MY_Controller {
 		$this->filter(3);
 
 		// Cek Jadwal Ujian apakah sudah ada
-		$cek = $this->data->find(0, ['a.name' => $this->input->post('name')], true);
+		$cek = $this->data->find(0, [
+			'a.exam_question_id' => enc($this->input->post('exam'), 1),
+			'a.order_id' => enc($this->input->post('order'), 1),
+			'a.date' => $this->ptime($this->input->post('date')),
+		], true);
 
 		if($cek && enc($cek[0]['id'], 1) != enc($this->input->post('id'), 1)){
 			if($cek[0]['is_del'] == '1'){
@@ -211,7 +222,11 @@ class Exam_schedule extends MY_Controller {
 
 			$save = [
 				'id' => enc($this->input->post('id'), 1),
-				'name' => $this->input->post('name'),
+				'exam_question_id' => enc($this->input->post('exam'), 1),
+				'order_id' => enc($this->input->post('order'), 1),
+				'date' => $this->ptime($this->input->post('date')),
+				'start' => $this->input->post('start'),
+				'finish' => $this->input->post('finish'),
 			];
 
 			$update = $this->data->save($save);

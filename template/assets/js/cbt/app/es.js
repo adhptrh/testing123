@@ -44,7 +44,7 @@ bperiod.onchange = () => {
 function loadExam() {
     $('#bexam').val([]).trigger('change');
 
-    url = (id.value == 0) ? '../../app/exam_schedule/get_json/' : '../../../data/exam_schedule/get_json/';
+    url = (id.value == 0) ? '../../app/exam_schedule/get_json/' : '../../../app/exam_schedule/get_json/';
 
     $.ajax({
         url: url,
