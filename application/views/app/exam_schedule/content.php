@@ -49,6 +49,7 @@
                         <a class="dropdown-item" href="<?= base_url('app/exam_schedule/edit/' . $v['id']); ?>"><i class="fas fa-edit"></i> Edit</a>
                         <a class="dropdown-item hapus" href="#" data-href="<?= base_url('app/exam_schedule/delete/' . $v['id']); ?>"><i class="fas fa-trash"></i> Hapus</a>
                         <a class="dropdown-item token" href="#" data-href=""><i class="fas fa-key"></i> Token</a>
+                        <a class="dropdown-item token" href="<?= base_url('app/test/main/' . $v['id']) . '/123'; ?>" data-href=""><i class="fas fa-check-square"></i> Ikuti Ujian</a>
                       </div>
                     </div>
                   </td>

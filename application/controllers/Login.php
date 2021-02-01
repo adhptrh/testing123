@@ -3,6 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Login extends CI_Controller
 {
+    private $is_siswa = 0;
 
     public function __construct()
     {
@@ -11,6 +12,9 @@ class Login extends CI_Controller
         $this->load->model('Menu_m', 'menu');
         $this->load->model('Hr_m', 'hr');
         $this->load->model('Lam_m', 'lam');
+        $this->load->model('Student_m', 'student');
+        $this->load->model('Student_grade_m', 'student_grade');
+        $this->load->model('Period_m', 'period');
     }
 
     public function index()
@@ -48,6 +52,30 @@ class Login extends CI_Controller
 
         } else {
             return true;
+        }
+    }
+
+    private function set_is_siswa($profile_id)
+    {
+        $student_id = $this->student->find(false, [
+            'a.profile_id' => $profile_id,
+        ]);
+
+        if ($student_id) {
+            $period_active = $this->period->find(false, ['a.status' == 1]);
+
+            $cek = $this->student_grade->find(false, [
+                'a.student_id' => enc($student_id[0]['id'], 1),
+                'e.status' => 1, // Periode yang aktif
+            ]);
+
+            if ($cek) {
+                $this->is_siswa = enc($cek[0]['id'], 1);
+            } else {
+                // Siswa belum punya kelas pada periode ini
+                $this->session->set_flashdata('message', 'Anda belum memiliki kelas');
+                redirect(base_url('login'));
+            }
         }
     }
 
@@ -97,12 +125,12 @@ class Login extends CI_Controller
         return $token;
     }
 
-    private function get_menu($get_hr)
+    private function get_menu($profile)
     {
         $menudb = $this->menu->find();
 
         $get_lam_read_role = $this->lam->find(false, [
-            'a.level_id' => enc($get_hr[0]['level_id'], 1),
+            'a.level_id' => enc($profile['level_id'], 1),
             'a.xread' => 1,
         ]);
 
@@ -126,22 +154,44 @@ class Login extends CI_Controller
 
     private function assign_session($get_user)
     {
-        // Human Resources
-        $get_hr = $this->hr->find(false, [
-            'a.profile_id' => enc($get_user[0]['profile_id'], 1),
-        ]);
+        $profile_id = enc($get_user[0]['profile_id'], 1);
 
-        // List of Access Modifier
-        $get_lam = $this->lam->find(false, [
-            'a.level_id' => enc($get_hr[0]['level_id'], 1),
-        ]);
+        //Set is_siswa jika ini adalah siswa
+        $this->set_is_siswa($profile_id);
 
-        $profile = array(
-            'profile_id' => $get_user[0]['id'],
-            'name' => $get_hr[0]['name'],
-            'level' => $get_hr[0]['level_name'],
-            'level_id' => $get_hr[0]['level_id'],
-        );
+        if ($this->is_siswa) { // Jika ini adalah siswa
+            // List of Access Modifier
+            $get_lam = $this->lam->find(false, [
+                'a.level_id' => 4, // ID Level for siswa
+            ]);
+
+            $profile = array(
+                'profile_id' => $get_user[0]['id'],
+                'name' => $get_user[0]['name'],
+                'level' => 'Siswa',
+                'level_id' => enc(4),
+                'student_grade_id' => $this->is_siswa,
+            );
+
+        } else { // jika ini bukan siswa
+            // Human Resources
+            $get_hr = $this->hr->find(false, [
+                'a.profile_id' => $profile_id,
+            ]);
+
+            // List of Access Modifier
+            $get_lam = $this->lam->find(false, [
+                'a.level_id' => enc($get_hr[0]['level_id'], 1),
+            ]);
+
+            $profile = array(
+                'profile_id' => $get_user[0]['id'],
+                'name' => $get_hr[0]['name'],
+                'level' => $get_hr[0]['level_name'],
+                'level_id' => $get_hr[0]['level_id'],
+                'student_grade_id' => 0,
+            );
+        }
 
         $token = $this->get_token();
 
@@ -149,7 +199,7 @@ class Login extends CI_Controller
             'token' => $token,
             'profile' => $profile,
             'lam' => $get_lam,
-            'menu' => $this->get_menu($get_hr),
+            'menu' => $this->get_menu($profile),
         ]);
 
         // Update token di table user

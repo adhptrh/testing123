@@ -31,6 +31,8 @@ class Student_grade_m extends MY_Model {
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
+    ->join('grade_extend_periods d', 'd.id = a.grade_period_id', 'left')
+    ->join('periods e', 'e.id = d.period_id', 'left')
     ->order_by('a.id', 'ASC');
 
     if(!$show_del){

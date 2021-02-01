@@ -44,6 +44,7 @@
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="<?= base_url('data/student/edit/' . $v['id']); ?>"><i class="fas fa-edit"></i> Edit</a>
+                        <a class="dropdown-item" href="<?= base_url('data/student/reset_password/' . $v['id']); ?>"><i class="fas fa-redo"></i> Reset Password</a>
                         <a class="dropdown-item hapus" href="#" data-href="<?= base_url('data/student/delete/' . $v['id']); ?>"><i class="fas fa-trash"></i> Hapus</a>
                       </div>
                     </div>

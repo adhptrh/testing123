@@ -7,9 +7,7 @@
 <script src="<?= base_url('template/'); ?>lib/feather-icons/feather.min.js"></script>
 <script src="<?= base_url('template/'); ?>lib/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="<?= base_url('template/'); ?>assets/js/dashforge.js"></script>
-<script src="<?= base_url('template/'); ?>assets/js/dashforge.aside.js">
-// <script src="<?= base_url('template/'); ?>assets/js/dashforge.settings.js">
-</script>
+<script src="<?= base_url('template/'); ?>assets/js/dashforge.aside.js"></script>
 <script src="<?= base_url('template/'); ?>lib/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('template/'); ?>lib/datatables.net-dt/js/dataTables.dataTables.min.js"></script>
 <script src="<?= base_url('template/'); ?>lib/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
@@ -65,6 +63,7 @@ $('.goToSelectedUrl').on('change', function() {
 $('.date').datepicker({
     dateFormat: "dd-mm-yy"
 });
+
 </script>
 </body>
 

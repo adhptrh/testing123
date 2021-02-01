@@ -238,6 +238,32 @@ class MY_Model extends CI_Model {
     }
   }
 
+  public function replace($data)
+  {
+    /*
+    * --------------------------------------------------------------------------
+    * REPLACE berdasaran id
+    * --------------------------------------------------------------------------
+    *
+    * Comment Here
+    *
+    */
+
+    $replace = $this->db->replace($this->table, $data);
+
+    if($replace){
+      return [
+        'status' => '200',
+        'message' => 'Data ' . $this->alias . ' berhasil diubah',
+      ];
+    }else{
+      return [
+        'status' => '400',
+        'message' => 'Data ' . $this->alias . ' tidak berhasil dihapus',
+      ];
+    }
+  }
+
   public function restore($id)
   {
     /*

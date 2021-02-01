@@ -99,7 +99,7 @@
 
               <div class="form-group">
                 <label>Email address</label>
-                <input name="username" type="email" class="form-control <?= $invalid = (form_error('username')) ? 'is-invalid' : ''  ?>" placeholder="nama@email.com" value="<?= $this->input->post('username'); ?>">
+                <input name="username" type="text" class="form-control <?= $invalid = (form_error('username')) ? 'is-invalid' : ''  ?>" placeholder="nama@email.com" value="<?= $this->input->post('username'); ?>">
                 <div class="invalid-feedback">
                   <?= form_error('username') ?>
                 </div>

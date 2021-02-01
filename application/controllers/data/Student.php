@@ -19,6 +19,7 @@ class Student extends MY_Controller
         $this->load->model('Grade_period_m', 'grade');
         $this->load->model('Profile_m', 'profile');
         $this->load->model('Period_m', 'period');
+        $this->load->model('User_m', 'user');
     }
 
     public function index()
@@ -93,6 +94,17 @@ class Student extends MY_Controller
         ]);
     }
 
+    private function generate_random_string($length = 4)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
     public function save()
     {
         $this->filter(1);
@@ -123,33 +135,47 @@ class Student extends MY_Controller
             } else {
                 $profile_id = $this->db->insert_id();
 
-                // Input siswa
-                $save = $this->data->save([
+                // Input username
+                $password = $this->generate_random_string();
+                $save = $this->user->save([
                     'profile_id' => $profile_id,
-                    'nisn' => $this->input->post('nisn'),
+                    'username' => $this->input->post('nisn'),
+                    'password' => password_hash($password, PASSWORD_DEFAULT),
+                    'pass_siswa' => $password,
                 ]);
-
-                $student_id = $this->db->insert_id();
 
                 if ($save['status'] != '200') {
                     $this->db->trans_rollback();
                     $this->session->set_flashdata('create_info_message', $save['message']);
                     $this->create($this->input->post());
                 } else {
-                    // Input student_grade
-                    $save = $this->student_grade->save([
-                        'student_id' => $student_id,
-                        'grade_period_id' => enc($this->input->post('grade'), 1),
+                    // Input siswa
+                    $save = $this->data->save([
+                        'profile_id' => $profile_id,
+                        'nisn' => $this->input->post('nisn'),
                     ]);
-                    if ($save['status'] == '200') {
-                        $this->db->trans_commit();
-                        $this->session->set_flashdata('message', $save['message']);
-                        redirect(base_url('data/student'));
-                    } else {
+
+                    $student_id = $this->db->insert_id();
+
+                    if ($save['status'] != '200') {
+                        $this->db->trans_rollback();
+                        $this->session->set_flashdata('create_info_message', $save['message']);
                         $this->create($this->input->post());
+                    } else {
+                        // Input student_grade
+                        $save = $this->student_grade->save([
+                            'student_id' => $student_id,
+                            'grade_period_id' => enc($this->input->post('grade'), 1),
+                        ]);
+                        if ($save['status'] == '200') {
+                            $this->db->trans_commit();
+                            $this->session->set_flashdata('message', $save['message']);
+                            redirect(base_url('data/student'));
+                        } else {
+                            $this->create($this->input->post());
+                        }
                     }
                 }
-
             }
         }
     }
@@ -220,11 +246,11 @@ class Student extends MY_Controller
 
             $this->db->trans_begin();
 
-            // Input profile
+            // Update profile
             $profile = $this->data->find($id);
             $profile_id = enc($profile['profile_id'], 1);
 
-            $save = $this->profile->save([
+            $save = $this->profile->update([
                 'id' => $profile_id,
                 'name' => $this->input->post('name'),
             ]);
@@ -235,35 +261,48 @@ class Student extends MY_Controller
                 $this->edit($this->input->post('id'), $this->input->post());
             } else {
 
-                // Input siswa
-                $save = $this->data->save([
-                    'id' => $id,
-                    'nisn' => $this->input->post('nisn'),
+                // Update username------------------
+                $save = $this->user->replace([
                     'profile_id' => $profile_id,
+                    'username' => $this->input->post('nisn'),
                 ]);
 
                 if ($save['status'] != '200') {
                     $this->db->trans_rollback();
-                    $this->session->set_flashdata('update_info_message', $save['message']);
-                    $this->edit($this->input->post('id'), $this->input->post());
+                    $this->session->set_flashdata('create_info_message', $save['message']);
+                    $this->create($this->input->post());
                 } else {
-                    // delete student_grade old
-                    $this->student_grade->delete_where([
-                        'student_id' => $id,
+                    $save = $this->data->save([
+                        'id' => $id,
+                        'nisn' => $this->input->post('nisn'),
+                        'profile_id' => $profile_id,
                     ]);
-
-                    // Input student_grade
-                    $save = $this->student_grade->save([
-                        'student_id' => $id,
-                        'grade_period_id' => enc($this->input->post('grade'), 1),
-                    ]);
-
-                    if ($save['status'] == '200') {
-                        $this->db->trans_commit();
-                        $this->session->set_flashdata('message', $save['message']);
-                        redirect(base_url('data/student'));
+    
+                    if ($save['status'] != '200') {
+                        $this->db->trans_rollback();
+                        $this->session->set_flashdata('update_info_message', $save['message']);
+                        $this->edit($this->input->post('id'), $this->input->post());
                     } else {
-                        $this->create($this->input->post());
+
+                        // find id student_grade old
+                        $data = $this->student_grade->find(false, [
+                            'student_id' => $id,
+                            'grade_period_id' => enc($this->input->post('grade'), 1),
+                        ]);
+    
+                        // Input student_grade
+                        $save = $this->student_grade->replace([
+                            'id' => enc($data[0]['id'], 1), 
+                            'grade_period_id' => enc($this->input->post('grade'), 1),
+                        ]);
+    
+                        if ($save['status'] == '200') {
+                            $this->db->trans_commit();
+                            $this->session->set_flashdata('message', $save['message']);
+                            redirect(base_url('data/student'));
+                        } else {
+                            $this->create($this->input->post());
+                        }
                     }
                 }
             }

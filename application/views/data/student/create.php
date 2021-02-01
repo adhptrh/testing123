@@ -57,6 +57,15 @@
                     <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>
                 </div>
 
+                <div class="form-group">
+                    <label>Password</label>
+                    <?php $var = 'password'; ?>
+                    <input name="<?= $var; ?>" type="password"
+                        class="form-control <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>"
+                        value="<?= $isi = (isset($old[$var])) ? $old[$var] : ''; ?>">
+                    <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>
+                </div>
+
             </div>
             <div class="card-footer">
                 <a href="<?= base_url('data/student') ?>" class="btn btn-sm btn-danger" type="button" name="">Batal</a>
