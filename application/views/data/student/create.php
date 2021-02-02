@@ -15,31 +15,6 @@
                 </div>
 
                 <div class="form-group">
-                    <?php $var = 'period'; ?>
-                    <label>Periode</label>
-                    <select id="bperiod" name="<?= $var; ?>"
-                        class="custom-select select2 <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>">
-                        <option></option>
-                        <?php foreach ($period as $k => $v): ?>
-
-                        <option value="<?= $v['id'] ?>"><?= $v['name'] ?></option>
-
-                        <?php endforeach; ?>
-                    </select>
-                    <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>
-                </div>
-
-                <div class="form-group">
-                    <?php $var = 'grade'; ?>
-                    <label>Kelas</label>
-                    <select id="bgrade" name="<?= $var; ?>"
-                        class="custom-select select2 <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>">
-                        <option></option>
-                    </select>
-                    <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>
-                </div>
-
-                <div class="form-group">
                     <label>Nama</label>
                     <?php $var = 'name'; ?>
                     <input name="<?= $var; ?>" type="text"
@@ -52,15 +27,6 @@
                     <label>NISN</label>
                     <?php $var = 'nisn'; ?>
                     <input name="<?= $var; ?>" type="text"
-                        class="form-control <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>"
-                        value="<?= $isi = (isset($old[$var])) ? $old[$var] : ''; ?>">
-                    <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>
-                </div>
-
-                <div class="form-group">
-                    <label>Password</label>
-                    <?php $var = 'password'; ?>
-                    <input name="<?= $var; ?>" type="password"
                         class="form-control <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>"
                         value="<?= $isi = (isset($old[$var])) ? $old[$var] : ''; ?>">
                     <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>

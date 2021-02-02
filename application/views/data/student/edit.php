@@ -16,30 +16,6 @@
                 </div>
 
                 <div class="form-group">
-                    <?php $var = 'period'; ?>
-                    <label>Periode</label>
-                    <select id="bperiod" name="<?= $var; ?>" class="custom-select select2 <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>">
-                        <option></option>
-                        <?php foreach ($period as $k => $v): ?>
-                        <option <?=$v['selected']?> value="<?= $v['id'] ?>"><?= $v['name'] ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>
-                </div>
-
-                <div class="form-group">
-                    <?php $var = 'grade'; ?>
-                    <label>Kelas</label>
-                    <select id="bgrade" name="<?= $var; ?>" class="custom-select select2 <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>">
-                        <option></option>
-                        <?php foreach ($grade as $k => $v): ?>
-                        <option <?=$v['selected']?> value="<?= $v['id'] ?>"><?= $v['kelas'] ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>
-                </div>
-
-                <div class="form-group">
                     <label>Nama</label>
                     <?php $var = 'name';?>
                     <input name="<?=$var;?>" type="text"
