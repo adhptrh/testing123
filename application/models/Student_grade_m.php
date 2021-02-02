@@ -25,14 +25,19 @@ class Student_grade_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.is_del')
+    $this->db->select('a.id, a.student_id, a.is_del')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
+    ->select('d.period_id')
+    ->select('f.nisn')
+    ->select('g.name')
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
     ->join('grade_extend_periods d', 'd.id = a.grade_period_id', 'left')
     ->join('periods e', 'e.id = d.period_id', 'left')
+    ->join('students f', 'f.id = a.student_id', 'left')
+    ->join('z_profiles g', 'g.id = f.profile_id', 'left')
     ->order_by('a.id', 'ASC');
 
     if(!$show_del){
@@ -50,6 +55,8 @@ class Student_grade_m extends MY_Model {
 
       $data = $this->db->get()->row_array();
       $data['id'] = enc($data['id']);
+      $data['student_id'] = enc($data['student_id']);
+      $data['period_id'] = enc($data['period_id']);
 
 
       return $data;
@@ -71,6 +78,8 @@ class Student_grade_m extends MY_Model {
         }
 
         $data[$k]['id'] = enc($v['id']);
+        $data[$k]['student_id'] = enc($v['student_id']);
+        $data[$k]['period_id'] = enc($v['period_id']);
 
       }
 

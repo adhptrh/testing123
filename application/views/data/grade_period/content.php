@@ -30,6 +30,7 @@
                 <th>Periode</th>
                 <th>Jurusan</th>
                 <th>Kelas</th>
+                <th>Jusmlah Siswa</th>
                 <th>Dibuat</th>
               </tr>
             </thead>
@@ -43,6 +44,7 @@
                         Pilih
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="<?= base_url('data/student_grade/create/' . $v['id']); ?>" data-href=""><i class="fas fa-users"></i> Daftar Siswa</a>
                         <a class="dropdown-item" href="<?= base_url('data/grade_period/edit/' . $v['id']); ?>"><i class="fas fa-edit"></i> Edit</a>
                         <a class="dropdown-item hapus" href="#" data-href="<?= base_url('data/grade_period/delete/' . $v['id']); ?>"><i class="fas fa-trash"></i> Hapus</a>
                       </div>
@@ -51,6 +53,7 @@
                   <td><?= $v['periode']; ?></td>
                   <td><?= $v['jurusan']; ?></td>
                   <td><?= $v['kelas']; ?></td>
+                  <td>-</td>
                   <td><?= $v['created_by'] . '<br><small>'. $v['created_at'] .'</small>' ?></td>
                 </tr>
               <?php endforeach; ?>

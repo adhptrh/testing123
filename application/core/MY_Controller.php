@@ -19,6 +19,13 @@ class MY_Controller extends CI_Controller
         $this->sure_check(); // Cek apakah login nya sah
     }
 
+    // public function get_token_json(){
+    //     $this->filter(2);
+    //     echo json_encode([
+    //         'token' => $this->security->get_csrf_hash()
+    //     ]);
+    // }
+
     protected function sure_check()
     {
         /**
