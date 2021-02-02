@@ -124,7 +124,8 @@ class Student_grade extends MY_Controller
 
     public function get_student_grade_json(){
         $this->filter(2);
-        $data['data'] = $this->data->find();
+        $post = $this->input->post('filter');
+        $data['data'] = $this->data->find(false, ['a.grade_period_id' => enc($post['gradePeriod'], 1)]);
         $data['token'] = $this->security->get_csrf_hash();
         
         echo json_encode($data);

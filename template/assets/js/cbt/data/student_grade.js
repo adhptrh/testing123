@@ -85,12 +85,13 @@ function createTable() {
 }
 
 function generate_row() {
+    createTable();
     const tableRef = document.querySelector('.dtable').getElementsByTagName('tbody')[0];
     studentGrade.forEach((item, index) => {
         html = `
             <tr>
             <td>${index + 1}</td>
-            <td><button class='btn btn-sm btn-warning'>Hapus</button></td>
+            <td><button class='btn btn-sm btn-danger'>Hapus</button></td>
             <td>${item['name']}</td>
             <td>${item['nisn']}</td>
             </tr>
@@ -116,7 +117,6 @@ function loadStudentGrade() {
         success: function(response) {
             setToken(response.token);
             setStudentGrade(response.data);
-            createTable();
             generate_row();
         }
 
