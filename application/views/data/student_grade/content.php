@@ -1,8 +1,5 @@
 <?= form_open('#') . form_close() ?>
 <div class="card">
-    <div class="card-header tx-medium">
-        Daftar Siswa
-    </div>
     <div class="card-body">
         <div class="row">
             <div class="col">
@@ -32,6 +29,12 @@
 </div>
 
 <div id="fContent" class="card mg-t-10 d-none">
+    <div class="card-header tx-medium d-flex align-items-center justify-content-between">
+        <span id="hContent" >Daftar Siswa</span>
+        <div class="d-flex align-items-center tx-18">
+            <a href="#" id="bCloseAddForm" class="link-03 lh-0"><i class="icon ion-md-close"></i></a>
+        </div>
+    </div>
     <div class="card-body">
         <div class="row">
             <div id="dContent" class="col">

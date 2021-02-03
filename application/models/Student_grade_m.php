@@ -12,7 +12,7 @@ class Student_grade_m extends MY_Model {
     $this->rules = [
       [
         'field' => 'student_id',
-        'label' => 'Jurusan',
+        'label' => 'Siswa',
         'rules' => 'required',
       ],
       [
