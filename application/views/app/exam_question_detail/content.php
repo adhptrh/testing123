@@ -19,7 +19,7 @@
             </div>
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <h6 class="mg-t-10">Mata Uji : <?= $exam_question['studi'] ?> (<span id="jsoal"><?= $exam_question['jsoal'] ?></span> butir
+                    <h6 class="mg-t-10">Mata Uji : <?= $exam_question['exam'] ?> (<span id="jsoal"><?= $exam_question['jsoal'] ?></span> butir
                         soal)</h6>
                     <div class=d-flex align-items-center tx-18">
                         <a href="<?= base_url('app/exam_question'); ?>"

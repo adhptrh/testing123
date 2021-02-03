@@ -24,11 +24,12 @@ class Exam_question_detail extends MY_Controller
         $this->filter(1);
 
         $eid = enc($exam_question_id, 1);
+
         $exam_question = $this->exam_question->find($eid);
 
         $this->header = [
             'title' => 'Butir Soal',
-            'js_file' => 'app/exam_question_detail/eqd',
+            'js_file' => 'app/eqd',
             'sub_title' => 'Tambah Butir Soal',
             'nav_active' => 'app/exam_question',
             'breadcrumb' => [
@@ -48,7 +49,7 @@ class Exam_question_detail extends MY_Controller
                     'href' => '#',
                 ],
                 [
-                    'label' => $exam_question['studi'],
+                    'label' => $exam_question['exam'],
                     'icon' => 'fa-list',
                     'href' => base_url('app/exam_question_detail'),
                 ],
