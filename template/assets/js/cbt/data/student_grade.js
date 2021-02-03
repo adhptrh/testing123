@@ -72,7 +72,6 @@ bgrade.onchange = () => {
 }
 
 function createTable() {
-    fContent.classList.remove('d-none');
     dContent.innerHTML = `
     <div class="row">
     <div class="col-md-6">
@@ -121,6 +120,7 @@ function generate_row() {
 }
 
 function loadStudentGrade() {
+    fContent.classList.remove('d-none');
     dContent.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div>';
     url = '../data/student_grade/get_student_grade_json';
     const xtoken = token;
