@@ -129,7 +129,7 @@
 
     <footer class="footer">
       <div>
-        <span>&copy; 2020 XPanel v4.0.0. </span>
+        <span>&copy; 2020 - 2021 XPanel v4.0.0. </span>
         <span>Created by <a href="#">Labschool Software Engineering</a></span>
       </div>
       <div>

@@ -11,12 +11,32 @@ let token = 0,
     period = 0,
     grade = '',
     html = '',
+    studentGrades = 0,
     students = 0,
     student = 0,
+    orders = 0,
+    order = 0,
+    ID = 0,
     gradePeriod = 0;
+
+function setID(data) {
+    ID = data;
+}
 
 function setStudent(data) {
     student = data;
+}
+
+function setStudentGrades(data) {
+    studentGrades = data;
+}
+
+function setOrder(data) {
+    order = data;
+}
+
+function setOrders(data) {
+    orders = data;
 }
 
 function setToken(data) {
@@ -28,7 +48,7 @@ function setPeriod(data) {
     period = data;
 }
 
-function setStudentData(data) {
+function setStudents(data) {
     students = data;
 }
 
@@ -72,6 +92,22 @@ function loadGrade() {
     })
 }
 
+function loadOrders() {
+    url = '../data/student_grade/get_orders/';
+    $.ajax({
+        url: url,
+        method: 'post',
+        data: {
+            token: token,
+        },
+        dataType: 'json',
+        success: function(response) {
+            setToken(response.token);
+            setOrders(response.data);
+        }
+    })
+}
+
 bgrade.onchange = () => {
     fContent.classList.add('d-none');
     setGradePeriod(bgrade.value);
@@ -82,7 +118,48 @@ bCloseAddForm.addEventListener('click', () => {
     loadStudentGrade()
 })
 
-function createTable(status = 'list') {
+loadOrders();
+
+function createTableList() {
+    dContent.innerHTML = `
+    <div class="row">
+    <div class="col-md-6">
+      <div class="input-group mg-b-10">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+        </div>
+        <input type="text" class="form-control dtp_cari" placeholder="Cari di sini" aria-label="Username" aria-describedby="basic-addon1">
+      </div>
+    </div>
+    <div class="col-md-6 d-none d-md-block">
+      <a id="bAdd" href="#" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-plus"></i> Tambah</a>
+    </div>
+    </div>
+    <table class='dtable table table-striped'>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th style="width:20%">Aksi</th>
+                <th>Nama</th>
+                <th>NISN</th>
+                <th>Pilih Sesi</th>
+            </tr>
+        </thead>
+        <tbody id='tStudentGrade'>
+        </tbody>
+    </table>
+    `;
+
+    hContent.innerHTML = 'Daftar Siswa';
+    bCloseAddForm.classList.add('d-none');
+
+    const bAdd = document.getElementById('bAdd');
+    bAdd.addEventListener('click', () => {
+        loadStudentNonGrade();
+    })
+}
+
+function createTableAdd() {
     dContent.innerHTML = `
     <div class="row">
     <div class="col-md-6">
@@ -111,20 +188,9 @@ function createTable(status = 'list') {
     </table>
     `;
 
-    const bAdd = document.getElementById('bAdd');
-
-    if (status != 'list') {
-        bAdd.classList.add('d-none');
-        hContent.innerHTML = 'Silahkan pilih siswa untuk menambahkan';
-        bCloseAddForm.classList.remove('d-none');
-    } else {
-        hContent.innerHTML = 'Daftar Siswa';
-        bCloseAddForm.classList.add('d-none');
-    }
-
-    bAdd.addEventListener('click', () => {
-        loadStudentNonGrade();
-    })
+    bAdd.classList.add('d-none');
+    hContent.innerHTML = 'Silahkan pilih siswa untuk menambahkan';
+    bCloseAddForm.classList.remove('d-none');
 }
 
 function deleteStudent() {
@@ -135,7 +201,7 @@ function deleteStudent() {
         method: 'post',
         data: {
             token: token,
-            student: student,
+            ID: ID,
         },
         dataType: 'json',
         success: function(response) {
@@ -156,6 +222,7 @@ function addStudent() {
             token: token,
             student: student,
             grade_period: gradePeriod,
+            period: period,
         },
         dataType: 'json',
         success: function(response) {
@@ -167,23 +234,52 @@ function addStudent() {
 }
 
 function generate_row() {
-    createTable();
+    createTableList();
     const tableRef = document.querySelector('.dtable').getElementsByTagName('tbody')[0];
-    students.forEach((item, index) => {
+    studentGrades.forEach((item, index) => {
         html = `
             <tr>
             <td>${index + 1}</td>
             <td><button data-id='${item['id']}' class='btn btn-sm btn-danger bDelete'>Hapus</button></td>
             <td>${item['name']}</td>
             <td>${item['nisn']}</td>
+            <td class='order'></td>
             </tr>
         `;
         tableRef.insertRow().innerHTML = html;
 
+        const fOrder = document.getElementsByClassName('order');
+        let bOrders = '';
+
+        orders.forEach((item1) => {
+            let button = 'btn-outline-success';
+            if (item1['name'] == item['order']) {
+                button = 'btn-success';
+            }
+            bOrders += `<button data-student-grade-id="${item['id']}" data-order-id="${item1['id']}" class="bOrder btn btn-sm ${button} mg-r-5">${item1['name']}</button>`;
+        });
+        fOrder[index].innerHTML = bOrders;
+
+        bOrders = fOrder[index].querySelectorAll('.bOrder');
+
+        bOrders.forEach((item2) => {
+            item2.addEventListener('click', (e) => {
+                setID(item2.getAttribute('data-student-grade-id'));
+                setOrder(item2.getAttribute('data-order-id'));
+                saveOrder();
+                bOrders.forEach((item2) => {
+                    item2.classList.remove('btn-success');
+                    item2.classList.add('btn-outline-success');
+                });
+                item2.classList.remove('btn-outline-success');
+                item2.classList.add('btn-success');
+            })
+        });
+
         const bDelete = document.getElementsByClassName('bDelete');
         bDelete[index].addEventListener('click', (e) => {
-            setStudent(e.target.getAttribute('data-id'));
-            deleteStudent();
+            setID(e.target.getAttribute('data-id'));
+            isConfirm();
         })
 
     });
@@ -191,7 +287,8 @@ function generate_row() {
 }
 
 function generate_row_nongrade() {
-    createTable('edit');
+
+    createTableAdd();
     const tableRef = document.querySelector('.dtable').getElementsByTagName('tbody')[0];
     students.forEach((item, index) => {
         html = `
@@ -232,7 +329,7 @@ function loadStudentGrade() {
         success: function(response) {
             dContent.innerHTML = '';
             setToken(response.token);
-            setStudentData(response.data);
+            setStudentGrades(response.data);
             generate_row();
         }
 
@@ -256,9 +353,43 @@ function loadStudentNonGrade() {
         success: function(response) {
             dContent.innerHTML = '';
             setToken(response.token);
-            setStudentData(response.data);
+            setStudents(response.data);
             generate_row_nongrade();
         }
 
+    })
+}
+
+function saveOrder() {
+
+    url = '../data/student_grade/set_order';
+    $.ajax({
+        url: url,
+        method: 'post',
+        data: {
+            token: token,
+            order_id: order,
+            student_grade_id: ID,
+        },
+        dataType: 'json',
+        success: function(response) {
+            setToken(response.token);
+        }
+
+    })
+}
+
+function isConfirm() {
+    Swal.fire({
+        title: 'Peringatan',
+        text: "Apakah Anda yakin akan menghapus data ini?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, hapus saja!',
+        cancelButtonText: 'Batal',
+    }).then((result) => {
+        deleteStudent();
     })
 }

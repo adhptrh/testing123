@@ -18,6 +18,7 @@ class Student_grade extends MY_Controller
         $this->load->model('Student_m', 'student');
         $this->load->model('Grade_period_m', 'grade_period');
         $this->load->model('Period_m', 'period');
+        $this->load->model('Order_m', 'order');
     }
 
     public function index()
@@ -133,6 +134,15 @@ class Student_grade extends MY_Controller
         echo json_encode($data);
     }
 
+    public function get_orders()
+    {
+        $this->filter(2);
+        $data['data'] = $this->order->find();
+        $data['token'] = $this->security->get_csrf_hash();
+
+        echo json_encode($data);
+    }
+
     public function get_student_nongrade_json()
     {
         $this->filter(2);
@@ -141,7 +151,8 @@ class Student_grade extends MY_Controller
 
         // Siswa yang sudah terdaftar di periode ini.
         $data = $this->data->find(false, [
-            'd.period_id' => $grade_period_id,
+            // 'd.period_id' => $grade_period_id,
+            'e.status' => 1,
         ]);
 
         $siswa_terdaftar = [];
@@ -161,6 +172,25 @@ class Student_grade extends MY_Controller
         $student_ready = array_values($data);
         $data['data'] = $student_ready;
         $data['token'] = $this->security->get_csrf_hash();
+        $data['siswa_terdaftar'] = $siswa_terdaftar;
+
+        echo json_encode($data);
+    }
+
+    public function set_order(){
+        $student_grade_id = $this->input->post('student_grade_id');
+        $order_id = $this->input->post('order_id');
+
+        $save = $this->data->save([
+            'id' => enc($student_grade_id, 1),
+            'order_id' => enc($order_id, 1),
+        ], true);
+
+        $data = [
+            'token' => $this->security->get_csrf_hash(),
+            'query' => $this->db->last_query(),
+            'post' => $this->input->post(),
+        ];
 
         echo json_encode($data);
     }
@@ -175,10 +205,13 @@ class Student_grade extends MY_Controller
         // Get Grade_period_id
         $grade_period_id = enc($this->input->post('grade_period'), 1);
 
+        // Get Period_id
+        $period_id = enc($this->input->post('period'), 1);
+
         // Cek apakah student_id sudah pernah didelete?
         $cek = $this->data->find(false, [
             'a.student_id' => $student_id,
-            'a.grade_period_id' => $grade_period_id,
+            'e.id' => $period_id,
         ], true);
 
         if ($cek) { // Ya
@@ -221,7 +254,7 @@ class Student_grade extends MY_Controller
     public function delete()
     {
         $this->filter(4);
-        $delete = $this->data->delete($this->input->post('student'));
+        $delete = $this->data->delete($this->input->post('ID'));
 
         $this->session->set_flashdata('message', $delete['message']);
 
