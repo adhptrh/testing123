@@ -28,8 +28,13 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<div id="fContent" class="card mg-t-10 d-none">
+    <div class="card-body">
         <div class="row">
-            <div id="dcontent" class="col">
+            <div id="dContent" class="col">
             </div>
         </div>
     </div>

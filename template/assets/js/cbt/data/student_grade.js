@@ -1,7 +1,9 @@
 const bgrade = document.getElementById("bgrade");
 const token_form = document.querySelector('input[name=token]');
 const bperiod = document.getElementById("bperiod");
-const fContent = document.getElementById("dcontent");
+const dContent = document.getElementById("dContent");
+const fContent = document.getElementById("fContent");
+const dtp_cari = document.querySelector("dtp_cari");
 
 let token = 0,
     period = 0,
@@ -38,7 +40,7 @@ function setGrade(data) {
 setToken(token_form.value);
 
 bperiod.onchange = () => {
-    fContent.innerHTML = '';
+    fContent.classList.add('d-none');
     setPeriod(bperiod.value);
     loadGrade();
 }
@@ -64,13 +66,28 @@ function loadGrade() {
 }
 
 bgrade.onchange = () => {
-    fContent.innerHTML = '';
+    fContent.classList.add('d-none');
     setGradePeriod(bgrade.value);
     loadStudentGrade();
 }
 
 function createTable() {
-    fContent.innerHTML = `<table class='dtable table table-striped'>
+    fContent.classList.remove('d-none');
+    dContent.innerHTML = `
+    <div class="row">
+    <div class="col-md-6">
+      <div class="input-group mg-b-10">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+        </div>
+        <input type="text" class="form-control dtp_cari" placeholder="Cari di sini" aria-label="Username" aria-describedby="basic-addon1">
+      </div>
+    </div>
+    <div class="col-md-6 d-none d-md-block">
+      <a href="#" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-plus"></i> Tambah</a>
+    </div>
+    </div>
+    <table class='dtable table table-striped'>
         <thead>
             <tr>
                 <th>#</th>
@@ -81,7 +98,8 @@ function createTable() {
         </thead>
         <tbody id='tStudentGrade'>
         </tbody>
-    </table>`;
+    </table>
+    `;
 }
 
 function generate_row() {
@@ -98,10 +116,12 @@ function generate_row() {
         `;
         tableRef.insertRow().innerHTML = html;
     });
+
+    tInit();
 }
 
 function loadStudentGrade() {
-    fContent.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"> loading ...</div>';
+    dContent.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div>';
     url = '../data/student_grade/get_student_grade_json';
     const xtoken = token;
     $.ajax({
@@ -115,6 +135,7 @@ function loadStudentGrade() {
         },
         dataType: 'json',
         success: function(response) {
+            dContent.innerHTML = '';
             setToken(response.token);
             setStudentGrade(response.data);
             generate_row();

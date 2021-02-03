@@ -19,19 +19,23 @@
 <?= $js = (isset($header['js_file']) ? '<script src="' . base_url('template/assets/js/cbt/' . $header['js_file'] . '.js') . '"></script>' : '') ?>
 
 <script type="text/javascript">
-var t = $('.dtable').DataTable({
-    responsive: false,
-    "bLengthChange": false,
-    language: {
-        searchPlaceholder: 'Search...',
-        sSearch: '',
-        lengthMenu: '_MENU_ items/page',
-    }
-});
+function tInit() {
+    var t = $('.dtable').DataTable({
+        responsive: false,
+        "bLengthChange": false,
+        language: {
+            searchPlaceholder: 'Search...',
+            sSearch: '',
+            lengthMenu: '_MENU_ items/page',
+        }
+    });
 
-$('.dtp_cari').on('keyup', function() {
-    t.search(this.value).draw();
-});
+    $('.dtp_cari').on('keyup', function() {
+        t.search(this.value).draw();
+    });
+}
+
+tInit();
 
 $('.hapus').click(function() {
     Swal.fire({
@@ -63,7 +67,6 @@ $('.goToSelectedUrl').on('change', function() {
 $('.date').datepicker({
     dateFormat: "dd-mm-yy"
 });
-
 </script>
 </body>
 
