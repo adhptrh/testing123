@@ -11,19 +11,19 @@
                     <div class="card-body list-group list-group-flush">
                         <div class="row list-group-item d-flex">
                             <div class="col">Nama</div>
-                            <div class="col">: </div>
+                            <div class="col tx-medium">: <?= $student['name'] ?></div>
                         </div>
                         <div class="row list-group-item d-flex">
                             <div class="col">NISN</div>
-                            <div class="col">: </div>
+                            <div class="col tx-medium">: <?= $student['nisn'] ?></div>
                         </div>
                         <div class="row list-group-item d-flex">
                             <div class="col">Tempat, Tanggal Lahir</div>
-                            <div class="col">: </div>
+                            <div class="col tx-medium">: </div>
                         </div>
                         <div class="row list-group-item d-flex">
                             <div class="col">Terdaftar Pada Sesi Ujian</div>
-                            <div class="col">: </div>
+                            <div class="col tx-medium">: <?= $student['order'] ?></div>
                         </div>
                     </div>
                 </div>
@@ -36,23 +36,23 @@
                     <div class="card-body list-group list-group-flush">
                         <div class="row list-group-item d-flex">
                             <div class="col">Mata Pelajaran</div>
-                            <div class="col">: </div>
+                            <div class="col tx-medium">: <?= $data['study'] ?></div>
                         </div>
                         <div class="row list-group-item d-flex">
                             <div class="col">Jumlah Soal</div>
-                            <div class="col">: </div>
+                            <div class="col tx-medium">: <?= $data['number_of_exam'] ?></div>
                         </div>
                         <div class="row list-group-item d-flex">
                             <div class="col">Tanggal Ujian</div>
-                            <div class="col">: </div>
+                            <div class="col tx-medium">: <?= $data['date'] ?></div>
                         </div>
                         <div class="row list-group-item d-flex">
                             <div class="col">Waktu Ujian</div>
-                            <div class="col">: </div>
+                            <div class="col tx-medium">: <?= $data['start'] . ' s.d ' . $data['finish'] . '<br/> &nbsp;&nbsp;&nbsp;<small>' . $data['durasi'] ?> </small></div>
                         </div>
                         <div class="row list-group-item d-flex">
                             <div class="col">Sesi</div>
-                            <div class="col">: </div>
+                            <div class="col tx-medium">: <?= $data['order'] ?></div>
                         </div>
                     </div>
                 </div>

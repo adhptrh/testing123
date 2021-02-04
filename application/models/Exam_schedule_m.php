@@ -42,7 +42,13 @@ class Exam_schedule_m extends MY_Model
 
     public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
     {
-        $this->db->select('a.id, a.is_del, a.start, a.finish, UNIX_TIMESTAMP(NOW()) time_server_now, UNIX_TIMESTAMP(DATE_FORMAT(CONCAT(CURDATE() ," ", a.finish), "%Y-%m-%d %H:%i:%s")) time_left, UNIX_TIMESTAMP(DATE_FORMAT(CONCAT(CURDATE() ," ", a.start), "%Y-%m-%d %H:%i:%s")) time_start, a.order_id, a.exam_question_id')
+        $this->db->select('a.id, a.is_del, DATE_FORMAT(a.start, "%H:%i") start')
+            ->select('DATE_FORMAT(TIMEDIFF(a.finish, a.start), "%H Jam %i menit") durasi')
+            ->select('a.number_of_exam, DATE_FORMAT(a.finish, "%H:%i") finish') 
+            ->select('UNIX_TIMESTAMP(NOW()) time_server_now')
+            ->select('UNIX_TIMESTAMP(DATE_FORMAT(CONCAT(CURDATE() ," ", a.finish), "%Y-%m-%d %H:%i:%s")) time_left')
+            ->select('UNIX_TIMESTAMP(DATE_FORMAT(CONCAT(CURDATE() ," ", a.start), "%Y-%m-%d %H:%i:%s")) time_start')
+            ->select('a.order_id, a.exam_question_id')
             ->select('DATE_FORMAT(a.date, "%d-%m-%Y") date')
             ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
             ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')

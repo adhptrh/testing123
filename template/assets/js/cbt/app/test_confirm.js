@@ -1,49 +1,83 @@
-const bConfirmDataYes = document.querySelector('#bConfirmDataYes'),
-    bConfirmDataNo = document.querySelector('#bConfirmDataNo'),
-    ConfirmToken = document.querySelector('#confirmToken'),
-    bConfirmToken = document.querySelector('#bConfirmToken'),
-    confirmCountdown = document.querySelector('#confirmCountdown'),
-    confirmInfo = document.querySelector('#confirmInfo'),
-    bStartTest = document.querySelector('#bStartTest'),
-    tTimeLeft = document.querySelector('#tTimeLeft'),
-    examSchedule = document.querySelector('#examScheduleID'),
-    token_form = document.querySelector('input[name=token]');
+const token_form = document.querySelector('input[name=token]');
+// bConfirmDataYes = document.querySelector('#bConfirmDataYes'),
+// bConfirmDataNo = document.querySelector('#bConfirmDataNo'),
+// ConfirmToken = document.querySelector('#confirmToken'),
+// bConfirmToken = document.querySelector('#bConfirmToken'),
+// confirmCountdown = document.querySelector('#confirmCountdown'),
+// confirmInfo = document.querySelector('#confirmInfo'),
+// bStartTest = document.querySelector('#bStartTest'),
+// tTimeLeft = document.querySelector('#tTimeLeft'),
+// examSchedule = document.querySelector('#examScheduleID'),
 
 let timeNow = new Date().getTime(),
-    timeTarget = new Date().getTime();
+    timeTarget = new Date().getTime(),
+    examSchedule = 0;
 
-function getExamInfo() {
+examSchedule = examScheduleID.getAttribute('data-id');
+
+function getTimeInfo() {
     $.ajax({
         url: '../../get_header_data/' + examSchedule,
         method: 'post',
         data: {
-            token: token_form.value,
+            token: token_form,
         },
         dataType: 'json',
         success: function(response) {
             token_form.value = response.token;
-            tStudy.innerHTML = response.study;
-            tOrder.innerHTML = response.order;
-            timeLeft = new Date(response.time_left * 1000).getTime();
-            timeServerNow = new Date(response.time_server_now * 1000).getTime();
-            showTimeLeft();
+            timeTarget = new Date(response.time_start * 1000).getTime();
+            timeNow = new Date(response.time_server_now * 1000).getTime();
         }
     })
 }
 
-console.log(examSchedule);
+bConfirmDataNo.addEventListener('click', () => {
+    Swal.fire({
+        title: 'Info',
+        text: "Silahkan hubungi pihak penyelenggara ujian.",
+        icon: 'warning',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK',
+    }).then((result) => {})
+});
 
 bConfirmDataYes.addEventListener('click', () => {
-    ConfirmToken.classList.remove('d-none')
+    confirmToken.classList.remove('d-none')
     bConfirmDataYes.disabled = true;
     bConfirmDataNo.disabled = true;
 })
 
 bConfirmToken.addEventListener('click', () => {
-    confirmCountdown.classList.remove('d-none')
-    bConfirmToken.disabled = true;
-    iConfirmToken.disabled = true;
-    showTimeLeft(timeTarget, timeNow);
+    $.ajax({
+        url: '../cek_token/',
+        method: 'post',
+        data: {
+            token: token_form.value,
+            examSchedule: examSchedule,
+            token_exam: iConfirmToken.value,
+        },
+        dataType: 'json',
+        success: function(response) {
+            token_form.value = response.token;
+            if (response.token_exam == 1) {
+                timeTarget = new Date(response.time_start * 1000).getTime();
+                timeNow = new Date(response.time_server_now * 1000).getTime();
+
+                confirmCountdown.classList.remove('d-none')
+                bConfirmToken.disabled = true;
+                iConfirmToken.disabled = true;
+                showTimeLeft(timeTarget, timeNow);
+            } else {
+                Swal.fire({
+                    title: 'Info',
+                    text: "Token Salah",
+                    icon: 'warning',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK',
+                }).then((result) => {})
+            }
+        }
+    })
 })
 
 function showConfirmInfo() {
