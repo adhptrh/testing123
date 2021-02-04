@@ -5,6 +5,6 @@
         </div>
     </div>
 </div>
-<div id="examQuestionDetails" class="d-none">
+<div id="examQuestionDetails" class="">
     <?php $this->load->view("app/test/create"); ?>
 </div>

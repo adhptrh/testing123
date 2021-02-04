@@ -193,6 +193,7 @@ function loadExamDetail(data) {
         },
         dataType: 'json',
         success: function(response) {
+            console.log(response);
             soal.setContents(response.soal);
             opsi_a.setContents(response.opsi_a);
             opsi_b.setContents(response.opsi_b);

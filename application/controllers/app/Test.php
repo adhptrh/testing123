@@ -53,6 +53,45 @@ class Test extends MY_Controller
         $this->temp('app/test/content', [
             'data' => [],
         ]);
+    }
+    
+    public function confirm($exam_schedule_id)
+    {
+        $this->filter(2);
+
+        $this->header = [
+			'title' => 'Ujian',
+            'js_file' => 'app/test_confirm',
+            'sub_title' => 'Konfirmasi Biodata dan Ujian',
+            'nav_active' => 'app/test',
+            'breadcrumb' => [
+                [
+                    'label' => 'XPanel',
+                    'icon' => 'fa-home',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Aplikasi',
+                    'icon' => 'fa-gear',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Ujian',
+                    'icon' => '',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Konfirmasi Data',
+                    'icon' => '',
+                    'href' => '#',
+                ],
+            ],
+        ];
+
+        $this->temp('app/test/confirm', [
+            'exam_schedule_id' => $exam_schedule_id,
+            'data' => [],
+        ]);
 	}
 
 	public function is_register($exam_schedule_id, $student_grade_id){

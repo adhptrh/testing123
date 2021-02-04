@@ -27,29 +27,29 @@ let timeLeft = 0,
     studentAnswer = '',
     token = 0;
 
-is_register();
+// register();
 
 function is_register() {
     loading('Memeriksa register peserta ujian');
 }
 
 function register() {
-    // $.ajax({
-    //     url: '../../get_header_data/' + examSchedule,
-    //     method: 'post',
-    //     data: {
-    //         token: token_form.value,
-    //     },
-    //     dataType: 'json',
-    //     success: function(response) {
-    //         token_form.value = response.token;
-    //         tStudy.innerHTML = response.study;
-    //         tOrder.innerHTML = response.order;
-    //         timeLeft = new Date(response.time_left * 1000).getTime();
-    //         timeServerNow = new Date(response.time_server_now * 1000).getTime();
-    //         showTimeLeft();
-    //     }
-    // })
+    $.ajax({
+        url: '../../get_header_data/' + examSchedule,
+        method: 'post',
+        data: {
+            token: token_form.value,
+        },
+        dataType: 'json',
+        success: function(response) {
+            token_form.value = response.token;
+            tStudy.innerHTML = response.study;
+            tOrder.innerHTML = response.order;
+            timeLeft = new Date(response.time_left * 1000).getTime();
+            timeServerNow = new Date(response.time_server_now * 1000).getTime();
+            showTimeLeft();
+        }
+    })
 }
 
 //set_numbers_of_exam
@@ -76,8 +76,6 @@ function showTimeLeft() {
 
         // Find the distance between now and the count down date
         var distance = timeLeft - timeServerNow;
-        a = new Date(timeLeft).toLocaleTimeString("en-US");
-        b = new Date(now).toLocaleTimeString("en-US");
 
         // Time calculations for days, hours, minutes and seconds
         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));

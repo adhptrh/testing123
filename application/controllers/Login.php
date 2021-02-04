@@ -70,7 +70,7 @@ class Login extends CI_Controller
             ]);
 
             if ($cek) {
-                $this->is_siswa = enc($cek[0]['id'], 1);
+                $this->is_siswa = $cek[0]['id'];
             } else {
                 // Siswa belum punya kelas pada periode ini
                 $this->session->set_flashdata('message', 'Anda belum memiliki kelas');

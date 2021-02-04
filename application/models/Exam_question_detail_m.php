@@ -289,7 +289,6 @@ class Exam_question_detail_m extends MY_Model
                             $pos_all[$n + 1]['type'] = 1;
                         }
                     }
-
                 }
             }
         }
@@ -299,14 +298,15 @@ class Exam_question_detail_m extends MY_Model
         foreach ($pos_all as $k => $v) {
             // $pos_all[$k]['content'] = substr($str, $v['start'], ($v['end'] - $v['start']));
 
-            if($v['type'] == 0){
+            if ($v['type'] == 0) {
                 $data = [
                     'insert' => substr($str, $v['start'], ($v['end'] - $v['start'])),
                 ];
-            }else{
+            } else {
+                $base64 = $this->img_to_base64(base_url(substr($str, $v['start'], ($v['end'] - $v['start']))));
                 $data = [
                     'insert' => [
-                        'image' => "../../../" . substr($str, $v['start'], ($v['end'] - $v['start'])),
+                        'image' => $base64,
                     ],
                 ];
             }
@@ -314,7 +314,14 @@ class Exam_question_detail_m extends MY_Model
             $content[$k] = $data;
         }
 
-       return $content;
+        return $content;
+    }
+
+    private function img_to_base64($path){
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        return $base64;
     }
 
 }

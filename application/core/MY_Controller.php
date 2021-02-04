@@ -11,20 +11,13 @@ class MY_Controller extends CI_Controller
      *
      */
 
-    protected $controller_id, $header = [];
+    protected $controller_id, $header = [], $student_grade_id = 0;
 
     public function __construct()
     {
         parent::__construct();
         $this->sure_check(); // Cek apakah login nya sah
     }
-
-    // public function get_token_json(){
-    //     $this->filter(2);
-    //     echo json_encode([
-    //         'token' => $this->security->get_csrf_hash()
-    //     ]);
-    // }
 
     protected function sure_check()
     {
@@ -45,6 +38,16 @@ class MY_Controller extends CI_Controller
         if (!$lookup) {
             redirect(base_url('login'));
         }
+    }
+
+    protected function set_student_grade_id()
+    {
+        /**
+         * Mendapatkan student grade id dari session
+         *
+         */
+        $data = $this->session->userdata('profile');
+        $this->student_grade_id = $data['student_grade_id'];
     }
 
     protected function filter($way)

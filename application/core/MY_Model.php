@@ -29,6 +29,11 @@ class MY_Model extends CI_Model
         return enc($this->session->userdata('profile')['level_id'], 1);
     }
 
+    protected function get_student_grade_id()
+    {
+        return enc($this->session->userdata('profile')['student_grade_id'], 1);
+    }
+
     protected function get_time()
     {
         return date('Y-m-d H:i:s');
