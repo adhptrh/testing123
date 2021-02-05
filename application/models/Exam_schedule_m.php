@@ -48,6 +48,12 @@ class Exam_schedule_m extends MY_Model
             ->select('UNIX_TIMESTAMP(NOW()) time_server_now')
             ->select('UNIX_TIMESTAMP(DATE_FORMAT(CONCAT(CURDATE() ," ", a.finish), "%Y-%m-%d %H:%i:%s")) time_left')
             ->select('UNIX_TIMESTAMP(DATE_FORMAT(CONCAT(CURDATE() ," ", a.start), "%Y-%m-%d %H:%i:%s")) time_start')
+            ->select('IF( 
+                UNIX_TIMESTAMP( NOW() ) >= UNIX_TIMESTAMP( CONCAT( CURDATE(), " ", a.start ) ) 
+                AND UNIX_TIMESTAMP( NOW() ) <= UNIX_TIMESTAMP( CONCAT( CURDATE(), " ", a.finish ) ),
+                1,
+                0 
+                ) intime')
             ->select('a.order_id, a.exam_question_id')
             ->select('DATE_FORMAT(a.date, "%d-%m-%Y") date')
             ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')

@@ -25,7 +25,7 @@ class Student_grade_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.order_id, a.student_id, a.is_del')
+    $this->db->select('a.id, a.order_id, a.student_id, a.is_del, a.grade_period_id')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
     ->select('d.period_id')
@@ -59,6 +59,7 @@ class Student_grade_m extends MY_Model {
       $data['id'] = enc($data['id']);
       $data['student_id'] = enc($data['student_id']);
       $data['period_id'] = enc($data['period_id']);
+      $data['grade_period_id'] = enc($data['grade_period_id']);
 
 
       return $data;
@@ -82,6 +83,7 @@ class Student_grade_m extends MY_Model {
         $data[$k]['id'] = enc($v['id']);
         $data[$k]['student_id'] = enc($v['student_id']);
         $data[$k]['period_id'] = enc($v['period_id']);
+        $data[$k]['grade_period_id'] = enc($v['grade_period_id']);
 
       }
 

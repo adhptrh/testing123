@@ -31,6 +31,10 @@ function getTimeInfo() {
     })
 }
 
+bStartTest.addEventListener('click', () => {
+    window.location.href = `../execute/${examSchedule}`;
+})
+
 bConfirmDataNo.addEventListener('click', () => {
     Swal.fire({
         title: 'Info',
