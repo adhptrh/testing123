@@ -73,6 +73,7 @@ class MY_Model extends CI_Model
                     $respon = [
                         'status' => '200',
                         'message' => 'Data ' . $this->alias . ' berhasil disimpan',
+                        'id' => enc($data['id']),
                     ];
                 }
             } else {
@@ -80,6 +81,7 @@ class MY_Model extends CI_Model
                     $respon = [
                         'status' => '400',
                         'message' => validation_errors(),
+                        'id' => 0,
                     ];
                 } else {
                     $this->db->where('id', $data['id']);
@@ -87,6 +89,7 @@ class MY_Model extends CI_Model
                         $respon = [
                             'status' => '200',
                             'message' => 'Data ' . $this->alias . ' berhasil disimpan',
+                            'id' => enc($data['id']),
                         ];
                     }
                 }
@@ -101,12 +104,14 @@ class MY_Model extends CI_Model
                 $respon = [
                     'status' => '400',
                     'message' => validation_errors(),
+                    'id' => 0,
                 ];
             } else {
                 if ($this->db->insert($this->name, $data)) {
                     $respon = [
                         'status' => '200',
                         'message' => 'Data ' . $this->alias . ' berhasil disimpan',
+                        'id' => enc($this->db->insert_id()),
                     ];
                 }
             }

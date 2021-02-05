@@ -1,4 +1,6 @@
-<div id="exam_schedule_id"></div>
+<div data-value="<?= $exam_schedule_id; ?>" id="examSchedule"></div>
+<div data-value="<?= $student_grade_exam_id; ?>" id="studentGradeExam"></div>
+<div data-value="<?= $exam_question_id; ?>" id="examQuestion"></div>
 <?=form_open('#') . form_close();?>
 <div class="card mg-b-10">
     <div class="card-body">
@@ -48,7 +50,7 @@
             <div id="tListOfNumber" class="card-body text-center">
                 <?php
                     for ($i = 0; $i < $number_of_exam; $i++) {
-                        echo '<button type="button" class="btn btn-sm btn-outline-primary mg-r-5 mg-b-5 w-15">' . $no = ($i < 9) ? '0' . ($i + 1) : ($i + 1) . '</button>';
+                        echo '<button data-answer="0" data-exam-item="0" data-number="0" type="button" class="bExamItems btn btn-sm btn-outline-secondary mg-r-5 mg-b-5 w-15">' . $no = ($i < 9) ? '0' . ($i + 1) : ($i + 1) . '</button>';
                     }
                 ?>
             </div>

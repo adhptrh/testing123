@@ -54,9 +54,19 @@ class Exam_question_detail_m extends MY_Model
         ];
     }
 
-    public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
+    public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0, $is_student = false)
     {
-        $this->db->select('a.id, a.exam_question_id, a.question, a.opsi_a, a.opsi_b, a.opsi_c, a.opsi_d, a.opsi_e, a.keyword, a.is_del')
+        if($is_student){
+            if($id){
+                $select = 'a.question, a.opsi_a, a.opsi_b, a.opsi_c, a.opsi_d, a.opsi_e, a.is_del';
+            }else{
+                $select = 'a.id';
+            }
+        }else{
+            $select = 'a.id, a.exam_question_id, a.question, a.opsi_a, a.opsi_b, a.opsi_c, a.opsi_d, a.opsi_e, a.keyword, a.is_del';
+        }
+
+        $this->db->select()
             ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
             ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
             ->from($this->name . ' a')

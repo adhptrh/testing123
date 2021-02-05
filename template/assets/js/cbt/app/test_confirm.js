@@ -1,13 +1,4 @@
 const token_form = document.querySelector('input[name=token]');
-// bConfirmDataYes = document.querySelector('#bConfirmDataYes'),
-// bConfirmDataNo = document.querySelector('#bConfirmDataNo'),
-// ConfirmToken = document.querySelector('#confirmToken'),
-// bConfirmToken = document.querySelector('#bConfirmToken'),
-// confirmCountdown = document.querySelector('#confirmCountdown'),
-// confirmInfo = document.querySelector('#confirmInfo'),
-// bStartTest = document.querySelector('#bStartTest'),
-// tTimeLeft = document.querySelector('#tTimeLeft'),
-// examSchedule = document.querySelector('#examScheduleID'),
 
 let timeNow = new Date().getTime(),
     timeTarget = new Date().getTime(),

@@ -14,7 +14,10 @@ class Test extends MY_Controller
     {
         parent::__construct();
         $this->controller_id = 17;
-        $this->load->model('Exam_schedule_m', 'exam');
+        $this->load->model('Exam_m', 'exam');
+        $this->load->model('Exam_schedule_m', 'exam_schedule');
+        $this->load->model('Exam_temp_m', 'exam_temp');
+        $this->load->model('Exam_question_detail_m', 'exam_question_detail');
         $this->load->model('Student_grade_m', 'student_grade');
         $this->load->model('Student_grade_exam_m', 'student_exam');
     }
@@ -28,7 +31,7 @@ class Test extends MY_Controller
     public function execute($exam_schedule = 0)
     {
         $this->filter(1);
-      
+
         $this->header = [
             'title' => 'Ujian',
             'js_file' => 'app/execute',
@@ -53,7 +56,7 @@ class Test extends MY_Controller
             ],
         ];
 
-        if($exam_schedule === 0){
+        if ($exam_schedule === 0) {
             $this->temp('app/test/info', [
                 'info' => 'Maaf, Anda belum menentukan Mata Uji, silahkan cek menu jadwal ujian',
             ]);
@@ -68,7 +71,7 @@ class Test extends MY_Controller
         $student_grade = $this->student_grade->find($sgi);
 
         $cek_access = false;
-        $data = $this->exam->find(false, [
+        $data = $this->exam_schedule->find(false, [
             'a.order_id' => $student_grade['order_id'], # Cek sesi
             'a.token' => $this->session->userdata('token_exam'), # Cek Token
         ]);
@@ -95,6 +98,9 @@ class Test extends MY_Controller
                     // Dapatkan daftar soal dan jawaban
                     // arahkan ke laman ujian
                     $this->temp('app/test/content', [
+                        'student_grade_exam_id' => $is_register[0]['id'],
+                        'exam_schedule_id' => $exam_schedule,
+                        'exam_question_id' => $data[0]['exam_question_id'],
                         'number_of_exam' => $data[0]['number_of_exam'],
                         'study' => $data[0]['study'],
                         'order' => $data[0]['order'],
@@ -119,6 +125,9 @@ class Test extends MY_Controller
 
                     // arahkan ke laman ujian
                     $this->temp('app/test/content', [
+                        'exam_schedule_id' => $exam_schedule,
+                        'student_grade_exam_id' => $regis['id'],
+                        'exam_question_id' => $data[0]['exam_question_id'],
                         'number_of_exam' => $data[0]['number_of_exam'],
                         'study' => $data[0]['study'],
                         'order' => $data[0]['order'],
@@ -188,23 +197,150 @@ class Test extends MY_Controller
 
         $this->temp('app/test/confirm', [
             'exam_schedule_id' => $exam_schedule_id,
-            'data' => $this->exam->find(enc($exam_schedule_id, 1)),
+            'data' => $this->exam_schedule->find(enc($exam_schedule_id, 1)),
             'student' => $this->student_grade->find(enc($this->student_grade_id, 1)),
         ]);
     }
 
-    // public function is_register($exam_schedule_id, $student_grade_id)
+    // public function get_exam_detail()
     // {
     //     $this->filter(2);
+    //     $exam_question_id = $this->input->post('exam_question_id');
+    //     $exam_schedule_id = $this->input->post('exam_schedule_id');
+    //     $exam_items = $this->input->post('exam_items');
+    //     $exam_item = $this->input->post('exam_item');
+    //     $student_grade_exam_id = $this->input->post('student_grade_exam_id');
+
+    //     // apakah exam_item = 0
+    //     if ($exam_item == 0) { // Jika ya
+    //         // cari random soal berdasarkan exam_question_id dan exam_items :: function get_question_random()
+    //         $question = get_question_random($exam_items, $exam_question_id);
+
+    //         $exam_question_detail_id = enc($question['id'], 1);
+    //         $student_grade_exam_id = enc($student_grade_exam_id, 1);
+
+    //         // save ke exam_temps dan exams
+    //         $this->db->trans_begin();
+
+    //         $save_exam_temps = $this->exam_temp->save([
+    //             'student_grade_exam_id' => $student_grade_exam_id,
+    //             'exam_question_detail_id' => $exam_question_detail_id,
+    //         ]);
+
+    //         if ($save_exam_temps['status'] == '200') {
+
+    //             $save_exam = $this->exam->save([
+    //                 'student_grade_exam_id' => $student_grade_exam_id,
+    //                 'exam_question_detail_id' => $exam_question_detail_id,
+    //             ]);
+
+    //             if ($save_exam['status'] == '200') {
+    //                 // Commit db
+    //                 $this->db->trans_commit();
+
+    //                 // send to view
+    //                 $data = [
+    //                     'token' => $this->security->get_csrf_hash(),
+    //                     'exam_item' => $exam_question_detail_id,
+    //                     'question' => $question['question'],
+    //                     'opsi_a' => $question['opsi_a'],
+    //                     'opsi_b' => $question['opsi_b'],
+    //                     'opsi_c' => $question['opsi_c'],
+    //                     'opsi_d' => $question['opsi_d'],
+    //                     'opsi_e' => $question['opsi_e'],
+    //                     'status' => $save_exam['status'],
+    //                 ];
+    //             } else {
+    //                 // Commit db
+    //                 $this->db->trans_rollback();
+
+    //                 // send to view
+    //                 $data = [
+    //                     'token' => $this->security->get_csrf_hash(),
+    //                     'exam_item' => 0,
+    //                     'question' => 0,
+    //                     'opsi_a' => 0,
+    //                     'opsi_b' => 0,
+    //                     'opsi_c' => 0,
+    //                     'opsi_d' => 0,
+    //                     'opsi_e' => 0,
+    //                     'status' => $save_exam['status'],
+    //                 ];
+    //             }
+    //         } else {
+
+    //         }
+
+    //     } else { // Jika tidak
+    //         // dapatkan soal berdasarkan exam_item dan student_grade_exam_id :: function get_question()
+    //     }
+    // }
+
+    // private function get_question_random($exam_items, $exam_question_id)
+    // {
+    //     $exam_question_ready = $this->exam_question->find(false, enc($exam_question_id, 1));
+
+    //     // Remove encryption
+    //     foreach ($exam_items as $k => $v) {
+    //         $id = enc($v, 1);
+    //         // find and unset exam_question_ready here
+    //         if (($cell = array_search($id, $exam_question_ready)) !== false) {
+    //             unset($exam_question_ready[$cell]);
+    //         }
+    //     }
+
+    //     $question = array_rand($exam_question_ready, 1);
+
+    //     return $question;
+    // }
+
+    // private function get_question($exam_item, $student_grade_exam_id)
+    // {
 
     // }
 
-    public function get_header_data($exam_schedule_id)
+    public function get_exam_detail()
+    {
+        $this->filter(2);
+        $exam_item = enc($this->input->post('exam_item'), 1);
+
+        $exam_question = $this->exam_question_detail->find($exam_item);
+        $data = [
+            'question' => $exam_question['question'],
+            'opsi_a' => $exam_question['opsi_a'],
+            'opsi_b' => $exam_question['opsi_b'],
+            'opsi_c' => $exam_question['opsi_c'],
+            'opsi_d' => $exam_question['opsi_d'],
+            'opsi_e' => $exam_question['opsi_e'],
+            'status' => $save_exam['status'],
+        ];
+
+        $data['token'] = $this->security->get_csrf_hash();
+        echo json_encode($data);
+    }
+
+    public function get_landing_data()
     {
         $this->filter(2);
 
-        $data = $this->exam_info->find(enc($exam_schedule_id, 1));
-        $data['token'] = $this->security->get_csrf_hash();
+        // $exam_schedule_id = enc($this->input->post('exam_schedule_id'), 1);
+        // $exam_question_id = enc($this->input->post('exam_question_id'), 1);
+
+        $info = $this->exam_schedule->find(enc($this->input->post('exam_schedule_id'), 1));
+
+        $exam_questions_raw = $this->exam_question_detail->find(false, [
+            'a.exam_question_id' => enc($this->input->post('exam_question_id'), 1),
+        ], false, 0, true);
+
+        $exam_questions = array_rand($exam_questions_raw, $info['number_of_exam']);
+
+        $data = [
+            'token' => $this->security->get_csrf_hash(),
+            'time_left' => $info['time_left'],
+            'time_server_now' => $info['time_server_now'],
+            'exam_questions' => $exam_questions,
+        ];
+
         echo json_encode($data);
     }
 
@@ -214,7 +350,7 @@ class Test extends MY_Controller
         $exam_schedule_id = $this->input->post('examSchedule');
         $token_exam = $this->input->post('token_exam');
 
-        $cek = $this->exam->find(false, [
+        $cek = $this->exam_schedule->find(false, [
             'a.id' => enc($exam_schedule_id, 1),
             'a.token' => $token_exam,
         ]);
