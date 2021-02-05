@@ -19,21 +19,21 @@ class Test extends MY_Controller
         $this->load->model('Student_grade_exam_m', 'student_exam');
     }
 
-    public function create()
+    // public function create()
+    // {
+    //     $this->filter(1);
+    //     $this->load->view('app/test/create');
+    // }
+
+    public function execute($exam_schedule = 0)
     {
         $this->filter(1);
-        $this->load->view('app/test/create');
-    }
-
-    public function execute($exam_schedule)
-    {
-        $this->filter(1);
-
+      
         $this->header = [
             'title' => 'Ujian',
             'js_file' => 'app/execute',
             'sub_title' => 'Pelaksanaan Ujian',
-            'nav_active' => 'app/test',
+            'nav_active' => 'app/test/execute',
             'breadcrumb' => [
                 [
                     'label' => 'XPanel',
@@ -52,6 +52,12 @@ class Test extends MY_Controller
                 ],
             ],
         ];
+
+        if($exam_schedule === 0){
+            $this->temp('app/test/info', [
+                'info' => 'Maaf, Anda belum menentukan Mata Uji, silahkan cek menu jadwal ujian',
+            ]);
+        }
 
         // get student_grade_id
         $this->set_student_grade_id();
@@ -88,7 +94,11 @@ class Test extends MY_Controller
                 if ($is_register[0]['finish_time'] == null) { // (2) Jika belum
                     // Dapatkan daftar soal dan jawaban
                     // arahkan ke laman ujian
-                    echo 'Halaman lanjutkan ujian';
+                    $this->temp('app/test/content', [
+                        'number_of_exam' => $data[0]['number_of_exam'],
+                        'study' => $data[0]['study'],
+                        'order' => $data[0]['order'],
+                    ]);
                 } else { // (2) Jika sudah
                     // Go info atau logout
                     $this->temp('app/test/info', [
@@ -104,14 +114,14 @@ class Test extends MY_Controller
                 ]);
 
                 if ($regis['status'] == '200') {
-                    // Dapatkan daftar soal
-                    $number_of_exam = $cek_access[0]['number_of_exam'];
                     // Commit db
                     $this->db->trans_commit();
 
                     // arahkan ke laman ujian
                     $this->temp('app/test/content', [
-                        'number_of_exam' => $number_of_exam,
+                        'number_of_exam' => $data[0]['number_of_exam'],
+                        'study' => $data[0]['study'],
+                        'order' => $data[0]['order'],
                     ]);
                 } else {
                     $this->db->trans_rollback();
@@ -183,11 +193,11 @@ class Test extends MY_Controller
         ]);
     }
 
-    public function is_register($exam_schedule_id, $student_grade_id)
-    {
-        $this->filter(2);
+    // public function is_register($exam_schedule_id, $student_grade_id)
+    // {
+    //     $this->filter(2);
 
-    }
+    // }
 
     public function get_header_data($exam_schedule_id)
     {

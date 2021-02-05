@@ -1,12 +1,13 @@
+<div id="exam_schedule_id"></div>
 <?=form_open('#') . form_close();?>
 <div class="card mg-b-10">
     <div class="card-body">
         <div class="row">
             <div class="col">Mata Uji : <span class="tx-medium" id="tStudy">
-                    <div class="spinner-border spinner-border-sm"></div>
+                    <?= $study; ?>
                 </span></div>
             <div class="col text-center">Sesi : <span class="tx-medium" id="tOrder">
-                    <div class="spinner-border spinner-border-sm"></div>
+                    <?= $order; ?>
                 </span></div>
             <div class="col text-right">Sisa Waktu : <span class="tx-medium" id="tTimeLeft">
                     <div class="spinner-border spinner-border-sm"></div>
@@ -46,7 +47,7 @@
             </div>
             <div id="tListOfNumber" class="card-body text-center">
                 <?php
-                    for ($i = 0; $i < 50; $i++) {
+                    for ($i = 0; $i < $number_of_exam; $i++) {
                         echo '<button type="button" class="btn btn-sm btn-outline-primary mg-r-5 mg-b-5 w-15">' . $no = ($i < 9) ? '0' . ($i + 1) : ($i + 1) . '</button>';
                     }
                 ?>

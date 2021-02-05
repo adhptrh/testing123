@@ -1,20 +1,17 @@
-const pathArray = window.location.pathname.split("/");
-const tStudy = document.getElementById("tStudy"),
-    tOrder = document.getElementById("tOrder"),
-    tTimeLeft = document.getElementById("tTimeLeft"),
-    tNotifWarning = document.getElementById("tNotif"),
-    tNotifInfo = document.getElementById("tNotifInfo"),
-    fNotifInfo = document.getElementById("fNotifInfo"),
-    tExamDetail = document.getElementById("tExamDetail"),
-    bNext = document.getElementById("bNext"),
-    bPrev = document.getElementById("bPrev"),
-    tListOfNumber = document.getElementById("tListOfNumber"),
-    examSchedule = pathArray[6],
-    studentGrade = pathArray[7],
-    token_form = document.querySelector('input[name=token]'),
-    aside = document.querySelector('.aside'),
-    pExam = document.querySelector("#exam"),
-    examQuestionDetails = document.querySelector("#examQuestionDetails"),
+const token_form = document.querySelector('input[name=token]'),
+    // aside = document.querySelector('.aside'),
+    // tOrder = document.getElementById("tOrder"),
+    // tStudy = document.getElementById("tStudy"),
+    // tTimeLeft = document.getElementById("tTimeLeft"),
+    // tNotifWarning = document.getElementById("tNotif"),
+    // tNotifInfo = document.getElementById("tNotifInfo"),
+    // fNotifInfo = document.getElementById("fNotifInfo"),
+    // tExamDetail = document.getElementById("tExamDetail"),
+    // bNext = document.getElementById("bNext"),
+    // bPrev = document.getElementById("bPrev"),
+    // exam = document.querySelector("#exam"),
+    // examQuestionDetails = document.querySelector("#examQuestionDetails"),
+    // tListOfNumber = document.getElementById("tListOfNumber"),
     today = new Date();
 
 let timeLeft = 0,
@@ -29,27 +26,27 @@ let timeLeft = 0,
 
 // register();
 
-function is_register() {
-    loading('Memeriksa register peserta ujian');
-}
+// function is_register() {
+//     loading('Memeriksa register peserta ujian');
+// }
 
-function register() {
-    $.ajax({
-        url: '../../get_header_data/' + examSchedule,
-        method: 'post',
-        data: {
-            token: token_form.value,
-        },
-        dataType: 'json',
-        success: function(response) {
-            token_form.value = response.token;
-            tStudy.innerHTML = response.study;
-            tOrder.innerHTML = response.order;
-            timeLeft = new Date(response.time_left * 1000).getTime();
-            timeServerNow = new Date(response.time_server_now * 1000).getTime();
-            showTimeLeft();
-        }
-    })
+// function register() {
+//     $.ajax({
+//         url: '../../get_header_data/' + examSchedule,
+//         method: 'post',
+//         data: {
+//             token: token_form.value,
+//         },
+//         dataType: 'json',
+//         success: function(response) {
+//             token_form.value = response.token;
+//             tStudy.innerHTML = response.study;
+//             tOrder.innerHTML = response.order;
+//             timeLeft = new Date(response.time_left * 1000).getTime();
+//             timeServerNow = new Date(response.time_server_now * 1000).getTime();
+//             showTimeLeft();
+//         }
+//     })
 }
 
 //set_numbers_of_exam
@@ -57,6 +54,7 @@ function register() {
 //set_next
 //set_prev
 //answer, lock, set_studentAnswer, post, set_next, set_prev, unlock
+loadingTime();
 
 function loading(param = 0) {
     tNotifInfo.innerHTML = param;
@@ -93,7 +91,7 @@ function showTimeLeft() {
     }, 1000);
 }
 
-function headerInfo() {
+function loadingTime() {
     $.ajax({
         url: '../../get_header_data/' + examSchedule,
         method: 'post',
@@ -103,8 +101,8 @@ function headerInfo() {
         dataType: 'json',
         success: function(response) {
             token_form.value = response.token;
-            tStudy.innerHTML = response.study;
-            tOrder.innerHTML = response.order;
+            // tStudy.innerHTML = response.study;
+            // tOrder.innerHTML = response.order;
             timeLeft = new Date(response.time_left * 1000).getTime();
             timeServerNow = new Date(response.time_server_now * 1000).getTime();
             showTimeLeft();
