@@ -30,7 +30,7 @@
         </div>
         <div class="card">
             <div class="card-header tx-medium">
-                Detail Soal
+                Detail Soal No. <span id="noExam"></span>
             </div>
             <div class="card-body">
                 <div class="d-none" id="loadIndicator">
@@ -40,39 +40,39 @@
                     <p id="tExamDetail"></p>
 
                     <div class="custom-control custom-radio mg-b-20">
-                        <input type="radio" id="ftOpsiA" name="customRadio" class="custom-control-input">
+                        <input data-value="opsi_a" type="radio" id="ftOpsiA" name="bOpsi" class="custom-control-input">
                         <label class="custom-control-label tx-medium" for="ftOpsiA">A</label>
                         <div id="tOpsiA"></div>
                     </div>
 
                     <div class="custom-control custom-radio mg-b-20">
-                        <input type="radio" id="ftOpsiB" name="customRadio" class="custom-control-input">
+                        <input data-value="opsi_b" type="radio" id="ftOpsiB" name="bOpsi" class="custom-control-input">
                         <label class="custom-control-label tx-medium" for="ftOpsiB">B</label>
                         <div id="tOpsiB"></div>
                     </div>
 
                     <div class="custom-control custom-radio mg-b-20">
-                        <input type="radio" id="ftOpsiC" name="customRadio" class="custom-control-input">
+                        <input data-value="opsi_c" type="radio" id="ftOpsiC" name="bOpsi" class="custom-control-input">
                         <label class="custom-control-label tx-medium" for="ftOpsiC">C</label>
                         <div id="tOpsiC"></div>
 
                     </div>
 
                     <div class="custom-control custom-radio mg-b-20">
-                        <input type="radio" id="ftOpsiD" name="customRadio" class="custom-control-input">
+                        <input data-value="opsi_d" type="radio" id="ftOpsiD" name="bOpsi" class="custom-control-input">
                         <label class="custom-control-label tx-medium" for="ftOpsiD">D</label>
                         <div id="tOpsiD"></div>
 
                     </div>
 
                     <div class="custom-control custom-radio mg-b-20">
-                        <input type="radio" id="ftOpsiE" name="customRadio" class="custom-control-input">
+                        <input data-value="opsi_e" type="radio" id="ftOpsiE" name="bOpsi" class="custom-control-input">
                         <label class="custom-control-label tx-medium" for="ftOpsiE">E</label>
                         <div id="tOpsiE"></div>
                     </div>
 
                     <div class="custom-control custom-radio mg-b-20">
-                        <input type="radio" id="ftOpsiX" name="customRadio" class="custom-control-input">
+                        <input data-value="dubious" type="radio" id="ftOpsiX" name="bOpsi" class="custom-control-input">
                         <label class="custom-control-label tx-medium" for="ftOpsiX">Ragu-Ragu</label>
                     </div>
                 </div>
@@ -93,8 +93,8 @@
             <div id="tListOfNumber" class="card-body text-center">
                 <?php
                     for ($i = 0; $i < $number_of_exam; $i++) {
-                        $no = $i + 1;
-                        echo '<button data-answer="0" data-exam-item="0" data-number="'. $no .'" type="button" class="bExamItems btn btn-sm btn-outline-secondary mg-r-5 mg-b-5 w-15">' . $no = ($i < 9) ? '0' . ($i + 1) : ($i + 1) . '</button>';
+                        // $no = $i + 1;
+                        echo '<button data-answer="0" data-exam-item="0" data-number="0" type="button" class="bExamItems btn btn-sm btn-outline-secondary mg-r-5 mg-b-5 w-15">' . $no = ($i < 9) ? '0' . ($i + 1) : ($i + 1) . '</button>';
                     }
                 ?>
             </div>

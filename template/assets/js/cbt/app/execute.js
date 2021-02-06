@@ -1,6 +1,7 @@
 const token_form = document.querySelector('input[name=token]'),
     today = new Date(),
-    bExamItems = document.querySelectorAll('.bExamItems');
+    bExamItems = document.querySelectorAll('.bExamItems'),
+    bOpsi = document.querySelectorAll('input[name="bOpsi"]');
 
 let timeTarget = new Date().getTime(),
     timeServerNow = new Date().getTime(),
@@ -18,7 +19,7 @@ let timeTarget = new Date().getTime(),
     studentAnswer = '',
     token = 0,
     message = 0,
-    answers = '',
+    answer = '',
     exam = 0; // ganti value nya dengan examp_temps_id
 
 bNext.addEventListener('click', () => {
@@ -29,21 +30,40 @@ bPrev.addEventListener('click', () => {
     prev();
 })
 
+bOpsi.forEach((item, index) => {
+    item.addEventListener('click', () => {
+        lock();
+        answer = item.getAttribute('data-value');
+        hitAnswer();
+    })
+});
+
 bExamItems.forEach((item, index) => {
     item.addEventListener('click', () => {
+        lock();
         exam = item.getAttribute('data-exam-item'); // ganti value nya dengan examp_temps_id
         numberOfExam = index;
         loadExamDetails();
 
         // Set all item clear
         bExamItems.forEach(item1 => {
-            item1.classList.add('btn-outline-secondary');
-            item1.classList.remove('btn-secondary');
+            if (item1.getAttribute('data-answer') == 0) {
+                item1.classList.add('btn-outline-secondary');
+                item1.classList.remove('btn-secondary');
+            }
         })
 
-        // Set this item current
-        item.classList.add('btn-secondary');
-        item.classList.remove('btn-outline-secondary');
+        // Mempertahakan tanda sudah dijawab (jika sudah dijawab)
+        answer = item.getAttribute('data-answer');
+        if (answer != 0) {
+            // tandai sudah pernah di jawab
+            bNumberButtonColor();
+        } else {
+            // Set this item current
+            item.classList.add('btn-secondary');
+            item.classList.remove('btn-outline-secondary');
+        }
+
     })
 });
 
@@ -70,6 +90,7 @@ function loadExamDetails() {
             examDetail.opsi_d = response.opsi_d;
             examDetail.opsi_e = response.opsi_e;
             showExamDetails();
+            lock(false);
         }
     })
 }
@@ -82,7 +103,8 @@ function showExamDetails() {
     tOpsiC.innerHTML = imageShow(examDetail['opsi_c']);
     tOpsiD.innerHTML = imageShow(examDetail['opsi_d']);
     tOpsiE.innerHTML = imageShow(examDetail['opsi_e']);
-    fExamDetail.classList.remove('d-none')
+    fExamDetail.classList.remove('d-none');
+    noExam.innerHTML = (numberOfExam + 1)
 }
 
 function showZero(x) {
@@ -148,10 +170,13 @@ function imageShow(data) {
 function hitAnswer() {
     // close show info
     // lock()
-    // set_answer
     // save(answer, exam)
     // if 200 -> set bNumberButtonColor -> unlock()
+    bNumberButtonColor();
+    bExamItems[numberOfExam].setAttribute('data-answer', answer);
+    // Set value ke button
     // if NOT 200 -> show info -> unlock()
+    lock(false);
 }
 
 function lock(status = 0) {
@@ -193,7 +218,15 @@ function showInfo(message = 0) {
 }
 
 function bNumberButtonColor() {
-
+    if (answer == 'dubious') {
+        bExamItems[numberOfExam].classList.add('btn-warning');
+        bExamItems[numberOfExam].classList.remove('btn-outline-secondary');
+        bExamItems[numberOfExam].classList.remove('btn-secondary');
+    } else {
+        bExamItems[numberOfExam].classList.add('btn-primary');
+        bExamItems[numberOfExam].classList.remove('btn-outline-secondary');
+        bExamItems[numberOfExam].classList.remove('btn-secondary');
+    }
 }
 
 function next() {
@@ -206,4 +239,17 @@ function prev() {
     if (numberOfExam > 0) {
         bExamItems[(numberOfExam - 1)].click();
     }
+}
+
+function lock(status = true) {
+    bOpsi.forEach(item => {
+        item.disabled = status;
+    })
+
+    bExamItems.forEach(item => {
+        item.disabled = status;
+    })
+
+    bPrev.disabled = status;
+    bNext.disabled = status;
 }
