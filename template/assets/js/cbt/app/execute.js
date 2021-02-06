@@ -15,12 +15,14 @@ let timeTarget = new Date().getTime(),
         'opsi_c': 0,
         'opsi_d': 0,
         'opsi_e': 0,
+        'answer': 0,
     },
     studentAnswer = '',
     token = 0,
     message = 0,
     answer = '',
-    exam = 0; // ganti value nya dengan examp_temps_id
+    exam = 0,
+    examQuestionDetail = 0;
 
 bNext.addEventListener('click', () => {
     next();
@@ -41,7 +43,9 @@ bOpsi.forEach((item, index) => {
 bExamItems.forEach((item, index) => {
     item.addEventListener('click', () => {
         lock();
-        exam = item.getAttribute('data-exam-item'); // ganti value nya dengan examp_temps_id
+        showInfo();
+        exam = item.getAttribute('data-exam-item');
+        examQuestionDetail = item.getAttribute('data-exam-question-detail');
         numberOfExam = index;
         loadExamDetails();
 
@@ -89,6 +93,7 @@ function loadExamDetails() {
             examDetail.opsi_c = response.opsi_c;
             examDetail.opsi_d = response.opsi_d;
             examDetail.opsi_e = response.opsi_e;
+            examDetail.answer = response.answer;
             showExamDetails();
             lock(false);
         }
@@ -105,6 +110,27 @@ function showExamDetails() {
     tOpsiE.innerHTML = imageShow(examDetail['opsi_e']);
     fExamDetail.classList.remove('d-none');
     noExam.innerHTML = (numberOfExam + 1)
+
+    if (examDetail['answer'] == 'opsi_a') {
+        ftOpsiA.checked = true;
+    } else if (examDetail['answer'] == 'opsi_b') {
+        ftOpsiB.checked = true;
+    } else if (examDetail['answer'] == 'opsi_c') {
+        ftOpsiC.checked = true;
+    } else if (examDetail['answer'] == 'opsi_d') {
+        ftOpsiD.checked = true;
+    } else if (examDetail['answer'] == 'opsi_e') {
+        ftOpsiE.checked = true;
+    } else if (examDetail['answer'] == 'dubious') {
+        ftOpsiX.checked = true;
+    } else {
+        ftOpsiA.checked = false;
+        ftOpsiB.checked = false;
+        ftOpsiC.checked = false;
+        ftOpsiD.checked = false;
+        ftOpsiE.checked = false;
+        ftOpsiX.checked = false;
+    }
 }
 
 function showZero(x) {
@@ -126,10 +152,16 @@ function showTimeLeft() {
         // Display the result in the element with id="demo"
         tTimeLeft.innerHTML = showZero(hours) + ":" + showZero(minutes) + ":" + showZero(seconds);
 
+        if (minutes < 10 && seconds == 59) {
+            tNotifWarningTimeOut.innerHTML = `Waktu mengerjakan ujian tinggal ${minutes} menit lagi`;
+            fNotifWarningTimeOut.classList.remove('d-none');
+        }
+
         // If the count down is finished, write some text
         if (distance < 0) {
             clearInterval(x);
             tTimeLeft.innerHTML = "HABIS";
+            lock();
         }
     }, 1000);
 }
@@ -142,6 +174,7 @@ function loadingLandingData() {
             token: token_form.value,
             exam_schedule_id: examSchedule.getAttribute('data-value'),
             exam_question_id: examQuestion.getAttribute('data-value'),
+            student_grade_exam_id: studentGradeExam.getAttribute('data-value'),
         },
         dataType: 'json',
         success: function(response) {
@@ -158,7 +191,21 @@ function loadingLandingData() {
 
 function asignBExamItems(data) {
     data.forEach((item, index) => {
-        bExamItems[index].setAttribute('data-exam-item', item);
+        bExamItems[index].setAttribute('data-exam-item', item['id']);
+        bExamItems[index].setAttribute('data-exam-question-detail', item['exam_question_detail_id']);
+        if (item['answer']) {
+            bExamItems[index].setAttribute('data-answer', item['answer']);
+            if (item['answer'] == 'dubious') {
+                bExamItems[index].classList.add('btn-warning');
+                bExamItems[index].classList.remove('btn-outline-secondary');
+                bExamItems[index].classList.remove('btn-secondary');
+            } else {
+                bExamItems[index].classList.add('btn-primary');
+                bExamItems[index].classList.remove('btn-outline-secondary');
+                bExamItems[index].classList.remove('btn-secondary');
+            }
+        }
+
     });
 }
 
@@ -169,26 +216,13 @@ function imageShow(data) {
 
 function hitAnswer() {
     // close show info
-    // lock()
-    // save(answer, exam)
-    // if 200 -> set bNumberButtonColor -> unlock()
-    bNumberButtonColor();
-    bExamItems[numberOfExam].setAttribute('data-answer', answer);
-    // Set value ke button
-    // if NOT 200 -> show info -> unlock()
-    lock(false);
-}
+    showInfo();
 
-function lock(status = 0) {
-    if (status == 0) {
-        // set opsi_a - ragu2 disabled
-        // set bnUmbers disabled
-        // set bNext/Prev disabled
-    } else {
-        // set opsi_a - ragu2 disabled-false
-        // set bnUmbers disabled-false
-        // set bNext/Prev disabled-false
-    }
+    // lock()
+    lock();
+
+    // save(answer, exam)
+    save();
 }
 
 function save() {
@@ -197,20 +231,27 @@ function save() {
         method: 'post',
         data: {
             token: token_form.value,
-            answer: answers,
+            answer: answer,
             exam: exam,
+            exam_question_detail_id: examQuestionDetail,
         },
         dataType: 'json',
         success: function(response) {
             token_form.value = response.token;
-            //get respon
+            if (response.status == 200) {
+                bNumberButtonColor();
+                bExamItems[numberOfExam].setAttribute('data-answer', answer);
+            } else {
+                showInfo(response.message)
+            }
+            lock(false);
         }
     })
 }
 
 function showInfo(message = 0) {
     tNotif.innerHTML = message;
-    if (param == 0) {
+    if (message == 0) {
         fNotif.classList.add('d-none');
     } else {
         fNotif.classList.remove('d-none');

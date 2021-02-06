@@ -21,10 +21,17 @@
 
 <div class="row">
     <div class="col-md-8">
-        <div id="fNotif" class="row">
+        <div id="fNotif" class="row d-none">
             <div class="col">
                 <div class="align-items-center alert alert-warning">
                     <i data-feather="alert-circle" class="mg-r-10"></i> <span id="tNotif">Ini notifikasi</span>
+                </div>
+            </div>
+        </div>
+        <div id="fNotifWarningTimeOut" class="row d-none">
+            <div class="col">
+                <div class="align-items-center alert alert-danger">
+                    <i data-feather="alert-circle" class="mg-r-10"></i> <span id="tNotifWarningTimeOut">Ini notifikasi</span>
                 </div>
             </div>
         </div>
@@ -94,7 +101,7 @@
                 <?php
                     for ($i = 0; $i < $number_of_exam; $i++) {
                         // $no = $i + 1;
-                        echo '<button data-answer="0" data-exam-item="0" data-number="0" type="button" class="bExamItems btn btn-sm btn-outline-secondary mg-r-5 mg-b-5 w-15">' . $no = ($i < 9) ? '0' . ($i + 1) : ($i + 1) . '</button>';
+                        echo '<button data-answer="0" data-exam-item="0" data-exam-question-detail="0" type="button" class="bExamItems btn btn-sm btn-outline-secondary mg-r-5 mg-b-5 w-15">' . $no = ($i < 9) ? '0' . ($i + 1) : ($i + 1) . '</button>';
                     }
                 ?>
             </div>
