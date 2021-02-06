@@ -167,7 +167,7 @@ class Test extends MY_Controller
             'title' => 'Ujian',
             'js_file' => 'app/test_confirm',
             'sub_title' => 'Konfirmasi Biodata dan Ujian',
-            'nav_active' => 'app/test',
+            'nav_active' => 'app/test/execute',
             'breadcrumb' => [
                 [
                     'label' => 'XPanel',
@@ -304,7 +304,8 @@ class Test extends MY_Controller
         $this->filter(2);
         $exam_item = enc($this->input->post('exam_item'), 1);
 
-        $exam_question = $this->exam_question_detail->find($exam_item);
+        $exam_question = $this->exam_question_detail->find_for_student_details($exam_item);
+
         $data = [
             'question' => $exam_question['question'],
             'opsi_a' => $exam_question['opsi_a'],
@@ -312,7 +313,6 @@ class Test extends MY_Controller
             'opsi_c' => $exam_question['opsi_c'],
             'opsi_d' => $exam_question['opsi_d'],
             'opsi_e' => $exam_question['opsi_e'],
-            'status' => $save_exam['status'],
         ];
 
         $data['token'] = $this->security->get_csrf_hash();
@@ -328,14 +328,20 @@ class Test extends MY_Controller
 
         $info = $this->exam_schedule->find(enc($this->input->post('exam_schedule_id'), 1));
 
-        $exam_questions_raw = $this->exam_question_detail->find(false, [
+        $exam_questions_raw = $this->exam_question_detail->find_for_student_id_only(false, [
             'a.exam_question_id' => enc($this->input->post('exam_question_id'), 1),
-        ], false, 0, true);
+        ]);
 
-        $exam_questions = array_rand($exam_questions_raw, $info['number_of_exam']);
+        $exam_question_items = array_rand($exam_questions_raw, $info['number_of_exam']);
+        $exam_questions = [];
+
+        foreach ($exam_question_items as $k => $v) {
+            array_push($exam_questions, $exam_questions_raw[$v]['id']);
+        }
 
         $data = [
             'token' => $this->security->get_csrf_hash(),
+            'number_of_exam' => $info['number_of_exam'],
             'time_left' => $info['time_left'],
             'time_server_now' => $info['time_server_now'],
             'exam_questions' => $exam_questions,
@@ -366,5 +372,9 @@ class Test extends MY_Controller
 
         $data['token'] = $this->security->get_csrf_hash();
         echo json_encode($data);
+    }
+
+    function save(){
+        //update
     }
 }

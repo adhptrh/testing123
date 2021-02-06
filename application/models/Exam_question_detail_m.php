@@ -54,19 +54,111 @@ class Exam_question_detail_m extends MY_Model
         ];
     }
 
-    public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0, $is_student = false)
+    public function find_for_student_id_only($id = false, $conditions = false, $show_del = false, $selected_id = 0)
     {
-        if($is_student){
-            if($id){
-                $select = 'a.question, a.opsi_a, a.opsi_b, a.opsi_c, a.opsi_d, a.opsi_e, a.is_del';
-            }else{
-                $select = 'a.id';
-            }
-        }else{
-            $select = 'a.id, a.exam_question_id, a.question, a.opsi_a, a.opsi_b, a.opsi_c, a.opsi_d, a.opsi_e, a.keyword, a.is_del';
+        $this->db->select('a.id')
+            ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
+            ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
+            ->from($this->name . ' a')
+            ->join('z_profiles b', 'b.id = a.created_by', 'left')
+            ->join('z_profiles c', 'c.id = a.updated_by', 'left')
+            ->order_by('a.id', 'ASC');
+
+        if (!$show_del) {
+            $this->db->where('a.is_del', '0');
         }
 
-        $this->db->select()
+        $this->db->order_by('a.id', 'desc');
+
+        // Jika cari berdasarkan id
+        if ($id) {
+
+            $this->db->where([
+                'a.id' => $id,
+            ]);
+
+            $data = $this->db->get()->row_array();
+            $data['id'] = enc($data['id']);
+
+            return $data;
+
+        } else { // Jika cari semua
+            if ($conditions) {
+                $this->db->where($conditions);
+            }
+
+            $this->db->order_by('a.id', 'desc');
+
+            $data = $this->db->get()->result_array();
+
+            foreach ($data as $k => $v) {
+                if ($selected_id == $v['id']) {
+                    $data[$k]['selected'] = 'selected'; // Men-setting selected untuk select2
+                } else {
+                    $data[$k]['selected'] = '';
+                }
+
+                $data[$k]['id'] = enc($v['id']);
+            }
+
+            return $data;
+        }
+    }
+
+    public function find_for_student_details($id = false, $conditions = false, $show_del = false, $selected_id = 0)
+    {
+        $this->db->select('a.id, a.question, a.opsi_a, a.opsi_b, a.opsi_c, a.opsi_d, a.opsi_e')
+            ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
+            ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
+            ->from($this->name . ' a')
+            ->join('z_profiles b', 'b.id = a.created_by', 'left')
+            ->join('z_profiles c', 'c.id = a.updated_by', 'left')
+            ->order_by('a.id', 'ASC');
+
+        if (!$show_del) {
+            $this->db->where('a.is_del', '0');
+        }
+
+        $this->db->order_by('a.id', 'desc');
+
+        // Jika cari berdasarkan id
+        if ($id) {
+
+            $this->db->where([
+                'a.id' => $id,
+            ]);
+
+            $data = $this->db->get()->row_array();
+            $data['id'] = enc($data['id']);
+
+            return $data;
+
+        } else { // Jika cari semua
+            if ($conditions) {
+                $this->db->where($conditions);
+            }
+
+            $this->db->order_by('a.id', 'desc');
+
+            $data = $this->db->get()->result_array();
+
+            foreach ($data as $k => $v) {
+                if ($selected_id == $v['id']) {
+                    $data[$k]['selected'] = 'selected'; // Men-setting selected untuk select2
+                } else {
+                    $data[$k]['selected'] = '';
+                }
+
+                $data[$k]['id'] = enc($v['id']);
+            }
+
+            return $data;
+        }
+    }
+
+    public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
+    {
+        $this->db->select('a.id, a.exam_question_id, a.question, a.opsi_a, a.opsi_b, a.opsi_c, a.opsi_d, a.opsi_e, a.keyword, a.is_del')
             ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
             ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
             ->from($this->name . ' a')
@@ -327,7 +419,8 @@ class Exam_question_detail_m extends MY_Model
         return $content;
     }
 
-    private function img_to_base64($path){
+    private function img_to_base64($path)
+    {
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
