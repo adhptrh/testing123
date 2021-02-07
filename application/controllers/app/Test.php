@@ -20,13 +20,8 @@ class Test extends MY_Controller
         $this->load->model('Exam_question_detail_m', 'exam_question_detail');
         $this->load->model('Student_grade_m', 'student_grade');
         $this->load->model('Student_grade_exam_m', 'student_exam');
+        $this->load->model('Token_m', 'server');
     }
-
-    // public function create()
-    // {
-    //     $this->filter(1);
-    //     $this->load->view('app/test/create');
-    // }
 
     public function execute($exam_schedule = 0)
     {
@@ -80,10 +75,9 @@ class Test extends MY_Controller
         if (count($data)) {
             $grade_period_id = enc($student_grade['grade_period_id'], 1);
             $grade_period_ids = explode("-", $data[0]['grade_period_id']);
-            if (
-                (in_array($grade_period_id, $grade_period_ids)) # cek Kelas
-                 &&
-                $data[0]['intime'] == 1) /* cek Waktu */ {$cek_access = true;}
+            if ((in_array($grade_period_id, $grade_period_ids)) && $data[0]['intime'] == 1) {
+                $cek_access = true;
+            }
         }
 
         if ($cek_access) { // (0) Jika Ya
@@ -147,16 +141,127 @@ class Test extends MY_Controller
         }
     }
 
-    public function close()
-    {
-        $this->filter(1);
+    /**
+     * Kondisi menyebabkan close :
+     *
+     * function closing()
+     * Permintaan peserta ujian
+     * Karena timeout ketika sedang ujian
+     *
+     * function closing_by_operator()
+     * Permintaan panitia ujian
+     *
+     * * function closing_by_sistem()
+     * Karena timeout direct link
+     */
 
-        // Cek apakah sudah menyelsaikan semua ujian
-        // Jika sudah
-        // insert finish time
-        // set info
-        // Jika belum
-        // set info
+    public function closing($student_grade_exam_id, $is_time_out = false)
+    {
+        /**
+         * variable yang dibutuhkan :
+         * $student_grade_exam_id yang masih diecnrypt
+         */
+
+        $this->filter(3);
+        $closing = $this->set_it_close($student_grade_exam_id);
+
+        if ($is_time_out) {
+            $message = "Waktu ujian telah habis, data ujian Anda sudah kami submit (diselesaikan) secara otomatis.";
+        } else {
+            $message = "Terimakasih, Anda telah berhasil menyelesaikan ujian ini.";
+
+        }
+
+        $this->load->view('app/test/close_dialog', [
+            'status' => $closing['status'],
+            'message_sistem' => $closing['message'],
+            'message' => 'Terimakasih, Anda telah berhasil menyelesaikan ujian ini.',
+        ]);
+
+    }
+
+    public function closing_by_operator()
+    {
+        /**
+         * variable yang dibutuhkan :
+         * $student_grade_exam_id yang masih diecnrypt
+         */
+
+        $this->filter(3);
+
+        $student_grade_exam_id = enc($student_grade_exam_id, 1);
+        $closing = $this->set_it_close($student_grade_exam_id);
+
+        $this->session->set_flashdata('create_info_message', 'Ujian siswa berhasil disubmit (diselesaikan).');
+
+        redirect(base_url('app/exam_schedule'));
+    }
+
+    public function closing_by_sistem($student_grade_exam_id)
+    {
+        /**
+         * variable yang dibutuhkan :
+         * $student_grade_exam_id yang masih diecnrypt
+         */
+
+        $this->filter(3);
+
+        $student_grade_exam_id = enc($student_grade_exam_id, 1);
+        $closing = $this->set_it_close($student_grade_exam_id);
+
+        $this->temp('app/test/close_dialog', [
+            'status' => $closing['status'],
+            'message' => 'Kami telah men-submit (menyelesaikan lalu menyimpan) data ujian Anda, karena waktu ujian ini telah kadaluarsa.',
+        ]);
+    }
+
+    private function set_it_close($student_grade_exam_id)
+    {
+        /**
+         * Fungsi ini digunakan untuk mereset ujian, yaitu
+         * memberikan nilai finish_time, dan
+         * menghapus ujian di table exam_temps
+         *
+         * variable yang dibutuhkan :
+         * $student_grade_exam_id yang masih diecnrypt
+         */
+
+        $student_grade_exam_id = enc($student_grade_exam_id, 1);
+
+        $this->db->trans_begin();
+        // Finishing ujian
+        $finishing = $this->student_exam->save([
+            'id' => $student_grade_exam_id,
+            'finish_time' => $this->server->info()['datetime'],
+        ], true);
+
+        if ($finishing['status'] == '200') {
+            // Clearing ujian
+            $clearing = $this->exam_temp->delete_where([
+                'student_grade_exam_id' => $student_grade_exam_id,
+            ]);
+
+            if ($clearing['status'] == '200') {
+                $this->db->trans_commit();
+                return [
+                    'status' => $clearing['status'],
+                    'message' => $clearing['message'],
+                ];
+            } else {
+                $this->db->trans_rollback();
+                return [
+                    'status' => $clearing['status'],
+                    'message' => $clearing['message'],
+                ];
+            }
+
+        } else {
+            $this->db->trans_rollback();
+            return [
+                'status' => $finishing['status'],
+                'message' => $finishing['message'],
+            ];
+        }
     }
 
     public function confirm($exam_schedule_id)
@@ -202,103 +307,6 @@ class Test extends MY_Controller
         ]);
     }
 
-    // public function get_exam_detail()
-    // {
-    //     $this->filter(2);
-    //     $exam_question_id = $this->input->post('exam_question_id');
-    //     $exam_schedule_id = $this->input->post('exam_schedule_id');
-    //     $exam_items = $this->input->post('exam_items');
-    //     $exam_item = $this->input->post('exam_item');
-    //     $student_grade_exam_id = $this->input->post('student_grade_exam_id');
-
-    //     // apakah exam_item = 0
-    //     if ($exam_item == 0) { // Jika ya
-    //         // cari random soal berdasarkan exam_question_id dan exam_items :: function get_question_random()
-    //         $question = get_question_random($exam_items, $exam_question_id);
-
-    //         $exam_question_detail_id = enc($question['id'], 1);
-    //         $student_grade_exam_id = enc($student_grade_exam_id, 1);
-
-    //         // save ke exam_temps dan exams
-    //         $this->db->trans_begin();
-
-    //         $save_exam_temps = $this->exam_temp->save([
-    //             'student_grade_exam_id' => $student_grade_exam_id,
-    //             'exam_question_detail_id' => $exam_question_detail_id,
-    //         ]);
-
-    //         if ($save_exam_temps['status'] == '200') {
-
-    //             $save_exam = $this->exam->save([
-    //                 'student_grade_exam_id' => $student_grade_exam_id,
-    //                 'exam_question_detail_id' => $exam_question_detail_id,
-    //             ]);
-
-    //             if ($save_exam['status'] == '200') {
-    //                 // Commit db
-    //                 $this->db->trans_commit();
-
-    //                 // send to view
-    //                 $data = [
-    //                     'token' => $this->security->get_csrf_hash(),
-    //                     'exam_item' => $exam_question_detail_id,
-    //                     'question' => $question['question'],
-    //                     'opsi_a' => $question['opsi_a'],
-    //                     'opsi_b' => $question['opsi_b'],
-    //                     'opsi_c' => $question['opsi_c'],
-    //                     'opsi_d' => $question['opsi_d'],
-    //                     'opsi_e' => $question['opsi_e'],
-    //                     'status' => $save_exam['status'],
-    //                 ];
-    //             } else {
-    //                 // Commit db
-    //                 $this->db->trans_rollback();
-
-    //                 // send to view
-    //                 $data = [
-    //                     'token' => $this->security->get_csrf_hash(),
-    //                     'exam_item' => 0,
-    //                     'question' => 0,
-    //                     'opsi_a' => 0,
-    //                     'opsi_b' => 0,
-    //                     'opsi_c' => 0,
-    //                     'opsi_d' => 0,
-    //                     'opsi_e' => 0,
-    //                     'status' => $save_exam['status'],
-    //                 ];
-    //             }
-    //         } else {
-
-    //         }
-
-    //     } else { // Jika tidak
-    //         // dapatkan soal berdasarkan exam_item dan student_grade_exam_id :: function get_question()
-    //     }
-    // }
-
-    // private function get_question_random($exam_items, $exam_question_id)
-    // {
-    //     $exam_question_ready = $this->exam_question->find(false, enc($exam_question_id, 1));
-
-    //     // Remove encryption
-    //     foreach ($exam_items as $k => $v) {
-    //         $id = enc($v, 1);
-    //         // find and unset exam_question_ready here
-    //         if (($cell = array_search($id, $exam_question_ready)) !== false) {
-    //             unset($exam_question_ready[$cell]);
-    //         }
-    //     }
-
-    //     $question = array_rand($exam_question_ready, 1);
-
-    //     return $question;
-    // }
-
-    // private function get_question($exam_item, $student_grade_exam_id)
-    // {
-
-    // }
-
     public function get_exam_detail()
     {
         $this->filter(2);
@@ -330,7 +338,7 @@ class Test extends MY_Controller
         $info = $this->exam_schedule->find(enc($this->input->post('exam_schedule_id'), 1));
 
         // cek apakah student_grade_exam_id sudah ada di exam
-        $exams = $this->exam->find(false, [
+        $exams = $this->exam_temp->find(false, [
             'a.student_grade_exam_id' => $student_grade_exam_id,
         ]);
 
@@ -446,7 +454,7 @@ class Test extends MY_Controller
                 'answer' => $answer,
                 'is_correct' => $correct,
             ], true);
-    
+
             if ($update['status'] == '200') {
                 $this->db->trans_commit();
             } else {

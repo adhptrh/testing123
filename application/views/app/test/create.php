@@ -19,7 +19,7 @@
     </div>
 </div>
 
-<div class="row">
+<div id="fTest" class="row">
     <div class="col-md-8">
         <div id="fNotif" class="row d-none">
             <div class="col">
@@ -106,7 +106,7 @@
                 ?>
             </div>
             <div class="card-footer">
-                <button class="btn btn-sm btn-success btn-block" type="" name="">Selesai</button>
+                <button id="bFinish" class="btn btn-sm btn-success btn-block" type="" name="">Selesai</button>
             </div>
         </div>
     </div>

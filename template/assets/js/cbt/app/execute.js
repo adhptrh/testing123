@@ -21,7 +21,7 @@ let timeTarget = new Date().getTime(),
     token = 0,
     message = 0,
     answer = '',
-    exam = 0,
+    exam = 0, // exam_temp_id
     examQuestionDetail = 0;
 
 bNext.addEventListener('click', () => {
@@ -133,6 +133,26 @@ function showExamDetails() {
     }
 }
 
+bFinish.addEventListener('click', () => {
+    count_dubious = 0;
+    count_answer_is_zero = 0;
+    bExamItems.forEach((item) => {
+        if (item.getAttribute('data-answer') == 0) {
+            count_answer_is_zero++;
+        }
+
+        if (item.getAttribute('data-answer') == 'dubious') {
+            count_dubious++;
+        }
+    });
+
+    if (count_dubious > 0 || count_answer_is_zero > 0) {
+        confirmTimeOut(`Anda memiliki ${count_dubious} soal yang masih ragu-ragu dan ${count_answer_is_zero} soal yang belum dijawab. Apakah Anda yakin akan menyelesaikan ujian ini?`);
+    } else {
+        confirmTimeOut();
+    }
+})
+
 function showZero(x) {
     return data = (x < 10) ? '0' + x : x;
 }
@@ -141,18 +161,18 @@ function showTimeLeft() {
     x = setInterval(function() {
 
         // Find the distance between now and the count down date
-        var distance = timeTarget - timeNow;
-        timeNow = timeNow + 1000;
+        const distance = timeTarget - timeServerNow;
+        timeServerNow = timeServerNow + 1000;
 
         // Time calculations for days, hours, minutes and seconds
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         // Display the result in the element with id="demo"
         tTimeLeft.innerHTML = showZero(hours) + ":" + showZero(minutes) + ":" + showZero(seconds);
 
-        if (minutes < 10 && seconds == 59) {
+        if (hours < 1 && minutes < 10 && seconds == 59) {
             tNotifWarningTimeOut.innerHTML = `Waktu mengerjakan ujian tinggal ${minutes} menit lagi`;
             fNotifWarningTimeOut.classList.remove('d-none');
         }
@@ -162,8 +182,45 @@ function showTimeLeft() {
             clearInterval(x);
             tTimeLeft.innerHTML = "HABIS";
             lock();
+            timeOut(true);
         }
     }, 1000);
+}
+
+function confirmTimeOut(message = 'Apakah Anda yakin akan menyelesaikan ujian ini') {
+    Swal.fire({
+        title: 'Peringatan',
+        text: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            timeOut();
+        }
+    })
+}
+
+function timeOut(is_time_out = false) {
+    if (is_time_out) {
+        url = '../closing/' + studentGradeExam.getAttribute('data-value') + '/1';
+    } else {
+        url = '../closing/' + studentGradeExam.getAttribute('data-value');
+    }
+
+    $.ajax({
+        url: url,
+        method: 'post',
+        data: {
+            token: token_form.value,
+        },
+        success: function(response) {
+            fTest.innerHTML = response;
+        }
+    })
 }
 
 function loadingLandingData() {
@@ -180,7 +237,7 @@ function loadingLandingData() {
         success: function(response) {
             token_form.value = response.token;
             timeTarget = new Date(response.time_left * 1000).getTime();
-            timeNow = new Date(response.time_server_now * 1000).getTime();
+            timeServerNow = new Date(response.time_server_now * 1000).getTime();
             showTimeLeft();
             asignBExamItems(response.exam_questions);
             numberOfExamMax = response.number_of_exam;
@@ -239,8 +296,8 @@ function save() {
         success: function(response) {
             token_form.value = response.token;
             if (response.status == 200) {
-                bNumberButtonColor();
                 bExamItems[numberOfExam].setAttribute('data-answer', answer);
+                bNumberButtonColor();
             } else {
                 showInfo(response.message)
             }
@@ -265,6 +322,7 @@ function bNumberButtonColor() {
         bExamItems[numberOfExam].classList.remove('btn-secondary');
     } else {
         bExamItems[numberOfExam].classList.add('btn-primary');
+        bExamItems[numberOfExam].classList.remove('btn-warning');
         bExamItems[numberOfExam].classList.remove('btn-outline-secondary');
         bExamItems[numberOfExam].classList.remove('btn-secondary');
     }
