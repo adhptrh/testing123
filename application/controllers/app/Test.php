@@ -111,6 +111,7 @@ class Test extends MY_Controller
                 $regis = $this->student_exam->save([
                     'student_grade_id' => $sgi,
                     'exam_schedule_id' => $esi,
+                    'numbers_before_answer' => $data[0]['number_of_exam']
                 ]);
 
                 if ($regis['status'] == '200') {
@@ -427,6 +428,7 @@ class Test extends MY_Controller
         $answer = $this->input->post('answer');
         $exam = enc($this->input->post('exam'), 1);
         $exam_question_detail_id = enc($this->input->post('exam_question_detail_id'), 1);
+        $student_grade_exam_id = enc($this->input->post('student_grade_exam_id'), 1);
 
         // cek apakah jawaban correct
         $is_correct = $this->exam_question_detail->find(false, [
@@ -442,21 +444,72 @@ class Test extends MY_Controller
 
         $this->db->trans_begin();
 
-        $update = $this->exam->save([
-            'id' => $exam,
-            'answer' => $answer,
-            'is_correct' => $correct,
+        // Update score ======================================================================
+        // table : student_grade_extend_exams
+        $sgXe = $this->student_exam->find($student_grade_exam_id);
+
+        // table : exams
+        $e = $this->exam_temp->find($exam);
+
+        $update_correct = $sgXe['correct']; // Jumlah Benar
+        $update_incorrect = $sgXe['incorrect']; // Jumlah Salah
+        $last_answer = $e['answer']; // apakah soal sudah dijawab sebelumnya? (respon true/false)
+        $last_is_correct = $e['is_correct']; // jawaban sebelumnya benar / salah ? (respon true/false)
+        $numbers_before_answer = $sgXe['numbers_before_answer']; // Jumlah soal yang sudah dijawab
+
+        if ($correct) { // Jika jawaban sekarang benar
+            if($last_answer == null){
+                $numbers_before_answer--;
+                $update_correct++;
+            }else{
+                if($last_is_correct == 0){
+                    $update_incorrect--;
+                    $update_correct++;
+                }
+            }
+        } else { // Jika jawaban sekarang salah
+            if($last_answer == null){
+                $numbers_before_answer--;
+                $update_incorrect++;
+            }else{
+                if($last_is_correct == 1){
+                    $update_incorrect++;
+                    $update_correct--;
+                }
+            }
+        }
+
+        $update = $this->student_exam->save([
+            'id' => $student_grade_exam_id,
+            'correct' => $update_correct,
+            'incorrect' => $update_incorrect,
+            'numbers_before_answer' => $numbers_before_answer,
+            'score' => ($update_correct/($update_correct + $update_incorrect + $numbers_before_answer)) * 10,
         ], true);
 
         if ($update['status'] == '200') {
-            $update = $this->exam_temp->save([
+
+            // table : exams
+            $update = $this->exam->save([
                 'id' => $exam,
                 'answer' => $answer,
                 'is_correct' => $correct,
             ], true);
 
             if ($update['status'] == '200') {
-                $this->db->trans_commit();
+
+                // table : exams_temp
+                $update = $this->exam_temp->save([
+                    'id' => $exam,
+                    'answer' => $answer,
+                    'is_correct' => $correct,
+                ], true);
+
+                if ($update['status'] == '200') {
+                    $this->db->trans_commit();
+                } else {
+                    $this->db->trans_rollback();
+                }
             } else {
                 $this->db->trans_rollback();
             }

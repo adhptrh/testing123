@@ -25,7 +25,7 @@ class Student_grade_exam_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.is_del, a.finish_time')
+    $this->db->select('a.id, a.is_del, a.finish_time, a.correct, a.incorrect, a.numbers_before_answer')
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left');

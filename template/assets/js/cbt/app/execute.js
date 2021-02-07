@@ -96,6 +96,16 @@ function loadExamDetails() {
             examDetail.answer = response.answer;
             showExamDetails();
             lock(false);
+        },
+        error: function() {
+            Swal.fire({
+                title: 'Peringatan',
+                text: 'Aplikasi tidak berhasil mengunduh detail soal, mohon hubungi penyelenggara ujian.',
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ya',
+            })
         }
     })
 }
@@ -219,6 +229,7 @@ function timeOut(is_time_out = false) {
         },
         success: function(response) {
             fTest.innerHTML = response;
+            timeServerNow = timeTarget;
         }
     })
 }
@@ -291,6 +302,7 @@ function save() {
             answer: answer,
             exam: exam,
             exam_question_detail_id: examQuestionDetail,
+            student_grade_exam_id: studentGradeExam.getAttribute('data-value'),
         },
         dataType: 'json',
         success: function(response) {
@@ -302,6 +314,16 @@ function save() {
                 showInfo(response.message)
             }
             lock(false);
+        },
+        error: function() {
+            Swal.fire({
+                title: 'Peringatan',
+                text: 'Aplikasi tidak berhasil menyimpan jawaban peserta ujian, mohon hubungi penyelenggara ujian.',
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ya',
+            })
         }
     })
 }
