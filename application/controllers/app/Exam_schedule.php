@@ -55,7 +55,7 @@ class Exam_schedule extends MY_Controller
         //student_grade_id_from_session
         $this->set_student_grade_id();
 
-        if ($this->student_grade_id) { // Jika siswa
+        if (enc($this->student_grade_id, 1)) { // Jika siswa
 
             //detail student_grade
             $sg = $this->student_grade->find(enc($this->student_grade_id, 1));
@@ -72,11 +72,6 @@ class Exam_schedule extends MY_Controller
                 'e.id' => $oi,
                 'h.grade_period_id' => $gp,
 			]);
-			
-			// date('Y-m-d'	)
-
-            //     // date
-			//     // now must be in (15 minutes before start) and (finish)
 			
 			$data = [
 				'exam_schedule' => $data,

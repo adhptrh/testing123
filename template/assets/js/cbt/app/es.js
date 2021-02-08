@@ -5,7 +5,8 @@ const id = document.querySelector('input[name=id]');
 const bexam = document.getElementById("bexam");
 let token = 0,
     period = 0,
-    exam = '';
+    exam = '',
+    numbers_of_exam = 0;
 
 const start = new Cleave('#start', {
     time: true,
@@ -29,7 +30,7 @@ function setPeriod(data) {
 function setExam(data) {
     opsi = '<option></option>';
     data.forEach((value, index) => {
-        opsi += '<option value="' + value.id + '">' + value.exam + '</option>';
+        opsi += '<option data-jsoal="' + value.jsoal + '" value="' + value.id + '">' + value.exam + '</option>';
     });
     exam = opsi;
 }
@@ -40,6 +41,23 @@ bperiod.onchange = () => {
     setPeriod(bperiod.value);
     loadExam();
 }
+
+bexam.onchange = () => {
+    numbers_of_exam = 0;
+    jsoal = $("#bexam").select2().find(":selected").data("jsoal");
+    if (jsoal > 0) {
+        iJSoal.value = jsoal;
+        numbers_of_exam = jsoal;
+    }
+}
+
+bSave.addEventListener("click", () => {
+    if (numbersToExam.value < numbers_of_exam) {
+        xform.submit();
+    } else {
+        warningNumberExam.classList.remove('d-none');
+    }
+})
 
 function loadExam() {
     $('#bexam').val([]).trigger('change');

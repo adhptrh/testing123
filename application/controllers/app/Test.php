@@ -20,7 +20,7 @@ class Test extends MY_Controller
         $this->load->model('Exam_question_detail_m', 'exam_question_detail');
         $this->load->model('Student_grade_m', 'student_grade');
         $this->load->model('Student_grade_exam_m', 'student_exam');
-        $this->load->model('Token_m', 'server');
+        $this->load->model('Token_m', 'token');
     }
 
     public function execute($exam_schedule = 0)
@@ -66,16 +66,19 @@ class Test extends MY_Controller
         $student_grade = $this->student_grade->find($sgi);
 
         $cek_access = false;
-        $data = $this->exam_schedule->find(false, [
-            'a.order_id' => $student_grade['order_id'], # Cek sesi
-            'a.token' => $this->session->userdata('token_exam'), # Cek Token
-        ]);
 
-        # Cek kelas dan waktu
-        if (count($data)) {
+        # Data jadwal ujian
+        $data = $this->exam_schedule->find($esi);
+        
+        # Cek Token server
+        $token_server =  $token_server = $this->token->get();
+        $token_exam =  $this->session->userdata('token_exam');
+
+        # Cek kelas, waktu dan token
+        if (count($data) && ($token_server == $token_exam)) {
             $grade_period_id = enc($student_grade['grade_period_id'], 1);
-            $grade_period_ids = explode("-", $data[0]['grade_period_id']);
-            if ((in_array($grade_period_id, $grade_period_ids)) && $data[0]['intime'] == 1) {
+            $grade_period_ids = explode("-", $data['grade_period_id']);
+            if ((in_array($grade_period_id, $grade_period_ids)) && $data['intime'] == 1) {
                 $cek_access = true;
             }
         }
@@ -94,10 +97,10 @@ class Test extends MY_Controller
                     $this->temp('app/test/content', [
                         'student_grade_exam_id' => $is_register[0]['id'],
                         'exam_schedule_id' => $exam_schedule,
-                        'exam_question_id' => $data[0]['exam_question_id'],
-                        'number_of_exam' => $data[0]['number_of_exam'],
-                        'study' => $data[0]['study'],
-                        'order' => $data[0]['order'],
+                        'exam_question_id' => $data['exam_question_id'],
+                        'number_of_exam' => $data['number_of_exam'],
+                        'study' => $data['study'],
+                        'order' => $data['order'],
                     ]);
                 } else { // (2) Jika sudah
                     // Go info atau logout
@@ -111,7 +114,7 @@ class Test extends MY_Controller
                 $regis = $this->student_exam->save([
                     'student_grade_id' => $sgi,
                     'exam_schedule_id' => $esi,
-                    'numbers_before_answer' => $data[0]['number_of_exam']
+                    'numbers_before_answer' => $data['number_of_exam']
                 ]);
 
                 if ($regis['status'] == '200') {
@@ -122,10 +125,10 @@ class Test extends MY_Controller
                     $this->temp('app/test/content', [
                         'exam_schedule_id' => $exam_schedule,
                         'student_grade_exam_id' => $regis['id'],
-                        'exam_question_id' => $data[0]['exam_question_id'],
-                        'number_of_exam' => $data[0]['number_of_exam'],
-                        'study' => $data[0]['study'],
-                        'order' => $data[0]['order'],
+                        'exam_question_id' => $data['exam_question_id'],
+                        'number_of_exam' => $data['number_of_exam'],
+                        'study' => $data['study'],
+                        'order' => $data['order'],
                     ]);
                 } else {
                     $this->db->trans_rollback();
@@ -233,7 +236,7 @@ class Test extends MY_Controller
         // Finishing ujian
         $finishing = $this->student_exam->save([
             'id' => $student_grade_exam_id,
-            'finish_time' => $this->server->info()['datetime'],
+            'finish_time' => $this->token->info()['datetime'],
         ], true);
 
         if ($finishing['status'] == '200') {
@@ -404,11 +407,12 @@ class Test extends MY_Controller
         $token_exam = $this->input->post('token_exam');
 
         $cek = $this->exam_schedule->find(false, [
-            'a.id' => enc($exam_schedule_id, 1),
-            'a.token' => $token_exam,
+            'a.id' => enc($exam_schedule_id, 1)
         ]);
 
-        if (count($cek)) {
+        $token_server = $this->token->get(); 
+
+        if (count($cek) && $token_exam == $token_server) {
             $this->session->set_userdata('token_exam', $token_exam);
             $data['token_exam'] = 1;
             $data['time_start'] = $cek[0]['time_start'];

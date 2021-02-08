@@ -25,7 +25,6 @@
                     <?=$pesan = ($this->session->flashdata('message')) ? $this->session->flashdata('message') : ''?>
                 </div>
 
-
                 <div class="table-responsive">
                     <table class="dtable table table-striped">
                         <thead>
@@ -44,11 +43,12 @@
                         <tbody>
                             <?php foreach ($data['exam_schedule'] as $k => $v): ?>
                             <?php if (
-                                date("d-m-Y", $v['time_server_now']) == $v['date']
+                                (date("d-m-Y", $v['time_server_now']) == $v['date']
                                 &&
-                                date("H:i:s", ($v['time_server_now'] + 900 )) >= $v['start']
+                                date("H:i:s", ($v['time_server_now'] + 900)) >= $v['start']
                                 &&
-                                date("H:i:s", $v['time_server_now']) <= $v['finish']
+                                date("H:i:s", $v['time_server_now']) <= $v['finish'])
+                                || !$data['student']
                             ): ?>
 
                             <tr>
@@ -76,7 +76,9 @@
                                         </div>
                                     </div>
                                     <?php else: ?>
-                                    <a class="btn btn-sm btn-success" href="<?php echo base_url('app/test/confirm/' . $v['id']); ?>"><i class="fas fa-edit"></i> Ikuti
+                                    <a class="btn btn-sm btn-success"
+                                        href="<?php echo base_url('app/test/confirm/' . $v['id']); ?>"><i
+                                            class="fas fa-edit"></i> Ikuti
                                         Ujian</a>
                                     <?php endif;?>
 
@@ -89,7 +91,7 @@
                                 <?=$token = (!$data['student']) ? '<td>-</td>' : '';?>
                                 <td><?=$v['created_by'] . '<br><small>' . $v['created_at'] . '</small>'?></td>
                             </tr>
-                            <?php endif; ?>
+                            <?php endif;?>
                             <?php endforeach;?>
                         </tbody>
                     </table>
