@@ -44,7 +44,7 @@
                         Pilih
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="<?= base_url('data/student_grade/create/' . $v['id']); ?>" data-href=""><i class="fas fa-users"></i> Daftar Siswa</a>
+                        <!-- <a class="dropdown-item" href="<?= base_url('data/student_grade/create/' . $v['id']); ?>" data-href=""><i class="fas fa-users"></i> Daftar Siswa</a> -->
                         <a class="dropdown-item" href="<?= base_url('data/grade_period/edit/' . $v['id']); ?>"><i class="fas fa-edit"></i> Edit</a>
                         <a class="dropdown-item hapus" href="#" data-href="<?= base_url('data/grade_period/delete/' . $v['id']); ?>"><i class="fas fa-trash"></i> Hapus</a>
                       </div>

@@ -74,7 +74,7 @@
 
     <div class="content content-fixed content-auth">
         <div class="container">
-            <div class="row mg-t-100 mg-l-50">
+            <div class="row mg-t-70 mg-l-50">
                 <div class="col-md-5 text-right">
                     <img src="<?=base_url('template/assets/img/login-amico.png')?>" class="img-fluid" alt=""
                         width="50%">

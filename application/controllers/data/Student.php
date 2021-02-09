@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Reader\Xls;
+
 class Student extends MY_Controller
 {
 
@@ -51,6 +53,42 @@ class Student extends MY_Controller
         ]);
     }
 
+    public function create_excel()
+    {
+        $this->filter(1);
+
+        $this->header = [
+            'title' => 'Siswa',
+            'sub_title' => 'Tambah Siswa',
+            'sub_title' => 'Tambah Siswa',
+            'nav_active' => 'data/student',
+            'breadcrumb' => [
+                [
+                    'label' => 'XPanel',
+                    'icon' => 'fa-home',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Referensi',
+                    'icon' => 'fa-gear',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Siswa',
+                    'icon' => 'fa-list',
+                    'href' => base_url('data/student'),
+                ],
+                [
+                    'label' => 'Import Excel',
+                    'icon' => '',
+                    'href' => '#',
+                ],
+            ],
+        ];
+
+        $this->temp('data/student/create_excel');
+    }
+
     public function create($old = [])
     {
         $this->filter(1);
@@ -77,7 +115,7 @@ class Student extends MY_Controller
                     'href' => base_url('data/student'),
                 ],
                 [
-                    'label' => 'Tambah',
+                    'label' => 'Tambah ',
                     'icon' => '',
                     'href' => '#',
                 ],
@@ -98,6 +136,37 @@ class Student extends MY_Controller
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    public function save_excel()
+    {
+        $fileName = $_FILES['file']['name'];
+
+        $path = './upload/files/';
+        $config['upload_path'] = $path; //path upload
+        $config['file_name'] = $fileName; // nama file
+        $config['allowed_types'] = 'xls|xlsx'; //tipe file yang diperbolehkan
+        $config['max_size'] = 10000; // maksimal sizze
+
+        $this->load->library('upload'); //meload librari upload
+        $this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('file')) {
+            $this->session->set_flashdata('create_info_message', $this->upload->display_errors());
+            $this->create_excel();
+        } else {
+            $inputFileName = $path . $fileName;
+
+            $reader = new Xls;
+            $spreadsheet = $reader->load($inputFileName);
+            $sheetData = $spreadsheet->getActiveSheet()->toArray();
+
+            // DEBUG
+            echo '<pre>';
+            print_r($sheetData);
+            echo '</pre>';
+            die();
+        }
     }
 
     public function save()
