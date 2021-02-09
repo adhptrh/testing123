@@ -22,6 +22,7 @@
 
     <link id="dfMode" rel="stylesheet" href="<?=base_url('template/');?>lib/select2/css/select2.min.css">
     <link rel="stylesheet" href="<?=base_url('template/');?>assets/css/dashforge.css">
+    <!-- <link rel="stylesheet" href="<?=base_url('template/');?>assets/css/dashforge.dashboard.css"> -->
     <link id="dfMode" rel="stylesheet" href="<?=base_url('template/');?>assets/css/skin.light.css">
     <link id="dfMode" rel="stylesheet" href="<?=base_url('template/');?>assets/css/skin.deepblue.css">
     <link id="dfMode" rel="stylesheet"

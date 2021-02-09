@@ -1,13 +1,26 @@
-    <!-- <div class="d-none d-md-block">
-      <button class="btn btn-sm pd-x-15 btn-white btn-uppercase"><i data-feather="mail" class="wd-10 mg-r-5"></i> Email</button>
-      <button class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5"><i data-feather="printer" class="wd-10 mg-r-5"></i> Print</button>
-      <button class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5"><i data-feather="file" class="wd-10 mg-r-5"></i> Generate Report</button>
-    </div> -->
-  </div>
-
-  <div class="row row-xs">
-    <div class="col-md-12">
-      Hello :)
-    </div>
-  </div><!-- row -->
-</div><!-- container -->
+<div class="row row-xs">
+    <div class="col">
+        <div class="card card-body">
+            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Token</h6>
+            <div class="d-flex d-lg-block d-xl-flex align-items-end">
+                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><?= $token ?></h3> <i class="fa fa-key"></i></p>
+            </div>
+        </div>
+    </div><!-- col -->
+    <div class="col mg-t-10 mg-sm-t-0">
+        <div class="card card-body">
+            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Siswa Terdaftar</h6>
+            <div class="d-flex d-lg-block d-xl-flex align-items-end">
+                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><?= $student ?></h3> <i class="fa fa-users"></i>
+            </div>
+        </div>
+    </div><!-- col -->
+    <div class="col mg-t-10 mg-lg-t-0">
+        <div class="card card-body">
+            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Ujian Terjadwal</h6>
+            <div class="d-flex d-lg-block d-xl-flex align-items-end">
+                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><?= $schedule ?></h3> <i class="fa fa-clock"></i></p></p>
+            </div>
+        </div>
+    </div><!-- col -->
+</div>
