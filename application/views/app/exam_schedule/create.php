@@ -13,7 +13,12 @@
 
                         <div class="form-group d-none">
                             <label>ID</label>
-                            <input name="id" type="text" class="form-control" value="0" readonly>
+                            <input id="iId" name="id" type="text" class="form-control" value="0" readonly>
+                        </div>
+
+                        <div class="form-group d-none">
+                            <label>Intime</label>
+                            <input id="iIntime" name="id" type="text" class="form-control" value="0" readonly>
                         </div>
 
                         <div class="form-group">
@@ -86,16 +91,17 @@
                     </div>
 
                     <div class="col-md-4">
-                    <div class="form-group">
+                        <div class="form-group">
                             <?php $var = 'number_of_exam';?>
                             <label>Jumlah soal yang akan diujiankan</label>
                             <input id="numbersToExam" autocomplete="off" name="<?=$var;?>" type="text"
                                 class="form-control <?=$has_error = (form_error($var)) ? 'is-invalid' : ''?>"
                                 value="<?=$isi = (isset($old[$var])) ? $old[$var] : 0;?>">
                             <?=$has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : ''?>
-                            <small id="warningNumberExam" class="d-none tx-danger">Jumlah soal yang diujiankan harus lebih kecil atau sama dengan jumlah soal tersedia</small>
+                            <small id="warningNumberExam" class="d-none tx-danger">Jumlah soal yang diujiankan harus
+                                lebih kecil atau sama dengan jumlah soal tersedia</small>
                         </div>
-                    <div class="form-group">
+                        <div class="form-group">
                             <?php $var = 'number_of_all_exam';?>
                             <label>Jumlah soal tersedia</label>
                             <input id="iJSoal" disabled autocomplete="off" name="" type="text"

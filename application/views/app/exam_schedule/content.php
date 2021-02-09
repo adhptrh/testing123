@@ -34,22 +34,21 @@
                                 <th>Soal</th>
                                 <th>Kelas</th>
                                 <th>Tanggal</th>
-                                <th>Sesi</th>
+                                <th>Jumlah Soal</th>
                                 <th>Waktu</th>
-                                <?=$token = (!$data['student']) ? '<th>Token</th>' : '';?>
                                 <th>Dibuat</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($data['exam_schedule'] as $k => $v): ?>
                             <?php if (
-                                (date("d-m-Y", $v['time_server_now']) == $v['date']
-                                &&
-                                date("H:i:s", ($v['time_server_now'] + 900)) >= $v['start']
-                                &&
-                                date("H:i:s", $v['time_server_now']) <= $v['finish'])
-                                || !$data['student']
-                            ): ?>
+    (date("d-m-Y", $v['time_server_now']) == $v['date']
+        &&
+        date("H:i:s", ($v['time_server_now'] + 900)) >= $v['start']
+        &&
+        date("H:i:s", $v['time_server_now']) <= $v['finish'])
+    || !$data['student']
+): ?>
 
                             <tr>
                                 <td><?=$k++ + 1?></td>
@@ -65,9 +64,11 @@
                                             <a class="dropdown-item"
                                                 href="<?=base_url('app/exam_schedule/edit/' . $v['id']);?>"><i
                                                     class="fas fa-edit"></i> Edit</a>
+                                            <?php if ($v['intime'] == 0): ?>
                                             <a class="dropdown-item hapus" href="#"
                                                 data-href="<?=base_url('app/exam_schedule/delete/' . $v['id']);?>"><i
                                                     class="fas fa-trash"></i> Hapus</a>
+                                            <?php endif;?>
                                             <a class="dropdown-item token" href="#" data-href=""><i
                                                     class="fas fa-key"></i> Token</a>
                                             <a class="dropdown-item token"
@@ -85,10 +86,9 @@
                                 </td>
                                 <td><?=$v['study']?></td>
                                 <td><?=$v['grade']?></td>
-                                <td><?=$v['date']?></td>
-                                <td><?=$v['order']?></td>
+                                <td><?=$v['date'] . "<br><small>" . $v['order'];?></small></td>
+                                <td>Ujian : <?=$v['number_of_exam'] . "<br> Tersedia : " . $v['stock_of_exams']?></td>
                                 <td><?=$v['start'] . ' - ' . $v['finish']?></td>
-                                <?=$token = (!$data['student']) ? '<td>-</td>' : '';?>
                                 <td><?=$v['created_by'] . '<br><small>' . $v['created_at'] . '</small>'?></td>
                             </tr>
                             <?php endif;?>

@@ -46,14 +46,9 @@ class Exam_schedule_m extends MY_Model
             ->select('DATE_FORMAT(TIMEDIFF(a.finish, a.start), "%H Jam %i menit") durasi')
             ->select('a.number_of_exam, DATE_FORMAT(a.finish, "%H:%i") finish') 
             ->select('UNIX_TIMESTAMP(NOW()) time_server_now')
-            ->select('UNIX_TIMESTAMP(DATE_FORMAT(CONCAT(CURDATE() ," ", a.finish), "%Y-%m-%d %H:%i:%s")) time_left')
-            ->select('UNIX_TIMESTAMP(DATE_FORMAT(CONCAT(CURDATE() ," ", a.start), "%Y-%m-%d %H:%i:%s")) time_start')
-            ->select('IF( 
-                UNIX_TIMESTAMP( NOW() ) >= UNIX_TIMESTAMP( CONCAT( CURDATE(), " ", a.start ) ) 
-                AND UNIX_TIMESTAMP( NOW() ) <= UNIX_TIMESTAMP( CONCAT( CURDATE(), " ", a.finish ) ),
-                1,
-                0 
-                ) intime')
+            ->select('UNIX_TIMESTAMP(a.finish) time_left')
+            ->select('UNIX_TIMESTAMP(a.start) time_start')
+            ->select('IF(NOW() >= a.start AND NOW() <= a.finish, 1, 0) intime')
             ->select('a.order_id, a.exam_question_id')
             ->select('DATE_FORMAT(a.date, "%d-%m-%Y") date')
             ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
@@ -62,6 +57,7 @@ class Exam_schedule_m extends MY_Model
             ->select('e.name order')
             ->select('f.name study')
             ->select('g.grade, g.grade_period_id')
+            ->select('h.jsoal stock_of_exams')
             ->from($this->name . ' a')
             ->join('z_profiles b', 'b.id = a.created_by', 'left')
             ->join('z_profiles c', 'c.id = a.updated_by', 'left')
@@ -77,6 +73,12 @@ class Exam_schedule_m extends MY_Model
             WHERE     a.is_del = "0"
             GROUP BY  a.exam_question_id
           ) g', 'g.exam_question_id = a.exam_question_id', 'left')
+          ->join('(
+            SELECT    a.id, a.exam_question_id, count(a.id) jsoal
+            FROM      exam_question_extend_details a
+            WHERE     a.is_del = "0"
+            GROUP BY  a.exam_question_id
+          ) h', 'h.exam_question_id = a.exam_question_id', 'left')
             ->join('exam_question_extend_grades h', 'g.exam_question_id = a.exam_question_id', 'left')
             ->group_by('a.exam_question_id')
             ->order_by('a.id', 'ASC');

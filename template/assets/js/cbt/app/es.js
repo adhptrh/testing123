@@ -18,6 +18,10 @@ const finish = new Cleave('#finish', {
     timePattern: ['h', 'm']
 });
 
+if (iId.value != 0) {
+    numbers_of_exam = iJSoal.value;
+}
+
 function setToken(data) {
     token = data;
     token_form.value = data;
@@ -52,8 +56,18 @@ bexam.onchange = () => {
 }
 
 bSave.addEventListener("click", () => {
-    if (numbersToExam.value < numbers_of_exam) {
-        xform.submit();
+    if (numbersToExam.value <= numbers_of_exam) {
+        if (iIntime.value == 1) {
+            Swal.fire({
+                title: 'Peringatan',
+                text: "Mengubah properti soal pada saat jadwal berlangsung tidak dizinkan",
+                icon: 'warning',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK',
+            })
+        } else {
+            xform.submit();
+        }
     } else {
         warningNumberExam.classList.remove('d-none');
     }

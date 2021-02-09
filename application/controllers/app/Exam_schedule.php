@@ -168,12 +168,14 @@ class Exam_schedule extends MY_Controller
             }
             $this->create($this->input->post());
         } else {
+            $date = $this->ptime($this->input->post('date'));
             $save = [
                 'exam_question_id' => enc($this->input->post('exam'), 1),
                 'order_id' => enc($this->input->post('order'), 1),
-                'date' => $this->ptime($this->input->post('date')),
-                'start' => $this->input->post('start'),
-                'finish' => $this->input->post('finish'),
+                'date' => $date,
+                'start' => $date . " " .$this->input->post('start'),
+                'finish' => $date . " " .$this->input->post('finish'),
+                'number_of_exam' => $this->input->post('number_of_exam'),
             ];
 
             $save = $this->data->save($save);
@@ -254,14 +256,15 @@ class Exam_schedule extends MY_Controller
 
             $this->edit($this->input->post('id'), $this->input->post());
         } else {
-
+            $date = $this->ptime($this->input->post('date'));
             $save = [
                 'id' => enc($this->input->post('id'), 1),
                 'exam_question_id' => enc($this->input->post('exam'), 1),
                 'order_id' => enc($this->input->post('order'), 1),
-                'date' => $this->ptime($this->input->post('date')),
-                'start' => $this->input->post('start'),
-                'finish' => $this->input->post('finish'),
+                'date' => $date,
+                'start' => $date . " " .$this->input->post('start'),
+                'finish' => $date . " " .$this->input->post('finish'),
+                'number_of_exam' => $this->input->post('number_of_exam'),
             ];
 
             $update = $this->data->save($save);

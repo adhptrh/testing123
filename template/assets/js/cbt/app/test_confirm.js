@@ -6,21 +6,21 @@ let timeNow = new Date().getTime(),
 
 examSchedule = examScheduleID.getAttribute('data-id');
 
-function getTimeInfo() {
-    $.ajax({
-        url: '../../get_header_data/' + examSchedule,
-        method: 'post',
-        data: {
-            token: token_form,
-        },
-        dataType: 'json',
-        success: function(response) {
-            token_form.value = response.token;
-            timeTarget = new Date(response.time_start * 1000).getTime();
-            timeNow = new Date(response.time_server_now * 1000).getTime();
-        }
-    })
-}
+// function getTimeInfo() {
+//     $.ajax({
+//         url: '../../get_header_data/' + examSchedule,
+//         method: 'post',
+//         data: {
+//             token: token_form,
+//         },
+//         dataType: 'json',
+//         success: function(response) {
+//             token_form.value = response.token;
+//             timeTarget = new Date(response.time_start * 1000).getTime();
+//             timeNow = new Date(response.time_server_now * 1000).getTime();
+//         }
+//     })
+// }
 
 bStartTest.addEventListener('click', () => {
     window.location.href = `../execute/${examSchedule}`;
