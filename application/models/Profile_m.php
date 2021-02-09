@@ -23,9 +23,11 @@ class Profile_m extends MY_Model {
     $this->db->select('a.id, a.name, a.is_del')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
+    ->select('d.id user_id')
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
-    ->join('z_profiles c', 'c.id = a.updated_by', 'left');
+    ->join('z_profiles c', 'c.id = a.updated_by', 'left')
+    ->join('z_users d', 'd.profile_id = a.id', 'left');
 
     if(!$show_del){
       $this->db->where('a.is_del', '0');
@@ -43,6 +45,7 @@ class Profile_m extends MY_Model {
       $data = $this->db->get()->row_array();
 
       $data['id'] = enc($data['id']);
+      $data['user_id'] = enc($data['user_id']);
 
       return $data;
 
@@ -63,6 +66,7 @@ class Profile_m extends MY_Model {
         }
 
         $data[$k]['id'] = enc($v['id']);
+        $data[$k]['user_id'] = enc($v['user_id']);
       }
 
       return $data;

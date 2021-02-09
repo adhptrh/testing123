@@ -243,7 +243,8 @@ class Student extends MY_Controller
             } else {
 
                 // Update username------------------
-                $save = $this->user->replace([
+                $save = $this->user->save([
+                    'id' => enc($profile['user_id'], 1),
                     'profile_id' => $profile_id,
                     'username' => $this->input->post('nisn'),
                 ]);
