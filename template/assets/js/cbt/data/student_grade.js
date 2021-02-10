@@ -132,7 +132,8 @@ function createTableList() {
       </div>
     </div>
     <div class="col-md-6 d-none d-md-block">
-      <a id="bAdd" href="#" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-plus"></i> Tambah</a>
+        <a id="bAdd" href="#" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-plus"></i> Tambah</a>
+        <a id="bCreateCard" href="#" class="btn btn-sm pd-x-15 btn-success btn-uppercase mg-l-5 float-right"><i class="fa fa-print"></i> Cetak Kartu Ujian</a>
     </div>
     </div>
     <table class='dtable table table-striped'>

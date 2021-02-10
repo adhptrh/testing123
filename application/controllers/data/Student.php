@@ -12,6 +12,8 @@ class Student extends MY_Controller
      *
      */
 
+    protected $fail = 0, $success = 0;
+
     public function __construct()
     {
         parent::__construct();
@@ -161,11 +163,64 @@ class Student extends MY_Controller
             $spreadsheet = $reader->load($inputFileName);
             $sheetData = $spreadsheet->getActiveSheet()->toArray();
 
-            // DEBUG
-            echo '<pre>';
-            print_r($sheetData);
-            echo '</pre>';
-            die();
+            $this->save_excel_process($sheetData);
+            $this->session->set_flashdata('message', 'Data berhasil disimpan : ' . $this->success . ', gagal disimpan = ' . $this->fail);
+            redirect(base_url('data/student'));
+        }
+    }
+
+    public function save_excel_process($data)
+    {
+        foreach ($data as $k => $v) {
+            $nisn = $v[1];
+            $nama = $v[2];
+
+            if ($k != 0) {
+                $cek = $this->data->find(0, ['a.nisn' => $nisn], true);
+
+                if ($cek) { // Data sudah ada
+                    $this->fail++;
+                } else {
+                    $this->db->trans_begin();
+                    // Input profile
+                    $save = $this->profile->save([
+                        'name' => $nama,
+                    ]);
+
+                    if ($save['status'] != '200') {
+                        $this->db->trans_rollback();
+                        $this->fail++;
+                    } else {
+                        $profile_id = $this->db->insert_id();
+
+                        // Input username
+                        $password = $this->generate_random_string();
+                        $save = $this->user->save([
+                            'profile_id' => $profile_id,
+                            'username' => $nisn,
+                            'password' => password_hash($password, PASSWORD_DEFAULT),
+                            'pass_siswa' => $password,
+                        ]);
+
+                        if ($save['status'] != '200') {
+                            $this->fail++;
+                        } else {
+                            // Input siswa
+                            $save = $this->data->save([
+                                'profile_id' => $profile_id,
+                                'nisn' => $nisn,
+                            ]);
+
+                            if ($save['status'] != '200') {
+                                $this->fail++;
+                            } else {
+                                $this->db->trans_commit();
+                                $this->success++;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
