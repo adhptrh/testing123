@@ -52,7 +52,7 @@ class Test extends MY_Controller
         ];
 
         if ($exam_schedule === 0) {
-            $this->temp('app/test/info', [
+            $this->temp_test('app/test/info', [
                 'info' => 'Maaf, Anda belum menentukan Mata Uji, silahkan cek menu jadwal ujian',
             ]);
         }
@@ -94,7 +94,7 @@ class Test extends MY_Controller
                 if ($is_register[0]['finish_time'] == null) { // (2) Jika belum
                     // Dapatkan daftar soal dan jawaban
                     // arahkan ke laman ujian
-                    $this->temp('app/test/content', [
+                    $this->temp_test('app/test/content', [
                         'student_grade_exam_id' => $is_register[0]['id'],
                         'exam_schedule_id' => $exam_schedule,
                         'exam_question_id' => $data['exam_question_id'],
@@ -104,7 +104,7 @@ class Test extends MY_Controller
                     ]);
                 } else { // (2) Jika sudah
                     // Go info atau logout
-                    $this->temp('app/test/info', [
+                    $this->temp_test('app/test/info', [
                         'info' => 'Maaf, Anda telah menyelesaikan ujian ini pada ' . $is_register[0]['finish_time'],
                     ]);
                 }
@@ -122,7 +122,7 @@ class Test extends MY_Controller
                     $this->db->trans_commit();
 
                     // arahkan ke laman ujian
-                    $this->temp('app/test/content', [
+                    $this->temp_test('app/test/content', [
                         'exam_schedule_id' => $exam_schedule,
                         'student_grade_exam_id' => $regis['id'],
                         'exam_question_id' => $data['exam_question_id'],
@@ -132,14 +132,14 @@ class Test extends MY_Controller
                     ]);
                 } else {
                     $this->db->trans_rollback();
-                    $this->temp('app/test/info', [
+                    $this->temp_test('app/test/info', [
                         'info' => 'Maaf, Gagal mengeksekusi perintah, silahkan hubungi penyelenggara ujian',
                     ]);
                 }
             }
         } else { // (0) Jika Tidak
             // Go info atau logout
-            $this->temp('app/test/info', [
+            $this->temp_test('app/test/info', [
                 'info' => 'Maaf, Anda tidak memiliki akses untuk mengikut ujian ini',
             ]);
         }
@@ -213,7 +213,7 @@ class Test extends MY_Controller
         $student_grade_exam_id = enc($student_grade_exam_id, 1);
         $closing = $this->set_it_close($student_grade_exam_id);
 
-        $this->temp('app/test/close_dialog', [
+        $this->temp_test('app/test/close_dialog', [
             'status' => $closing['status'],
             'message' => 'Kami telah men-submit (menyelesaikan lalu menyimpan) data ujian Anda, karena waktu ujian ini telah kadaluarsa.',
         ]);
@@ -304,7 +304,7 @@ class Test extends MY_Controller
         //student_grade_id_from_session
         $this->set_student_grade_id();
 
-        $this->temp('app/test/confirm', [
+        $this->temp_test('app/test/confirm', [
             'exam_schedule_id' => $exam_schedule_id,
             'data' => $this->exam_schedule->find(enc($exam_schedule_id, 1)),
             'student' => $this->student_grade->find(enc($this->student_grade_id, 1)),

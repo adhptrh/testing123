@@ -76,18 +76,22 @@ class Exam_schedule extends MY_Controller
 			$data = [
 				'exam_schedule' => $data,
 				'student' => true,
-			];
+            ];
+            
+            $this->temp_test('app/exam_schedule/content', [
+                'data' => $data,
+            ]);
 
         } else {
             $data = [
 				'exam_schedule' => $this->data->find(),
 				'student' => false,
-			];
+            ];
+            
+            $this->temp('app/exam_schedule/content', [
+                'data' => $data,
+            ]);
         }
-
-        $this->temp('app/exam_schedule/content', [
-            'data' => $data,
-        ]);
     }
 
     public function get_json()

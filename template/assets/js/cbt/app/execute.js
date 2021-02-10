@@ -24,6 +24,8 @@ let timeTarget = new Date().getTime(),
     exam = 0, // exam_temp_id
     examQuestionDetail = 0;
 
+footer.classList.remove('fixed-bottom');
+
 bNext.addEventListener('click', () => {
     next();
 })

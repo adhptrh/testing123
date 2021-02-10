@@ -100,6 +100,19 @@ class MY_Controller extends CI_Controller
         $this->load->view('layout/footer');
     }
 
+    protected function temp_test($content, $data = [])
+    {
+        $this->load->view('layout/test/header', [
+            'header' => $this->header,
+            'profile' => $this->get_profile(),
+        ]);
+        $this->load->view('layout/test/nav', [
+            'menu' => $this->get_menu(),
+        ]);
+        $this->load->view($content, $data);
+        $this->load->view('layout/test/footer');
+    }
+
     private function get_token()
     {
         /**
