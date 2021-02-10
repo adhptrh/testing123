@@ -91,7 +91,11 @@ class Login extends CI_Controller
                     // Password benar
                     $this->assign_session($get_user);
 
-                    redirect(base_url('/'));
+                    if ($this->is_siswa) {
+                        redirect(base_url('/app/exam_schedule'));
+                    }else{
+                        redirect(base_url('/'));
+                    }
 
                 } else {
 

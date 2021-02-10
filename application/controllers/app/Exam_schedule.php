@@ -70,7 +70,7 @@ class Exam_schedule extends MY_Controller
 
             $data = $this->data->find(false, [
                 'e.id' => $oi,
-                'h.grade_period_id' => $gp,
+                'i.grade_period_id' => $gp,
 			]);
 			
 			$data = [

@@ -79,7 +79,7 @@ class Exam_schedule_m extends MY_Model
             WHERE     a.is_del = "0"
             GROUP BY  a.exam_question_id
           ) h', 'h.exam_question_id = a.exam_question_id', 'left')
-            ->join('exam_question_extend_grades h', 'g.exam_question_id = a.exam_question_id', 'left')
+            ->join('exam_question_extend_grades i', 'i.exam_question_id = a.exam_question_id', 'left')
             ->group_by('a.exam_question_id')
             ->order_by('a.id', 'ASC');
 
