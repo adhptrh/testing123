@@ -32,6 +32,8 @@ class Student_grade_m extends MY_Model {
     ->select('f.nisn')
     ->select('g.name')
     ->select('h.name order')
+    ->select('i.name grade')
+    ->select('j.pass_siswa')
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
@@ -40,6 +42,8 @@ class Student_grade_m extends MY_Model {
     ->join('students f', 'f.id = a.student_id', 'left')
     ->join('z_profiles g', 'g.id = f.profile_id', 'left')
     ->join('orders h', 'h.id = a.order_id', 'left')
+    ->join('grades i', 'i.id = d.grade_id', 'left')
+    ->join('z_users j', 'j.profile_id = g.id', 'left')
     ->order_by('a.id', 'ASC');
 
     if(!$show_del){

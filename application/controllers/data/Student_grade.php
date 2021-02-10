@@ -54,76 +54,6 @@ class Student_grade extends MY_Controller
         ]);
     }
 
-    // public function create($grade_period_id, $old = [])
-    // {
-    //     $this->filter(1);
-
-    //     $this->header = [
-    //         'title' => 'Siswa Kelas',
-    //         'sub_title' => 'Tambah Siswa Kelas',
-    //         'nav_active' => 'data/grade_period',
-    //         'breadcrumb' => [
-    //             [
-    //                 'label' => 'XPanel',
-    //                 'icon' => 'fa-home',
-    //                 'href' => '#',
-    //             ],
-    //             [
-    //                 'label' => 'Referensi',
-    //                 'icon' => 'fa-gear',
-    //                 'href' => '#',
-    //             ],
-    //             [
-    //                 'label' => 'Siswa Kelas',
-    //                 'icon' => 'fa-list',
-    //                 'href' => base_url('data/student_grade'),
-    //             ],
-    //             [
-    //                 'label' => 'Tambah',
-    //                 'icon' => '',
-    //                 'href' => '#',
-    //             ],
-    //         ],
-    //     ];
-
-    //     $id = enc($grade_period_id, 1);
-    //     $grade_period = $this->grade_period->find($id);
-
-    //     // Daftar siswa yang sudah terdaftar di kelas ini.
-    //     $student_current = $this->data->find(false, [
-    //         'a.grade_period_id' => $id
-    //     ]);
-
-    //     // Siswa yang sudah terdaftar di periode ini.
-    //     $data = $this->data->find(false, [
-    //         'd.period_id' => enc($grade_period['period_id'], 1),
-    //     ]);
-
-    //     $siswa_terdaftar = [];
-
-    //     foreach ($data as $k => $v) {
-    //         array_push($siswa_terdaftar, enc($v['student_id'], 1));
-    //     }
-
-    //     // Filter siswa yang belum terdaftar
-    //     $data = $this->student->find();
-    //     foreach ($data as $k => $v) {
-    //         if(in_array(enc($v['id'], 1), $siswa_terdaftar)){
-    //             unset($data[$k]);
-    //         }
-    //     }
-
-    //     $student_ready = $data;
-
-    //     $this->temp('data/student_grade/create', [
-    //         'grade_period_id' => $grade_period_id,
-    //         'student_current' => $student_current,
-    //         'student_ready' => $student_ready,
-    //         'grade_period' => $grade_period,
-    //         'old' => $old,
-    //     ]);
-    // }
-
     public function get_student_grade_json()
     {
         $this->filter(2);
@@ -233,23 +163,17 @@ class Student_grade extends MY_Controller
         $data = [
             'status' => $save['status'],
             'message' => $save['message'],
-            // 'student_id' => $student_id,
-            // 'grade_period_id' => $grade_period_id,
             'token' => $this->security->get_csrf_hash(),
         ];
 
         echo json_encode($data);
     }
 
-    // public function edit($id, $old = [])
-    // {
-    //     $this->filter(3);
-    // }
-
-    // public function update()
-    // {
-    //     $this->filter(3);
-    // }
+    public function card_print($grade_period_id){
+        $gpi = enc($grade_period_id, 1);
+        $data = $this->data->find(false, ['a.grade_period_id' => $gpi]);
+        $this->load->view('data/student_grade/card_print', ['data' => $data]);
+    }
 
     public function delete()
     {
@@ -265,9 +189,4 @@ class Student_grade extends MY_Controller
 
         echo json_encode($data);
     }
-
-    // public function restore($id)
-    // {
-    //     $this->filter(4);
-    // }
 }
