@@ -72,7 +72,7 @@
                 </div>
                 <div class="input-group d-none" id="confirmToken">
                     <hr>
-                    <input type="text" class="form-control" id="iConfirmToken"
+                    <input autocomplete="off" type="text" class="form-control" id="iConfirmToken"
                         placeholder="Masukkan token dan klik konfirmasi">
                     <div class="input-group-append">
                         <button class="btn btn-success" type="button" id="bConfirmToken">Konfirmasi</button>

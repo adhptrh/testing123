@@ -42,6 +42,12 @@ bOpsi.forEach((item, index) => {
 
 bExamItems.forEach((item, index) => {
     item.addEventListener('click', () => {
+        if (item.getAttribute('data-is-last-exam-item') == 1) {
+            fBFinish.classList.remove('d-none');
+        } else {
+            fBFinish.classList.add('d-none');
+        }
+
         lock();
         showInfo();
         exam = item.getAttribute('data-exam-item');
@@ -199,7 +205,7 @@ function showTimeLeft() {
 
 function confirmTimeOut(message = 'Apakah Anda yakin akan menyelesaikan ujian ini') {
     Swal.fire({
-        title: 'Peringatan',
+        title: 'Peringatan 1',
         text: message,
         icon: 'warning',
         showCancelButton: true,
@@ -209,6 +215,25 @@ function confirmTimeOut(message = 'Apakah Anda yakin akan menyelesaikan ujian in
         cancelButtonText: 'Batal',
     }).then((result) => {
         if (result.isConfirmed) {
+            confirmTimeOut2();
+        }
+    })
+}
+
+function confirmTimeOut2(message = 'Jika Anda yakin ingin menyelesaikan ujian, silahkan cheklist di bawah ini') {
+    Swal.fire({
+        title: 'Peringatan 2',
+        text: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal',
+        input: 'checkbox',
+        inputPlaceholder: 'Saya yakin'
+    }).then((result) => {
+        if (result.value) {
             timeOut();
         }
     })
