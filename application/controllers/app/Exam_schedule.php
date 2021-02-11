@@ -134,79 +134,79 @@ class Exam_schedule extends MY_Controller
         ]);
     }
 
-    public function reset($exam_schedule_id, $student_grade_exam_id)
-    {
-        /**
-         * Menghapus jawaban siswa di student_grade_extend_exams, exams dan exam_temps
-         */
+    // public function reset($exam_schedule_id, $student_grade_exam_id)
+    // {
+    //     /**
+    //      * Menghapus jawaban siswa di student_grade_extend_exams, exams dan exam_temps
+    //      */
 
-        $this->filter(3);
+    //     $this->filter(3);
 
-        $sgei = enc($student_grade_exam_id, 1);
+    //     $sgei = enc($student_grade_exam_id, 1);
 
-        /**
-         * Softdel student_grade_exam
-         * Softdel exam_temps
-         * Softdel exams
-         */
+    //     /**
+    //      * Softdel student_grade_exam
+    //      * Softdel exam_temps
+    //      * Softdel exams
+    //      */
 
-        $this->db->trans_begin();
+    //     $this->db->trans_begin();
 
-        // Softdel student_grade_exam
-        $update = $this->exam_student->delete($student_grade_exam_id);
+    //     // Softdel student_grade_exam
+    //     $update = $this->exam_student->delete($student_grade_exam_id);
 
-        if ($update['status'] == '200') {
-            // Softdel exam_temps
-            $update = $this->exam_current_temp->delete_where([
-                'student_grade_exam_id' => $sgei,
-            ]);
-            if ($update['status'] == '200') {
-                // Softdel exams
-                $update = $this->exam_current->delete_where([
-                    'student_grade_exam_id' => $sgei,
-                ]);
-                if ($update['status'] == '200') {
-                    $this->db->trans_commit();
-                    $this->session->set_flashdata('message', $update['message']);
-                } else {
-                    $this->db->trans_rollback();
-                    $this->session->set_flashdata('message', $update['message']);
-                }
-            } else {
-                $this->db->trans_rollback();
-                $this->session->set_flashdata('message', $update['message']);
-            }
-        } else {
-            $this->db->trans_rollback();
-            $this->session->set_flashdata('message', $update['message']);
-        }
+    //     if ($update['status'] == '200') {
+    //         // Softdel exam_temps
+    //         $update = $this->exam_current_temp->delete_where([
+    //             'student_grade_exam_id' => $sgei,
+    //         ]);
+    //         if ($update['status'] == '200') {
+    //             // Softdel exams
+    //             $update = $this->exam_current->delete_where([
+    //                 'student_grade_exam_id' => $sgei,
+    //             ]);
+    //             if ($update['status'] == '200') {
+    //                 $this->db->trans_commit();
+    //                 $this->session->set_flashdata('message', $update['message']);
+    //             } else {
+    //                 $this->db->trans_rollback();
+    //                 $this->session->set_flashdata('message', $update['message']);
+    //             }
+    //         } else {
+    //             $this->db->trans_rollback();
+    //             $this->session->set_flashdata('message', $update['message']);
+    //         }
+    //     } else {
+    //         $this->db->trans_rollback();
+    //         $this->session->set_flashdata('message', $update['message']);
+    //     }
 
-        redirect(base_url('app/exam_schedule/detail/' . $exam_schedule_id));
-    }
+    //     redirect(base_url('app/exam_schedule/detail/' . $exam_schedule_id));
+    // }
 
-    public function set_finish($exam_schedule_id, $student_grade_exam_id)
-    {
-        /**
-         * Mengeset finish_time pada student_grade_extend_exams
-         */
+    // public function set_finish($exam_schedule_id, $student_grade_exam_id)
+    // {
+    //     /**
+    //      * Mengeset finish_time pada student_grade_extend_exams
+    //      */
 
-        $this->filter(3);
+    //     $this->filter(3);
 
-        $sgei = enc($student_grade_exam_id, 1);
+    //     $sgei = enc($student_grade_exam_id, 1);
 
-        $update = $this->exam_student->save([
-            'id' => $sgei,
-            'finish_time' => date('Y-m-d H:i:s'),
-        ], true);
+    //     $update = $this->exam_student->save([
+    //         'id' => $sgei,
+    //         'finish_time' => date('Y-m-d H:i:s'),
+    //     ], true);
 
-        if ($update['status'] == '200') {
-            $this->session->set_flashdata('message', $update['message']);
-        } else {
-            $this->session->set_flashdata('message', $update['message']);
-        }
+    //     if ($update['status'] == '200') {
+    //         $this->session->set_flashdata('message', $update['message']);
+    //     } else {
+    //         $this->session->set_flashdata('message', $update['message']);
+    //     }
 
-        redirect(base_url('app/exam_schedule/detail/' . $exam_schedule_id));
-    }
+    //     redirect(base_url('app/exam_schedule/detail/' . $exam_schedule_id));
+    // }
 
     public function get_json()
     {

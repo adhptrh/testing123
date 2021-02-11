@@ -184,7 +184,7 @@ class Test extends MY_Controller
 
     }
 
-    public function closing_by_operator()
+    public function closing_by_operator($exam_schedule_id, $student_grade_exam_id)
     {
         /**
          * variable yang dibutuhkan :
@@ -193,12 +193,11 @@ class Test extends MY_Controller
 
         $this->filter(3);
 
-        $student_grade_exam_id = enc($student_grade_exam_id, 1);
         $closing = $this->set_it_close($student_grade_exam_id);
 
-        $this->session->set_flashdata('create_info_message', 'Ujian siswa berhasil disubmit (diselesaikan).');
+        $this->session->set_flashdata('message', 'Ujian siswa berhasil disubmit (diselesaikan).');
 
-        redirect(base_url('app/exam_schedule'));
+        redirect(base_url('app/exam_schedule/detail/' . $exam_schedule_id));
     }
 
     public function closing_by_sistem($student_grade_exam_id)
@@ -210,13 +209,62 @@ class Test extends MY_Controller
 
         $this->filter(3);
 
-        $student_grade_exam_id = enc($student_grade_exam_id, 1);
         $closing = $this->set_it_close($student_grade_exam_id);
 
         $this->temp_test('app/test/close_dialog', [
             'status' => $closing['status'],
             'message' => 'Kami telah men-submit (menyelesaikan lalu menyimpan) data ujian Anda, karena waktu ujian ini telah kadaluarsa.',
         ]);
+    }
+
+    public function reset_by_operator($exam_schedule_id, $student_grade_exam_id)
+    {
+        /**
+         * Menghapus jawaban siswa di student_grade_extend_exams, exams dan exam_temps
+         * 
+         * Variable yang dibutuhkan
+         * $exam_schedule_id yang diencrypt
+         * $student_grade_exam_id yang diencrypt
+         * 
+         * return = redirect ke app/exam_schedule/detail/xxx
+         */
+
+        $this->filter(3);
+
+        $sgei = enc($student_grade_exam_id, 1);
+        
+        $this->db->trans_begin();
+
+        // Softdel student_grade_exam
+        $update = $this->student_exam->delete($student_grade_exam_id);
+
+        if ($update['status'] == '200') {
+            // Softdel exam_temps
+            $update = $this->exam_temp->delete_where([
+                'student_grade_exam_id' => $sgei,
+            ], false);  // Hard Delete
+            if ($update['status'] == '200') {
+                // Softdel exams
+                $update = $this->exam->delete_where([
+                    'student_grade_exam_id' => $sgei,
+                ]);
+                if ($update['status'] == '200') {
+                    $this->db->trans_commit();
+                    $this->session->set_flashdata('message', $update['message']);
+                } else {
+                    $this->db->trans_rollback();
+                    $this->session->set_flashdata('message', $update['message']);
+                }
+            } else {
+                $this->db->trans_rollback();
+                $this->session->set_flashdata('message', $update['message']);
+            }
+        } else {
+            $this->db->trans_rollback();
+            $this->session->set_flashdata('message', $update['message']);
+        }
+
+        redirect(base_url('app/exam_schedule/detail/' . $exam_schedule_id));
     }
 
     private function set_it_close($student_grade_exam_id)
@@ -243,7 +291,7 @@ class Test extends MY_Controller
             // Clearing ujian
             $clearing = $this->exam_temp->delete_where([
                 'student_grade_exam_id' => $student_grade_exam_id,
-            ]);
+            ], false); // Hard Delete
 
             if ($clearing['status'] == '200') {
                 $this->db->trans_commit();

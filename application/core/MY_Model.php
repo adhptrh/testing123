@@ -215,23 +215,30 @@ class MY_Model extends CI_Model
         }
     }
 
-    public function delete_where($where)
+    public function delete_where($where, $soft = true)
     {
-        /*
-         * --------------------------------------------------------------------------
-         * DELETE berdasaran kondisi-kondisi tertentu
-         * --------------------------------------------------------------------------
-         *
-         * Comment Here
-         *
+        /**
+         * Delete dengan kondisi tertentu dalam bentuk array
+         * 
+         * variable yang dibutuhkan
+         * 1. array $where
+         * 2. $soft = true atau false
          */
 
-        $delete = $this->db->where($where)
+        
+        if ($soft) {
+            //Jika sof-tdel
+            $delete = $this->db->where($where)
             ->update($this->name, [
                 'is_del' => '1',
                 'updated_at' => $this->get_time(),
                 'updated_by' => $this->get_profile_id(),
             ]);
+        } else {
+            //Jika hard-del
+            $delete = $this->db->where($where)->delete($this->name);
+        }
+
 
         if ($delete) {
             return [
