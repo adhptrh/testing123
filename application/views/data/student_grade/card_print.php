@@ -4,9 +4,26 @@
    margin: 27mm 16mm 27mm 16mm;
 } */
 
+table {
+    width: 340px;
+}
+
+.cLeft {
+    width: 93px;
+}
+
+.cRight {
+    width: 170px;
+}
+
+.cCenter {
+    width: 76px;
+}
+
 .column {
     float: left;
-    width: 50%;
+    /* width: 50%; */
+    margin-right: 20px;
     margin-bottom: 20px;
 }
 
@@ -28,20 +45,20 @@
 <div class="row">
     <?php foreach ($data as $k => $v):?>
     <div class="column">
-        <table border="1" width="90%">
+        <table border="1">
             <tr>
                 <td colspan="3">Logo + Kop + Logo</td>
             </tr>
 
             <tr>
-                <td rowspan="5">Photo</td>
+                <td rowspan="5" class='cLeft'>Photo</td>
                 <td>Nama</td>
                 <td>: <?= $v['name']; ?></td>
             </tr>
 
             <tr>
-                <td>NISN (Username)</td>
-                <td>: <?= $v['nisn']; ?></td>
+                <td class='cCenter'>NISN</td>
+                <td class='cRight'>: <?= $v['nisn']; ?></td>
             </tr>
 
             <tr>

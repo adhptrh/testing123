@@ -150,10 +150,12 @@ class Exam_question extends MY_Controller
                     $this->session->set_flashdata('message', $save['message']);
                     redirect(base_url('app/exam_question'));
                 } else {
+                    $this->db->trans_rollback();
                     $this->create($this->input->post());
                 }
 
             } else {
+                $this->db->trans_rollback();
                 $this->create($this->input->post());
             }
         }

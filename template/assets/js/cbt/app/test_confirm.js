@@ -22,6 +22,8 @@ examSchedule = examScheduleID.getAttribute('data-id');
 //     })
 // }
 
+footer.classList.remove('fixed-bottom');
+
 bStartTest.addEventListener('click', () => {
     window.location.href = `../execute/${examSchedule}`;
 })

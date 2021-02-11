@@ -17,13 +17,11 @@ class Exam_schedule extends MY_Controller
         $this->load->model('Exam_schedule_m', 'data');
         $this->load->model('Period_m', 'period');
         $this->load->model('Exam_question_m', 'exam');
+        $this->load->model('Student_grade_exam_m', 'exam_student');
+        $this->load->model('Exam_m', 'exam_current');
+        $this->load->model('Exam_temp_m', 'exam_current_temp');
         $this->load->model('Order_m', 'order');
     }
-
-    /**
-     * Mendapatkan profile dari session
-     *
-     */
 
     public function index()
     {
@@ -71,27 +69,143 @@ class Exam_schedule extends MY_Controller
             $data = $this->data->find(false, [
                 'e.id' => $oi,
                 'i.grade_period_id' => $gp,
-			]);
-			
-			$data = [
-				'exam_schedule' => $data,
-				'student' => true,
+            ]);
+
+            $data = [
+                'exam_schedule' => $data,
+                'student' => true,
             ];
-            
+
             $this->temp_test('app/exam_schedule/content', [
                 'data' => $data,
             ]);
 
         } else {
             $data = [
-				'exam_schedule' => $this->data->find(),
-				'student' => false,
+                'exam_schedule' => $this->data->find(),
+                'student' => false,
             ];
-            
+
             $this->temp('app/exam_schedule/content', [
                 'data' => $data,
             ]);
         }
+    }
+
+    public function detail($exam_schedule_id)
+    {
+        $this->filter(2);
+
+        $this->header = [
+            'title' => 'Detail Ujian',
+            'js_file' => 'app/exam_schedule',
+            'sub_title' => 'Pengaturan Siswa Ujian',
+            'nav_active' => 'app/exam_schedule',
+            'breadcrumb' => [
+                [
+                    'label' => 'XPanel',
+                    'icon' => 'fa-home',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Aplikasi',
+                    'icon' => 'fa-gear',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Jadwal Ujian',
+                    'icon' => 'fa-gear',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Detail Ujian',
+                    'icon' => '',
+                    'href' => '#',
+                ],
+            ],
+        ];
+
+        $data = $this->exam_student->find(false, [
+            'a.exam_schedule_id' => enc($exam_schedule_id, 1),
+        ]);
+
+        $this->temp('app/exam_schedule/detail', [
+            'data' => $data,
+        ]);
+    }
+
+    public function reset($exam_schedule_id, $student_grade_exam_id)
+    {
+        /**
+         * Menghapus jawaban siswa di student_grade_extend_exams, exams dan exam_temps
+         */
+
+        $this->filter(3);
+
+        $sgei = enc($student_grade_exam_id, 1);
+
+        /**
+         * Softdel student_grade_exam
+         * Softdel exam_temps
+         * Softdel exams
+         */
+
+        $this->db->trans_begin();
+
+        // Softdel student_grade_exam
+        $update = $this->exam_student->delete($student_grade_exam_id);
+
+        if ($update['status'] == '200') {
+            // Softdel exam_temps
+            $update = $this->exam_current_temp->delete_where([
+                'student_grade_exam_id' => $sgei,
+            ]);
+            if ($update['status'] == '200') {
+                // Softdel exams
+                $update = $this->exam_current->delete_where([
+                    'student_grade_exam_id' => $sgei,
+                ]);
+                if ($update['status'] == '200') {
+                    $this->db->trans_commit();
+                    $this->session->set_flashdata('message', $update['message']);
+                } else {
+                    $this->db->trans_rollback();
+                    $this->session->set_flashdata('message', $update['message']);
+                }
+            } else {
+                $this->db->trans_rollback();
+                $this->session->set_flashdata('message', $update['message']);
+            }
+        } else {
+            $this->db->trans_rollback();
+            $this->session->set_flashdata('message', $update['message']);
+        }
+
+        redirect(base_url('app/exam_schedule/detail/' . $exam_schedule_id));
+    }
+
+    public function set_finish($exam_schedule_id, $student_grade_exam_id)
+    {
+        /**
+         * Mengeset finish_time pada student_grade_extend_exams
+         */
+
+        $this->filter(3);
+
+        $sgei = enc($student_grade_exam_id, 1);
+
+        $update = $this->exam_student->save([
+            'id' => $sgei,
+            'finish_time' => date('Y-m-d H:i:s'),
+        ], true);
+
+        if ($update['status'] == '200') {
+            $this->session->set_flashdata('message', $update['message']);
+        } else {
+            $this->session->set_flashdata('message', $update['message']);
+        }
+
+        redirect(base_url('app/exam_schedule/detail/' . $exam_schedule_id));
     }
 
     public function get_json()
@@ -177,8 +291,8 @@ class Exam_schedule extends MY_Controller
                 'exam_question_id' => enc($this->input->post('exam'), 1),
                 'order_id' => enc($this->input->post('order'), 1),
                 'date' => $date,
-                'start' => $date . " " .$this->input->post('start'),
-                'finish' => $date . " " .$this->input->post('finish'),
+                'start' => $date . " " . $this->input->post('start'),
+                'finish' => $date . " " . $this->input->post('finish'),
                 'number_of_exam' => $this->input->post('number_of_exam'),
             ];
 
@@ -266,8 +380,8 @@ class Exam_schedule extends MY_Controller
                 'exam_question_id' => enc($this->input->post('exam'), 1),
                 'order_id' => enc($this->input->post('order'), 1),
                 'date' => $date,
-                'start' => $date . " " .$this->input->post('start'),
-                'finish' => $date . " " .$this->input->post('finish'),
+                'start' => $date . " " . $this->input->post('start'),
+                'finish' => $date . " " . $this->input->post('finish'),
                 'number_of_exam' => $this->input->post('number_of_exam'),
             ];
 

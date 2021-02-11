@@ -227,7 +227,11 @@ class MY_Model extends CI_Model
          */
 
         $delete = $this->db->where($where)
-            ->delete($this->name);
+            ->update($this->name, [
+                'is_del' => '1',
+                'updated_at' => $this->get_time(),
+                'updated_by' => $this->get_profile_id(),
+            ]);
 
         if ($delete) {
             return [

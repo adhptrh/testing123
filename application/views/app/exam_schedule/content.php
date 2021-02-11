@@ -41,14 +41,7 @@
                         </thead>
                         <tbody>
                             <?php foreach ($data['exam_schedule'] as $k => $v): ?>
-                            <?php if (
-    (date("d-m-Y", $v['time_server_now']) == $v['date']
-        &&
-        date("H:i:s", ($v['time_server_now'] + 900)) >= $v['start']
-        &&
-        date("H:i:s", $v['time_server_now']) <= $v['finish'])
-    || !$data['student']
-): ?>
+                            <?php if ( (date("d-m-Y", $v['time_server_now']) == $v['date'] && date("H:i:s", ($v['time_server_now'] + 900)) >= $v['start'] && date("H:i:s", $v['time_server_now']) <= $v['finish']) || !$data['student'] ): ?>
 
                             <tr>
                                 <td><?=$k++ + 1?></td>
@@ -62,6 +55,9 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item"
+                                                href="<?=base_url('app/exam_schedule/detail/' . $v['id']);?>"><i
+                                                    class="fas fa-folder"></i> Detail</a>
+                                            <a class="dropdown-item"
                                                 href="<?=base_url('app/exam_schedule/edit/' . $v['id']);?>"><i
                                                     class="fas fa-edit"></i> Edit</a>
                                             <?php if ($v['intime'] == 0): ?>
@@ -69,11 +65,6 @@
                                                 data-href="<?=base_url('app/exam_schedule/delete/' . $v['id']);?>"><i
                                                     class="fas fa-trash"></i> Hapus</a>
                                             <?php endif;?>
-                                            <a class="dropdown-item token" href="#" data-href=""><i
-                                                    class="fas fa-key"></i> Token</a>
-                                            <a class="dropdown-item token"
-                                                href="<?=base_url('app/test/main/' . $v['id']) . '/123';?>"
-                                                data-href=""><i class="fas fa-check-square"></i> Ikuti Ujian</a>
                                         </div>
                                     </div>
                                     <?php else: ?>
