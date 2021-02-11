@@ -115,8 +115,12 @@ function setEditor() {
         modules: {
             toolbar: [
                 [{ header: [1, 2, false] }],
-                ['bold', 'italic', 'underline'],
-                ['image', 'code-block']
+                ['bold', 'italic', 'underline', 'strike'],
+                ['link'],
+                ['blockquote'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],
+                ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
             ]
         },
         placeholder: 'Ketikkan soal di sini ...',
@@ -127,8 +131,12 @@ function setEditor() {
         modules: {
             toolbar: [
                 [{ header: [1, 2, false] }],
-                ['bold', 'italic', 'underline'],
-                ['image', 'code-block']
+                ['bold', 'italic', 'underline', 'strike'],
+                ['link'],
+                ['blockquote'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],
+                ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
             ]
         },
         placeholder: 'Ketikkan opsi di sini ...',
@@ -139,8 +147,12 @@ function setEditor() {
         modules: {
             toolbar: [
                 [{ header: [1, 2, false] }],
-                ['bold', 'italic', 'underline'],
-                ['image', 'code-block']
+                ['bold', 'italic', 'underline', 'strike'],
+                ['link'],
+                ['blockquote'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],
+                ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
             ]
         },
         placeholder: 'Ketikkan opsi di sini ...',
@@ -151,8 +163,12 @@ function setEditor() {
         modules: {
             toolbar: [
                 [{ header: [1, 2, false] }],
-                ['bold', 'italic', 'underline'],
-                ['image', 'code-block']
+                ['bold', 'italic', 'underline', 'strike'],
+                ['link'],
+                ['blockquote'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],
+                ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
             ]
         },
         placeholder: 'Ketikkan opsi di sini ...',
@@ -163,8 +179,12 @@ function setEditor() {
         modules: {
             toolbar: [
                 [{ header: [1, 2, false] }],
-                ['bold', 'italic', 'underline'],
-                ['image', 'code-block']
+                ['bold', 'italic', 'underline', 'strike'],
+                ['link'],
+                ['blockquote'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],
+                ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
             ]
         },
         placeholder: 'Ketikkan opsi di sini ...',
@@ -175,8 +195,12 @@ function setEditor() {
         modules: {
             toolbar: [
                 [{ header: [1, 2, false] }],
-                ['bold', 'italic', 'underline'],
-                ['image', 'code-block']
+                ['bold', 'italic', 'underline', 'strike'],
+                ['link'],
+                ['blockquote'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],
+                ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
             ]
         },
         placeholder: 'Ketikkan opsi di sini ...',
