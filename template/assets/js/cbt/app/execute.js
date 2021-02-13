@@ -24,7 +24,11 @@ let timeTarget = new Date().getTime(),
     exam = 0, // exam_temp_id
     examQuestionDetail = 0;
 
-footer.classList.remove('fixed-bottom');
+if (roller.getAttribute('data-height') == 'minimal') {
+    footer.classList.add('fixed-bottom');
+} else {
+    footer.classList.remove('fixed-bottom');
+}
 
 bNext.addEventListener('click', () => {
     next();
