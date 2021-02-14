@@ -120,7 +120,7 @@ function setEditor() {
                 ['blockquote'],
                 [{ 'list': 'ordered' }, { 'list': 'bullet' }],
                 [{ 'script': 'sub' }, { 'script': 'super' }],
-                ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
+                ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }],
             ]
         },
         placeholder: 'Ketikkan soal di sini ...',

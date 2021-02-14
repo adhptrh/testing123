@@ -56,7 +56,7 @@ bexam.onchange = () => {
 }
 
 bSave.addEventListener("click", () => {
-    if (numbersToExam.value <= numbers_of_exam) {
+    if (parseInt(numbersToExam.value) <= parseInt(numbers_of_exam)) {
         if (iIntime.value == 1) {
             Swal.fire({
                 title: 'Peringatan',

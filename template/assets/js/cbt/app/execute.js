@@ -15,14 +15,16 @@ let timeTarget = new Date().getTime(),
         'opsi_c': 0,
         'opsi_d': 0,
         'opsi_e': 0,
-        'answer': 0,
+        // 'answer': 0,
     },
     studentAnswer = '',
     token = 0,
     message = 0,
-    answer = '',
+    answer = 0,
     exam = 0, // exam_temp_id
     examQuestionDetail = 0;
+
+token = token_form.value;
 
 if (roller.getAttribute('data-height') == 'minimal') {
     footer.classList.add('fixed-bottom');
@@ -93,21 +95,35 @@ function loadExamDetails() {
         url: '../get_exam_detail/',
         method: 'post',
         data: {
-            token: token_form.value,
-            exam_item: exam,
+            token: token,
+            exam_item: examQuestionDetail,
+            student_grade_exam: studentGradeExam.getAttribute('data-value'),
         },
         dataType: 'json',
         success: function(response) {
-            token_form.value = response.token;
-            examDetail.question = response.question;
-            examDetail.opsi_a = response.opsi_a;
-            examDetail.opsi_b = response.opsi_b;
-            examDetail.opsi_c = response.opsi_c;
-            examDetail.opsi_d = response.opsi_d;
-            examDetail.opsi_e = response.opsi_e;
-            examDetail.answer = response.answer;
-            showExamDetails();
-            lock(false);
+            if (!response.is_allow) {
+                Swal.fire({
+                    title: 'Peringatan',
+                    text: 'Ujian Anda tidak dapat dilanjutkan, silahkan hubungi penyelenggara Ujian',
+                    icon: 'warning',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Baik',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload()
+                    }
+                })
+            } else {
+                token = response.token;
+                examDetail.question = response.question;
+                examDetail.opsi_a = response.opsi_a;
+                examDetail.opsi_b = response.opsi_b;
+                examDetail.opsi_c = response.opsi_c;
+                examDetail.opsi_d = response.opsi_d;
+                examDetail.opsi_e = response.opsi_e;
+                showExamDetails();
+                lock(false);
+            }
         },
         error: function() {
             Swal.fire({
@@ -133,17 +149,17 @@ function showExamDetails() {
     fExamDetail.classList.remove('d-none');
     noExam.innerHTML = (numberOfExam + 1)
 
-    if (examDetail['answer'] == 'opsi_a') {
+    if (answer == 'opsi_a') {
         ftOpsiA.checked = true;
-    } else if (examDetail['answer'] == 'opsi_b') {
+    } else if (answer == 'opsi_b') {
         ftOpsiB.checked = true;
-    } else if (examDetail['answer'] == 'opsi_c') {
+    } else if (answer == 'opsi_c') {
         ftOpsiC.checked = true;
-    } else if (examDetail['answer'] == 'opsi_d') {
+    } else if (answer == 'opsi_d') {
         ftOpsiD.checked = true;
-    } else if (examDetail['answer'] == 'opsi_e') {
+    } else if (answer == 'opsi_e') {
         ftOpsiE.checked = true;
-    } else if (examDetail['answer'] == 'dubious') {
+    } else if (answer == 'dubious') {
         ftOpsiX.checked = true;
     } else {
         ftOpsiA.checked = false;
@@ -195,8 +211,13 @@ function showTimeLeft() {
         tTimeLeft.innerHTML = showZero(hours) + ":" + showZero(minutes) + ":" + showZero(seconds);
 
         if (hours < 1 && minutes < 10 && seconds == 59) {
-            tNotifWarningTimeOut.innerHTML = `Waktu mengerjakan ujian tinggal ${minutes} menit lagi`;
-            fNotifWarningTimeOut.classList.remove('d-none');
+            if (minutes < 1) {
+                tNotifWarningTimeOut.innerHTML = `Waktu mengerjakan ujian tinggal ${seconds} detik lagi`;
+                fNotifWarningTimeOut.classList.remove('d-none');
+            } else {
+                tNotifWarningTimeOut.innerHTML = `Waktu mengerjakan ujian tinggal ${minutes} menit lagi`;
+                fNotifWarningTimeOut.classList.remove('d-none');
+            }
         }
 
         // If the count down is finished, write some text
@@ -256,9 +277,10 @@ function timeOut(is_time_out = false) {
         url: url,
         method: 'post',
         data: {
-            token: token_form.value,
+            token: token,
         },
         success: function(response) {
+            footer.classList.add('fixed-bottom');
             fTest.innerHTML = response;
             timeServerNow = timeTarget;
         }
@@ -270,14 +292,14 @@ function loadingLandingData() {
         url: '../get_landing_data/',
         method: 'post',
         data: {
-            token: token_form.value,
+            token: token,
             exam_schedule_id: examSchedule.getAttribute('data-value'),
             exam_question_id: examQuestion.getAttribute('data-value'),
             student_grade_exam_id: studentGradeExam.getAttribute('data-value'),
         },
         dataType: 'json',
         success: function(response) {
-            token_form.value = response.token;
+            token = response.token;
             timeTarget = new Date(response.time_left * 1000).getTime();
             timeServerNow = new Date(response.time_server_now * 1000).getTime();
             showTimeLeft();
@@ -329,7 +351,7 @@ function save() {
         url: '../save/',
         method: 'post',
         data: {
-            token: token_form.value,
+            token: token,
             answer: answer,
             exam: exam,
             exam_question_detail_id: examQuestionDetail,
@@ -337,7 +359,7 @@ function save() {
         },
         dataType: 'json',
         success: function(response) {
-            token_form.value = response.token;
+            token = response.token;
             if (response.status == 200) {
                 bExamItems[numberOfExam].setAttribute('data-answer', answer);
                 bNumberButtonColor();

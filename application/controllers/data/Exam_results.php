@@ -106,6 +106,7 @@ class Exam_results extends MY_Controller
         $this->temp('data/exam_results/content', [
             'data' => [
                 'periods' => $this->periods,
+                'student_with_score' => $this->student_with_score,
             ],
         ]);
     }

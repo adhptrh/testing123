@@ -69,10 +69,10 @@ class Test extends MY_Controller
 
         # Data jadwal ujian
         $data = $this->exam_schedule->find($esi);
-        
+
         # Cek Token server
-        $token_server =  $token_server = $this->token->get();
-        $token_exam =  $this->session->userdata('token_exam');
+        $token_server = $token_server = $this->token->get();
+        $token_exam = $this->session->userdata('token_exam');
 
         # Cek kelas, waktu dan token
         if (count($data) && ($token_server == $token_exam)) {
@@ -114,7 +114,7 @@ class Test extends MY_Controller
                 $regis = $this->student_exam->save([
                     'student_grade_id' => $sgi,
                     'exam_schedule_id' => $esi,
-                    'numbers_before_answer' => $data['number_of_exam']
+                    'numbers_before_answer' => $data['number_of_exam'],
                 ]);
 
                 if ($regis['status'] == '200') {
@@ -221,18 +221,18 @@ class Test extends MY_Controller
     {
         /**
          * Menghapus jawaban siswa di student_grade_extend_exams, exams dan exam_temps
-         * 
+         *
          * Variable yang dibutuhkan
          * $exam_schedule_id yang diencrypt
          * $student_grade_exam_id yang diencrypt
-         * 
+         *
          * return = redirect ke app/exam_schedule/detail/xxx
          */
 
         $this->filter(3);
 
         $sgei = enc($student_grade_exam_id, 1);
-        
+
         $this->db->trans_begin();
 
         // Softdel student_grade_exam
@@ -242,7 +242,7 @@ class Test extends MY_Controller
             // Softdel exam_temps
             $update = $this->exam_temp->delete_where([
                 'student_grade_exam_id' => $sgei,
-            ], false);  // Hard Delete
+            ], false); // Hard Delete
             if ($update['status'] == '200') {
                 // Softdel exams
                 $update = $this->exam->delete_where([
@@ -362,18 +362,29 @@ class Test extends MY_Controller
     public function get_exam_detail()
     {
         $this->filter(2);
+        $is_allow = 0;
         $exam_item = enc($this->input->post('exam_item'), 1);
+        $student_grade_exam = enc($this->input->post('student_grade_exam'), 1);
 
-        $exam_question = $this->exam_temp->find($exam_item);
+        // is_still_register ?
+        $is_register = $this->student_exam->find($student_grade_exam);
+
+        if ($is_register) {
+            if ($is_register['finish_time'] == null) {
+                $is_allow = 1;
+            }
+        }
+
+        $exam_question = $this->exam_question_detail->find_for_student_details($exam_item);
 
         $data = [
+            'is_allow' => $is_allow,
             'question' => $exam_question['question'],
             'opsi_a' => $exam_question['opsi_a'],
             'opsi_b' => $exam_question['opsi_b'],
             'opsi_c' => $exam_question['opsi_c'],
             'opsi_d' => $exam_question['opsi_d'],
             'opsi_e' => $exam_question['opsi_e'],
-            'answer' => $exam_question['answer'],
         ];
 
         $data['token'] = $this->security->get_csrf_hash();
@@ -402,6 +413,7 @@ class Test extends MY_Controller
                 'time_server_now' => $info['time_server_now'],
                 'exam_questions' => $exams,
             ];
+
         } else { // jika tidak ada (belum ujian)
 
             $exam_questions_raw = $this->exam_question_detail->find_for_student_id_only(false, [
@@ -425,7 +437,7 @@ class Test extends MY_Controller
             $save_to_exam = $this->exam->save_batch($exam_questions_to_be_save);
             $save_to_exam_temp = $this->exam_temp->save_batch($exam_questions_to_be_save);
 
-            $exams = $this->exam->find(false, [
+            $exams = $this->exam_temp->find(false, [
                 'a.student_grade_exam_id' => $student_grade_exam_id,
             ]);
 
@@ -455,10 +467,10 @@ class Test extends MY_Controller
         $token_exam = $this->input->post('token_exam');
 
         $cek = $this->exam_schedule->find(false, [
-            'a.id' => enc($exam_schedule_id, 1)
+            'a.id' => enc($exam_schedule_id, 1),
         ]);
 
-        $token_server = $this->token->get(); 
+        $token_server = $this->token->get();
 
         if (count($cek) && $token_exam == $token_server) {
             $this->session->set_userdata('token_exam', $token_exam);
@@ -501,7 +513,7 @@ class Test extends MY_Controller
         $sgXe = $this->student_exam->find($student_grade_exam_id);
 
         // table : exams
-        $e = $this->exam_temp->find($exam);
+        $e = $this->exam_temp->find($exam, false, false, 0, true);
 
         $update_correct = $sgXe['correct']; // Jumlah Benar
         $update_incorrect = $sgXe['incorrect']; // Jumlah Salah
@@ -510,21 +522,21 @@ class Test extends MY_Controller
         $numbers_before_answer = $sgXe['numbers_before_answer']; // Jumlah soal yang sudah dijawab
 
         if ($correct) { // Jika jawaban sekarang benar
-            if($last_answer == null){
+            if ($last_answer == null) {
                 $numbers_before_answer--;
                 $update_correct++;
-            }else{
-                if($last_is_correct == 0){
+            } else {
+                if ($last_is_correct == 0) {
                     $update_incorrect--;
                     $update_correct++;
                 }
             }
         } else { // Jika jawaban sekarang salah
-            if($last_answer == null){
+            if ($last_answer == null) {
                 $numbers_before_answer--;
                 $update_incorrect++;
-            }else{
-                if($last_is_correct == 1){
+            } else {
+                if ($last_is_correct == 1) {
                     $update_incorrect++;
                     $update_correct--;
                 }
@@ -536,7 +548,7 @@ class Test extends MY_Controller
             'correct' => $update_correct,
             'incorrect' => $update_incorrect,
             'numbers_before_answer' => $numbers_before_answer,
-            'score' => ($update_correct/($update_correct + $update_incorrect + $numbers_before_answer)) * 10,
+            'score' => ($update_correct / ($update_correct + $update_incorrect + $numbers_before_answer)) * 10,
         ], true);
 
         if ($update['status'] == '200') {
