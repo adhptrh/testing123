@@ -71,7 +71,7 @@ class Test extends MY_Controller
         $data = $this->exam_schedule->find($esi);
 
         # Cek Token server
-        $token_server = $token_server = $this->token->get();
+        $token_server = $this->token->get();
         $token_exam = $this->session->userdata('token_exam');
 
         # Cek kelas, waktu dan token

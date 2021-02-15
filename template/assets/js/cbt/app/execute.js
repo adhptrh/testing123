@@ -133,6 +133,10 @@ function loadExamDetails() {
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ya',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    lock(false);
+                }
             })
         }
     })
@@ -211,13 +215,11 @@ function showTimeLeft() {
         tTimeLeft.innerHTML = showZero(hours) + ":" + showZero(minutes) + ":" + showZero(seconds);
 
         if (hours < 1 && minutes < 10 && seconds == 59) {
-            if (minutes < 1) {
-                tNotifWarningTimeOut.innerHTML = `Waktu mengerjakan ujian tinggal ${seconds} detik lagi`;
-                fNotifWarningTimeOut.classList.remove('d-none');
-            } else {
-                tNotifWarningTimeOut.innerHTML = `Waktu mengerjakan ujian tinggal ${minutes} menit lagi`;
-                fNotifWarningTimeOut.classList.remove('d-none');
-            }
+            tNotifWarningTimeOut.innerHTML = `Waktu mengerjakan ujian tinggal ${minutes} menit lagi`;
+            fNotifWarningTimeOut.classList.remove('d-none');
+        } else if (minutes < 1) {
+            tNotifWarningTimeOut.innerHTML = `Waktu mengerjakan ujian tinggal ${seconds} detik lagi`;
+            fNotifWarningTimeOut.classList.remove('d-none');
         }
 
         // If the count down is finished, write some text
@@ -283,6 +285,10 @@ function timeOut(is_time_out = false) {
             footer.classList.add('fixed-bottom');
             fTest.innerHTML = response;
             timeServerNow = timeTarget;
+
+            // Again :) untuk yang selesai normal
+            clearInterval(x);
+            tTimeLeft.innerHTML = "HABIS";
         }
     })
 }
@@ -376,6 +382,10 @@ function save() {
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ya',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    lock(false);
+                }
             })
         }
     })

@@ -57,11 +57,11 @@ class Exam_question_detail_m extends MY_Model
     public function find_for_student_id_only($id = false, $conditions = false, $show_del = false, $selected_id = 0)
     {
         $this->db->select('a.id')
-            ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
-            ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
+            // ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
+            // ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
             ->from($this->name . ' a')
-            ->join('z_profiles b', 'b.id = a.created_by', 'left')
-            ->join('z_profiles c', 'c.id = a.updated_by', 'left')
+            // ->join('z_profiles b', 'b.id = a.created_by', 'left')
+            // ->join('z_profiles c', 'c.id = a.updated_by', 'left')
             ->order_by('a.id', 'ASC');
 
         if (!$show_del) {
@@ -108,11 +108,11 @@ class Exam_question_detail_m extends MY_Model
     public function find_for_student_details($id = false, $conditions = false, $show_del = false, $selected_id = 0)
     {
         $this->db->select('a.id, a.question, a.opsi_a, a.opsi_b, a.opsi_c, a.opsi_d, a.opsi_e')
-            ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
-            ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
+            // ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
+            // ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
             ->from($this->name . ' a')
-            ->join('z_profiles b', 'b.id = a.created_by', 'left')
-            ->join('z_profiles c', 'c.id = a.updated_by', 'left')
+            // ->join('z_profiles b', 'b.id = a.created_by', 'left')
+            // ->join('z_profiles c', 'c.id = a.updated_by', 'left')
             ->order_by('a.id', 'ASC');
 
         if (!$show_del) {
