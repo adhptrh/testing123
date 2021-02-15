@@ -391,6 +391,16 @@ class Test extends MY_Controller
         echo json_encode($data);
     }
 
+    public function test()
+    {
+       // DEBUG
+       echo '<pre>';
+       print_r($this->exam->find());
+       print_r($this->exam_temp->find());
+       echo '</pre>';
+       die();
+    }
+
     public function get_landing_data()
     {
         $this->filter(2);
