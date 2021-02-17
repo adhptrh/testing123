@@ -35,6 +35,7 @@
                                 <th>#</th>
                                 <th style="width:20%">Aksi</th>
                                 <th>Name</th>
+                                <th>Login Terkahir</th>
                                 <th>Dibuat</th>
                             </tr>
                         </thead>
@@ -54,8 +55,8 @@
                                                 href="<?= base_url('data/student/edit/' . $v['id']); ?>"><i
                                                     class="fas fa-edit"></i> Edit</a>
                                             <a class="dropdown-item"
-                                                href="<?= base_url('data/student/reset_password/' . $v['id']); ?>"><i
-                                                    class="fas fa-redo"></i> Reset Password</a>
+                                                href="<?= base_url('data/student/reset_login/' . $v['id']); ?>"><i
+                                                    class="fas fa-redo"></i> Reset Login</a>
                                             <a class="dropdown-item hapus" href="#"
                                                 data-href="<?= base_url('data/student/delete/' . $v['id']); ?>"><i
                                                     class="fas fa-trash"></i> Hapus</a>
@@ -63,6 +64,7 @@
                                     </div>
                                 </td>
                                 <td><?= $v['name'] . "<br/><small> NISN : " .$v['nisn']. "</small>"; ?></td>
+                                <td><?= $v['last_login']; ?></td>
                                 <td><?= $v['created_by'] . '<br><small>'. $v['created_at'] .'</small>' ?></td>
                             </tr>
                             <?php endforeach; ?>

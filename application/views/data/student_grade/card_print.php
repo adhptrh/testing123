@@ -111,7 +111,7 @@ td {
                 </tr>
             </table>
         </div>
-        <?php if(($k % 10) == 0) : ?>
+        <?php if(($k % 8) == 0) : ?>
         <div style="page-break-before:always;"></div>
         <?php endif; ?>
         <?php endforeach;?>

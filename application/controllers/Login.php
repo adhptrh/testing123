@@ -92,8 +92,36 @@ class Login extends CI_Controller
                     $this->assign_session($get_user);
 
                     if ($this->is_siswa) {
-                        redirect(base_url('/app/exam_schedule'));
-                    }else{
+                        // Cek apakah sedang login
+                        $cek_still_login = $this->student->find(false, [
+                            'a.nisn' => $get_user[0]['username'],
+                            'a.is_login' => 1,
+                        ]);
+
+                        if ($cek_still_login) {
+                            // Terdeteksi sudah login
+                            $this->session->set_flashdata('message', 'Anda terdeteksi sudah login, silahkan hubungi penyelenggara Ujian untuk RESET LOGIN');
+                            redirect(base_url('login'));
+                        } else {
+                            // Tandai sedang login
+                            $student = $this->student->find(false, [
+                                'a.nisn' => $get_user[0]['username']
+                            ]);
+
+                            $update = $this->student->save([
+                                'id' => enc($student[0]['id'], 1),
+                                'is_login' => 1,
+                            ], true);
+
+                            if ($update['status'] == '200') {
+                                redirect(base_url('/app/exam_schedule'));
+                            } else {
+                                // Tidak behasil update status login
+                                $this->session->set_flashdata('message', 'Sistem gagal mengupdate status login, silahkan hubungi penyelenggara Ujian');
+                                redirect(base_url('login'));
+                            }
+                        }
+                    } else {
                         redirect(base_url('/'));
                     }
 

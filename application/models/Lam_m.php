@@ -33,7 +33,7 @@ class Lam_m extends MY_Model {
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
     ->order_by('a.id', 'ASC');
 
-    if($show_del){
+    if(!$show_del){
       $this->db->where('a.is_del', '0');
     }
 

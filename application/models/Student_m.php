@@ -25,13 +25,14 @@ class Student_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.profile_id, a.nisn, a.is_del')
+    $this->db->select('a.id, a.profile_id, a.nisn, a.is_login, a.is_del')
     ->select('d.name')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
     ->select('g.name kelas')
     ->select('e.id student_grade_id, e.grade_period_id')
     ->select('f.period_id')
+    ->select('DATE_FORMAT(h.updated_at, "%d-%m-%Y %H:%i:%s") last_login')
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
@@ -39,6 +40,7 @@ class Student_m extends MY_Model {
     ->join('student_extend_grades e', 'e.student_id = a.id', 'left')
     ->join('grade_extend_periods f', 'f.id = e.grade_period_id', 'left')
     ->join('grades g', 'g.id = f.grade_id', 'left')
+    ->join('z_users h', 'h.profile_id = a.profile_id', 'left')
     ->order_by('a.id', 'ASC');
 
     if(!$show_del){

@@ -55,6 +55,19 @@ class Student extends MY_Controller
         ]);
     }
 
+    public function reset_login($student_id){
+        $this->filter(3);
+
+        $save = $this->data->save([
+            'id' => enc($student_id, 1),
+            'is_login' => 0,
+        ], true);
+
+        $this->session->set_flashdata('message', $save['message']);
+        redirect(base_url('data/student'));
+
+    }
+
     public function create_excel()
     {
         $this->filter(1);
