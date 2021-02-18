@@ -1,6 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+
 class Exam_results extends MY_Controller
 {
 
@@ -111,6 +116,68 @@ class Exam_results extends MY_Controller
         ]);
     }
 
+    public function export(string $exam_grade_id)
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $aligment = new Alignment();
+        $styleArray = [
+            'font' => [
+                'bold' => true,
+            ],
+            'alignment' => [
+                'horizontal' => $aligment::HORIZONTAL_CENTER,
+            ],
+        ];
+
+        $sheet->getStyle('A1:E1')->applyFromArray($styleArray);
+
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Nama Siswa');
+        $sheet->setCellValue('C1', 'Waktu Ujian');
+        $sheet->setCellValue('D1', 'Nilai');
+        $sheet->setCellValue('E1', 'Keterangan');
+
+        $this->set_student_with_score(enc($exam_grade_id, 1));
+
+        foreach(range('A','E') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        $last_row_cell = 1;
+        foreach ($this->student_with_score as $k => $v) {
+            $sheet->setCellValue('A' . ($k + 2), $k + 1);
+            $sheet->setCellValue('B' . ($k + 2), $v['name']);
+            $sheet->setCellValue('C' . ($k + 2), $v['date']);
+            $sheet->setCellValue('D' . ($k + 2), $v['score']);
+            $sheet->setCellValue('E' . ($k + 2), "Benar (" . $v['correct'] . ") - Salah (" . $v['incorrect'] . ")");
+            $last_row_cell++;
+        }
+
+        $border = new Border();
+
+        $styleArray = array(
+            'borders' => array(
+                'allBorders' => array(
+                    'borderStyle' => $border::BORDER_THIN,
+                    'color' => array('argb' => 'FFFF0000'),
+                ),
+            ),
+        );
+
+        $sheet->getStyle('A1:E' . $last_row_cell)->applyFromArray($styleArray);
+
+        $filename = 'laporan-hasil-ujian';
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+    }
+
     public function result($period_id = 0, $exam_question_id = false, $exam_grade_id = false)
     {
         $this->filter(2);
@@ -156,12 +223,25 @@ class Exam_results extends MY_Controller
         $this->set_grades($exam_question_id, $exam_grade_id);
         $this->set_student_with_score($exam_grade_id);
 
+        if ($exam_grade_id) {
+            $button = [
+                'disabled' => '',
+                'href' => base_url('data/exam_results/export/' . enc($exam_grade_id)),
+            ];
+        } else {
+            $button = [
+                'disabled' => 'disabled',
+                'href' => '#',
+            ];
+        }
+
         $this->temp('data/exam_results/content', [
             'data' => [
                 'periods' => $this->periods,
                 'studies' => $this->studies,
                 'grades' => $this->grades,
                 'student_with_score' => $this->student_with_score,
+                'button' => $button,
             ],
         ]);
     }

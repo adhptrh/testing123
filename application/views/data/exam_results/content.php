@@ -58,8 +58,8 @@
                         </div>
                     </div>
                     <div class="col-md-6 d-none d-md-block">
-                        <a href="#"
-                            class="btn btn-sm pd-x-15 btn-success btn-uppercase mg-l-5 float-right"><i
+                        <a href="<?= $data['button']['href']; ?>"
+                            class="btn btn-sm pd-x-15 btn-success btn-uppercase mg-l-5 float-right <?= $data['button']['disabled']; ?>"><i
                                 class="fa fa-download"></i> Download</a>
                     </div>
                 </div>
