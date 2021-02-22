@@ -121,6 +121,7 @@ class Exam_results extends MY_Controller
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
+        // Set Header Style
         $aligment = new Alignment();
         $styleArray = [
             'font' => [
@@ -133,18 +134,15 @@ class Exam_results extends MY_Controller
 
         $sheet->getStyle('A1:E1')->applyFromArray($styleArray);
 
+        // Set Header Name
         $sheet->setCellValue('A1', 'No');
         $sheet->setCellValue('B1', 'Nama Siswa');
         $sheet->setCellValue('C1', 'Waktu Ujian');
         $sheet->setCellValue('D1', 'Nilai');
         $sheet->setCellValue('E1', 'Keterangan');
 
+        // Write data
         $this->set_student_with_score(enc($exam_grade_id, 1));
-
-        foreach(range('A','E') as $columnID) {
-            $sheet->getColumnDimension($columnID)->setAutoSize(true);
-        }
-
         $last_row_cell = 1;
         foreach ($this->student_with_score as $k => $v) {
             $sheet->setCellValue('A' . ($k + 2), $k + 1);
@@ -155,8 +153,13 @@ class Exam_results extends MY_Controller
             $last_row_cell++;
         }
 
-        $border = new Border();
+        // Set AutoSize
+        foreach(range('A','E') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
 
+        // Set Border
+        $border = new Border();
         $styleArray = array(
             'borders' => array(
                 'allBorders' => array(
@@ -168,12 +171,13 @@ class Exam_results extends MY_Controller
 
         $sheet->getStyle('A1:E' . $last_row_cell)->applyFromArray($styleArray);
 
+        // Filename
         $filename = 'laporan-hasil-ujian';
-
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
         header('Cache-Control: max-age=0');
 
+        // Render and download
         $writer = new Xlsx($spreadsheet);
         $writer->save('php://output');
     }

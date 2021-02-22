@@ -1,6 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx as ReadXlsx;
+// use PhpOffice\PhpSpreadsheet\Reader\Xls;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class Exam_question_detail extends MY_Controller
 {
 
@@ -10,6 +15,8 @@ class Exam_question_detail extends MY_Controller
      *
      */
 
+    // private $examdetail = [];
+
     public function __construct()
     {
         parent::__construct();
@@ -18,6 +25,7 @@ class Exam_question_detail extends MY_Controller
         $this->load->model('Exam_question_m', 'exam_question');
         $this->load->model('Period_m', 'period');
         $this->load->model('Study_m', 'study');
+        $this->load->helper('string');
     }
 
     function list($exam_question_id) {
@@ -160,6 +168,145 @@ class Exam_question_detail extends MY_Controller
         $create['token'] = $this->security->get_csrf_hash();
 
         echo json_encode($create);
+    }
+
+    public function create_excel($exam_question_id)
+    {
+        $this->filter(1);
+
+        $eid = enc($exam_question_id, 1);
+
+        $exam_question = $this->exam_question->find($eid);
+
+        $this->header = [
+            'title' => 'Upload Butir Soal',
+            'sub_title' => 'Upload Tambah Butir Soal',
+            'nav_active' => 'app/exam_question',
+            'breadcrumb' => [
+                [
+                    'label' => 'XPanel',
+                    'icon' => 'fa-home',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Aplikasi',
+                    'icon' => 'fa-gear',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Soal',
+                    'icon' => 'fa-gear',
+                    'href' => '#',
+                ],
+                [
+                    'label' => $exam_question['exam'],
+                    'icon' => 'fa-list',
+                    'href' => base_url('app/exam_question_detail'),
+                ],
+                [
+                    'label' => 'Import Excel',
+                    'icon' => '',
+                    'href' => '#',
+                ],
+            ],
+        ];
+
+        $this->temp('app/exam_question_detail/create_excel', [
+            'exam_question_id_enc' => $exam_question_id,
+        ]);
+    }
+
+    public function create_excel_temp($exam_question_id)
+    {
+        $file = './upload/exam_template_master.xls';
+        $template = IOFactory::load($file);
+
+        $header = $this->exam_question->find(enc($exam_question_id, 1));
+
+        $sheet = $template->getActiveSheet();
+        $sheet->setCellValue('A1', 'Kode Soal : ' . $exam_question_id);
+        $sheet->setCellValue('A4', 'Mata Pelajaran : ' . $header['exam']);
+        $sheet->setCellValue('A5', 'Periode : ' . $header['period']);
+        $sheet->setCellValue('A6', 'Kelas : ' . $header['grade']);
+
+        // Filename
+        $date = new DateTime();
+        $filename = str_replace(' ', '_', $header['exam'] . $header['period'] . '_' . $date->getTimestamp());
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        // // Render and download
+        $writer = new Xlsx($template);
+        $writer->save('php://output');
+    }
+
+    public function save_excel($exam_question_id)
+    {
+        $exam_question_id = enc($exam_question_id, 1);
+        $fileName = $_FILES['file']['name'];
+
+        $path = './upload/files/';
+        $config['upload_path'] = $path; //path upload
+        $config['file_name'] = $fileName; // nama file
+        $config['allowed_types'] = 'xls|xlsx'; //tipe file yang diperbolehkan
+        $config['max_size'] = 10000; // maksimal sizze
+
+        $this->load->library('upload'); //meload librari upload
+        $this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('file')) {
+            $this->session->set_flashdata('create_info_message', $this->upload->display_errors());
+            $this->create_excel(enc($exam_question_id));
+        } else {
+            $inputFileName = $path . $fileName;
+
+            $reader = new ReadXlsx();
+            $spreadsheet = $reader->load($inputFileName);
+            $sheetData = $spreadsheet->getActiveSheet()->toArray();
+
+            // Cek apakah template ini adalah sah
+            $kode = explode("Kode Soal : ", $sheetData[0][0]);
+            if (enc($kode[1], 1) == $exam_question_id) {
+                $this->save_excel_process($sheetData, $exam_question_id);
+                redirect(base_url('app/exam_question_detail/list/' . enc($exam_question_id)));
+            } else {
+                $this->session->set_flashdata('create_info_message', 'Template tidak sesuai');
+                $this->create_excel(enc($exam_question_id));
+            }
+        }
+    }
+
+    private function save_excel_process($sheetData, $exam_question_id)
+    {
+        $data = [];
+        $key = 0;
+        foreach ($sheetData as $k => $v) {
+            if ($k >= 8 && $v[1] != '') {
+                $data[$key] = [
+                    'exam_question_id' => $exam_question_id,
+                    'question' => $v[1],
+                    'opsi_a' => $v[2],
+                    'opsi_b' => $v[3],
+                    'opsi_c' => $v[4],
+                    'opsi_d' => $v[5],
+                    'opsi_e' => $v[6],
+                    'keyword' => $v[7],
+                ];
+                $key++;
+            }
+        }
+
+        if(count($data)>0){
+            $save = $this->data->save_batch($data);
+            if($save['status'] == '200'){
+                $this->session->set_flashdata('message', $save['message']);
+            }else{
+                $this->session->set_flashdata('create_info_message', $save['message']);
+            }
+        }else{
+            $this->session->set_flashdata('create_info_message', 'Tidak terdapat soal pada template');
+        }
     }
 
     public function edit($id)

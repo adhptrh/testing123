@@ -49,6 +49,9 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item"
+                                                href="<?= base_url('app/exam_question_detail/create_excel_temp/' . $v['id']); ?>"><i
+                                                    class="fas fa-upload"></i> Download Template Excel</a>
+                                            <a class="dropdown-item"
                                                 href="<?= base_url('app/exam_question_detail/list/' . $v['id']); ?>"><i
                                                     class="fas fa-list"></i> Kelola Butir Soal</a>
                                             <a class="dropdown-item"

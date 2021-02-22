@@ -182,7 +182,7 @@ class Student extends MY_Controller
         }
     }
 
-    public function save_excel_process($data)
+    private function save_excel_process($data)
     {
         foreach ($data as $k => $v) {
             $nisn = $v[1];
