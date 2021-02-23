@@ -227,7 +227,7 @@ class Exam_question_detail extends MY_Controller
         $sheet->setCellValue('A1', 'Kode Soal : ' . $exam_question_id);
         $sheet->setCellValue('A4', 'Mata Pelajaran : ' . $header['exam']);
         $sheet->setCellValue('A5', 'Periode : ' . $header['period']);
-        $sheet->setCellValue('A6', 'Kelas : ' . $header['grade']);
+        $sheet->setCellValue('A6', 'Kelas : ' . str_replace("<br/>" ,", ", $header['grade']));
 
         // Filename
         $date = new DateTime();
@@ -283,6 +283,25 @@ class Exam_question_detail extends MY_Controller
         $key = 0;
         foreach ($sheetData as $k => $v) {
             if ($k >= 8 && $v[1] != '') {
+                switch ($v[7]) {
+                    case 'A':
+                        $keyword = 1;
+                        break;
+                    case 'B':
+                        $keyword = 2;
+                        break;
+                    case 'C':
+                        $keyword = 3;
+                        break;
+                    case 'R':
+                        $keyword = 4;
+                        break;
+                    case 'E':
+                        $keyword = 5;
+                        break;
+                    default:
+                        $keyword = 1;
+                }
                 $data[$key] = [
                     'exam_question_id' => $exam_question_id,
                     'question' => $v[1],
@@ -291,20 +310,20 @@ class Exam_question_detail extends MY_Controller
                     'opsi_c' => $v[4],
                     'opsi_d' => $v[5],
                     'opsi_e' => $v[6],
-                    'keyword' => $v[7],
+                    'keyword' => $keyword,
                 ];
                 $key++;
             }
         }
 
-        if(count($data)>0){
+        if (count($data) > 0) {
             $save = $this->data->save_batch($data);
-            if($save['status'] == '200'){
+            if ($save['status'] == '200') {
                 $this->session->set_flashdata('message', $save['message']);
-            }else{
+            } else {
                 $this->session->set_flashdata('create_info_message', $save['message']);
             }
-        }else{
+        } else {
             $this->session->set_flashdata('create_info_message', 'Tidak terdapat soal pada template');
         }
     }
