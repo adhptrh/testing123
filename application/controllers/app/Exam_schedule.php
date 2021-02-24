@@ -61,7 +61,7 @@ class Exam_schedule extends MY_Controller
             // filter
 
             // grade_period
-            $gp = enc($sg['period_id'], 1);
+            $gp = enc($sg['grade_period_id'], 1);
 
             // order_id
             $oi = $sg['order_id'];
@@ -70,6 +70,12 @@ class Exam_schedule extends MY_Controller
                 'e.id' => $oi,
                 'i.grade_period_id' => $gp,
             ]);
+
+            // DEBUG
+            // echo '<pre>';
+            // print_r($sg);
+            // echo '</pre>';
+            // die();
 
             $data = [
                 'exam_schedule' => $data,
