@@ -33,7 +33,7 @@ bperiod.onchange = () => {
 function loadGrade() {
     $('#bgrade').val([]).trigger('change');
 
-    url = (id.value == 0) ? '../../data/grade/get_json/' : '../../../data/grade/get_json/';
+    url = (id.value == 0) ? '../../data/grade_period/get_json/' : '../../../data/grade_period/get_json/';
 
     $.ajax({
         url: url,
