@@ -42,17 +42,17 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item bReset" href="#"
-                                                data-href="<?=base_url('app/test/reset_by_operator/' . $v['exam_schedule_id'] . '/' . $v['id']);?>"><i
+                                                data-href="<?=base_url('app/test/reset_by_operator/' . $v['exam_schedule_id'] . '/' . $v['student_grade_exam_id']);?>"><i
                                                     class="fas fa-trash"></i> Hapus Ujian</a>
                                             <?php if($v['finish_time'] == null): ?>
                                             <a class="dropdown-item bSetFinish" href="#"
-                                                data-href="<?=base_url('app/test/closing_by_operator/' . $v['exam_schedule_id'] . '/' . $v['id']);?>"><i
+                                                data-href="<?=base_url('app/test/closing_by_operator/' . $v['exam_schedule_id'] . '/' . $v['student_grade_exam_id']);?>"><i
                                                     class="fas fa-clock"></i> Set Selesai</a>
                                             <?php endif; ?>
                                         </div>
                                     </div>
                                 </td>
-                                <td><?= $v['siswa'] . $status = ($v['finish_time'] != null) ? '<br><span class="badge badge-success">Selesai</span>' : '<br><span class="badge badge-warning">Belum</span>'; ?>
+                                <td><?= $v['name'] . $status = ($v['finish_time'] != null) ? '<br><span class="badge badge-success">Selesai</span>' : '<br><span class="badge badge-warning">Belum</span>'; ?>
                                 </td>
                                 <td>
                                     <?php

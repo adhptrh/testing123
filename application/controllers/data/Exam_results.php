@@ -21,6 +21,7 @@ class Exam_results extends MY_Controller
     {
         parent::__construct();
         $this->controller_id = 24;
+        $this->load->model('Exam_m', 'exam');
         $this->load->model('Period_m', 'period');
         $this->load->model('Exam_question_m', 'exam_question');
         $this->load->model('Exam_question_grade_m', 'exam_grade');
@@ -112,6 +113,60 @@ class Exam_results extends MY_Controller
             'data' => [
                 'periods' => $this->periods,
                 'student_with_score' => $this->student_with_score,
+                'button' => [
+                    'disabled' => 'disabled',
+                    'href' => '#',
+                ],
+            ],
+        ]);
+    }
+
+    public function detail($student_grade_exam_id){
+
+        $this->filter(2);
+
+        $this->header = [
+            'title' => 'Hasil Ujian',
+            'js_file' => 'data/exam_result_detail',
+            'sub_title' => 'Analisa Hasil Ujian',
+            'nav_active' => 'data/exam_results',
+            'breadcrumb' => [
+                [
+                    'label' => 'XPanel',
+                    'icon' => 'fa-home',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Data',
+                    'icon' => 'fa-gear',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Detail Hasil Ujian',
+                    'icon' => '',
+                    'href' => '#',
+                ],
+            ],
+        ];
+        
+        $sgei = enc($student_grade_exam_id, 1);
+        $details = $this->exam->find_for_analytics(false, [
+            'a.student_grade_exam_id' => $sgei
+        ]);
+
+        // $student = $this->student;
+
+        $this->temp('data/exam_results/detail', [
+            'data' => [
+                'data' => $details,
+                'summary' => [
+                    'name' => $student['siswa'],
+                    'nisn' => $student['nisn'],
+                    'grade' => $student['grade'],
+                    'study' => '',
+                    'date' => $summary['date'],
+                    'time' => $summary['start_time'] . ' s.d ' . $summary['finish_time'],
+                ],
             ],
         ]);
     }
@@ -227,6 +282,7 @@ class Exam_results extends MY_Controller
         $this->set_grades($exam_question_id, $exam_grade_id);
         $this->set_student_with_score($exam_grade_id);
 
+        
         if ($exam_grade_id) {
             $button = [
                 'disabled' => '',

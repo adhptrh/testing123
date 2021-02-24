@@ -47,30 +47,32 @@ function xdelete(data) {
         confirmButtonText: 'Ya, hapus saja!',
         cancelButtonText: 'Batal',
     }).then((result) => {
-        $.ajax({
-            url: '../delete/' + data.getAttribute('data-id'),
-            method: 'post',
-            data: {
-                token: document.querySelector('#eq_list').getAttribute('data-token'),
-            },
-            dataType: 'json',
-            success: function(response) {
-                document.querySelector('#eq_list').setAttribute('data-token', response.token);
-                if (response.status != 200) {
-                    Swal.fire({
-                        title: 'Peringatan',
-                        text: "Terjadi kesalahan, silahkan hubungi Administrator",
-                        icon: 'warning',
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'Baiklah',
-                    })
-                } else {
-                    falert.classList.remove('d-none');
-                    malert.innerHTML = response.message;
-                    getList();
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '../delete/' + data.getAttribute('data-id'),
+                method: 'post',
+                data: {
+                    token: document.querySelector('#eq_list').getAttribute('data-token'),
+                },
+                dataType: 'json',
+                success: function(response) {
+                    document.querySelector('#eq_list').setAttribute('data-token', response.token);
+                    if (response.status != 200) {
+                        Swal.fire({
+                            title: 'Peringatan',
+                            text: "Terjadi kesalahan, silahkan hubungi Administrator",
+                            icon: 'warning',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Baiklah',
+                        })
+                    } else {
+                        falert.classList.remove('d-none');
+                        malert.innerHTML = response.message;
+                        getList();
+                    }
                 }
-            }
-        })
+            })
+        }
     })
 }
 

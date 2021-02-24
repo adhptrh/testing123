@@ -9,7 +9,9 @@ $('.bReset').click(function() {
         confirmButtonText: 'Ya',
         cancelButtonText: 'Batal',
     }).then((result) => {
-        location.href = $(this).data('href');
+        if (result.isConfirmed) {
+            location.href = $(this).data('href');
+        }
     })
 })
 
@@ -24,6 +26,8 @@ $('.bSetFinish').click(function() {
         confirmButtonText: 'Ya',
         cancelButtonText: 'Batal',
     }).then((result) => {
-        location.href = $(this).data('href');
+        if (result.isConfirmed) {
+            location.href = $(this).data('href');
+        }
     })
 })

@@ -391,6 +391,8 @@ function isConfirm() {
         confirmButtonText: 'Ya, hapus saja!',
         cancelButtonText: 'Batal',
     }).then((result) => {
-        deleteStudent();
+        if (result.isConfirmed) {
+            deleteStudent();
+        }
     })
 }
