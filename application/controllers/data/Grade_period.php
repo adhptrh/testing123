@@ -82,7 +82,7 @@ class Grade_period extends MY_Controller
             'title' => 'Kelas',
             'sub_title' => 'Tambah Kelas',
             'nav_active' => 'data/grade_period',
-            'js_file' => 'data/grade_period',
+            'js_file' => 'data/grade',
             'breadcrumb' => [
                 [
                     'label' => 'XPanel',
