@@ -25,9 +25,6 @@ class Student_grade_exam_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    /**
-     * Query untuk mendapatkan data siswa berdasarkan periode
-     */
     
     $this->db->select('a.id, a.exam_schedule_id, a.is_del,  DATE_FORMAT(a.start_time, "%d-%m-%Y") date, DATE_FORMAT(a.start_time, "%H:%i:%s") start_time, DATE_FORMAT(a.finish_time, "%H:%i:%s") finish_time, a.correct, a.incorrect, a.numbers_before_answer, DATE_FORMAT(a.updated_at, "%d-%m-%Y, %H:%i:%m") updated_at')
     ->from($this->name . ' a')
@@ -85,7 +82,7 @@ class Student_grade_exam_m extends MY_Model {
      * Query untuk mendapatkan data siswa + nilai berdasarkan periode
      */
 
-    $this->db->select('a.id, DATE_FORMAT(a.updated_at, "%d-%m-%Y, %H:%i:%m") updated_at')
+    $this->db->select('a.id, a.nisn, DATE_FORMAT(a.updated_at, "%d-%m-%Y, %H:%i:%m") updated_at')
     ->select('e.numbers_before_answer,e.exam_schedule_id, e.correct, e.incorrect, e.score, e.id student_grade_exam_id, DATE_FORMAT(e.finish_time, "%H:%i:%s") finish_time')
     ->select('g.name')
     ->select('DATE_FORMAT(f.start, "%d-%m-%Y %H:%i:%s") date')

@@ -23,7 +23,7 @@
                         <table class='table table-striped'>
                             <tr>
                                 <td class="wd-150">Mata Uji</td>
-                                <td>:</td>
+                                <td>: <?= $data['summary']['study'] ?></td>
                             </tr>
                             <tr>
                                 <td>Tanggal</td>

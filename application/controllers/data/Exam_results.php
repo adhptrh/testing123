@@ -121,8 +121,15 @@ class Exam_results extends MY_Controller
         ]);
     }
 
-    public function detail($student_grade_exam_id){
+    public function detail($student_grade_exam_id, $exam_question_id = 0, $exam_grade_id = 0){
 
+        /**
+         * Menampilkan detail jawaban siswa
+         * Variable :
+         * enc student_grade_exam_id untuk mendapatkan detail jawaban
+         * enc exam_question_id untuk mendapatkan data study
+         * enc exam_grade_id untuk mendapatkan data kelas
+         */
         $this->filter(2);
 
         $this->header = [
@@ -154,18 +161,21 @@ class Exam_results extends MY_Controller
             'a.student_grade_exam_id' => $sgei
         ]);
 
-        // $student = $this->student;
+        $student = $this->student_exam->find_with_score($sgei);
+        $exam_question = $this->exam_question->find(enc($exam_question_id, 1));
+        $grade = $this->exam_grade->find(enc($exam_grade_id, 1));
+        $dateTime = $this->student_exam->find($sgei);
 
         $this->temp('data/exam_results/detail', [
             'data' => [
                 'data' => $details,
                 'summary' => [
-                    'name' => $student['siswa'],
+                    'name' => $student['name'],
                     'nisn' => $student['nisn'],
-                    'grade' => $student['grade'],
-                    'study' => '',
-                    'date' => $summary['date'],
-                    'time' => $summary['start_time'] . ' s.d ' . $summary['finish_time'],
+                    'grade' => $grade['grade'],
+                    'study' => $exam_question['exam'],
+                    'date' => $dateTime['date'],
+                    'time' => $dateTime['start_time'] . ' s.d ' . $dateTime['finish_time'],
                 ],
             ],
         ]);
@@ -302,6 +312,10 @@ class Exam_results extends MY_Controller
                 'grades' => $this->grades,
                 'student_with_score' => $this->student_with_score,
                 'button' => $button,
+                'bdetail' => [
+                    'exam_question_id' => enc($exam_question_id),
+                    'exam_grade_id' => enc($exam_grade_id),
+                ],
             ],
         ]);
     }
