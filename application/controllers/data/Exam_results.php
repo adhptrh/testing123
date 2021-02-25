@@ -161,7 +161,9 @@ class Exam_results extends MY_Controller
             'a.student_grade_exam_id' => $sgei
         ]);
 
-        $student = $this->student_exam->find_with_score($sgei);
+        $student = $this->student_exam->find_with_score(false, [
+            'e.id' => $sgei
+        ]);
         $exam_question = $this->exam_question->find(enc($exam_question_id, 1));
         $grade = $this->exam_grade->find(enc($exam_grade_id, 1));
         $dateTime = $this->student_exam->find($sgei);
@@ -170,8 +172,8 @@ class Exam_results extends MY_Controller
             'data' => [
                 'data' => $details,
                 'summary' => [
-                    'name' => $student['name'],
-                    'nisn' => $student['nisn'],
+                    'name' => $student[0]['name'],
+                    'nisn' => $student[0]['nisn'],
                     'grade' => $grade['grade'],
                     'study' => $exam_question['exam'],
                     'date' => $dateTime['date'],
