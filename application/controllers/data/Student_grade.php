@@ -173,6 +173,11 @@ class Student_grade extends MY_Controller
         $gpi = enc($grade_period_id, 1);
         $data = $this->data->find(false, ['a.grade_period_id' => $gpi]);
         $this->load->view('data/student_grade/card_print', ['data' => $data]);
+
+        // $pdf = new \TCPDF();
+        // $pdf->AddPage();
+        // $pdf->writeHTML($page, true, false, true, false, '');
+        // $pdf->Output('tset.pdf'); 
     }
 
     public function delete()

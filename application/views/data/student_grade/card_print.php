@@ -7,6 +7,10 @@
         /* margin: 10mm 10mm 10mm 10mm;  */
         /* change the margins as you want them to be. */
     }
+
+    /* footer {
+        page-break-after: always;
+    } */
 }
 
 table {
@@ -46,17 +50,10 @@ td {
     /* padding: 3px; */
 }
 </style>
-<?php
-    // DEBUG
-    // echo '<pre>';
-    // print_r($data);
-    // echo '</pre>';
-    // die();
-?>
 
 <body>
     <div class="row">
-        <?php foreach ($data as $k => $v):?>
+        <?php $last = count($data); foreach ($data as $k => $v): ?>
         <div class="column">
             <table>
                 <tr class="header">
@@ -76,29 +73,30 @@ td {
                 </tr>
 
                 <tr>
-                    <td rowspan="5" align="center" class='cLeft'><img src="../../../upload/logo3.png" alt="" height="60px"></td>
+                    <td rowspan="5" align="center" class='cLeft'><img src="../../../upload/logo3.png" alt=""
+                            height="60px"></td>
                     <td>Nama</td>
-                    <td><?= $v['name']; ?></td>
+                    <td><?=ucwords(strtolower($v['name']));?></td>
                 </tr>
 
                 <tr>
                     <td class='cCenter'>NISN</td>
-                    <td class='cRight'><?= $v['nisn']; ?></td>
+                    <td class='cRight'><?=$v['nisn'];?></td>
                 </tr>
 
                 <tr>
                     <td>Password</td>
-                    <td><?= $v['pass_siswa']; ?></td>
+                    <td><?=$v['pass_siswa'];?></td>
                 </tr>
 
                 <tr>
                     <td>Kelas</td>
-                    <td><?= $v['grade']; ?></td>
+                    <td><?=$v['grade'];?></td>
                 </tr>
 
                 <tr>
                     <td>Sesi</td>
-                    <td><?= $v['order']; ?></td>
+                    <td><?=$v['order'];?></td>
                 </tr>
 
                 <tr>
@@ -111,9 +109,9 @@ td {
                 </tr>
             </table>
         </div>
-        <?php if(($k % 8) == 0) : ?>
+        <?php if ((($k % 8) == 0)): ?>
         <div style="page-break-before:always;"></div>
-        <?php endif; ?>
+        <?php endif;?>
         <?php endforeach;?>
     </div>
 </body>
