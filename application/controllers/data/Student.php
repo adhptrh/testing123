@@ -55,7 +55,8 @@ class Student extends MY_Controller
         ]);
     }
 
-    public function reset_login($student_id){
+    public function reset_login($student_id)
+    {
         $this->filter(3);
 
         $save = $this->data->save([
@@ -179,6 +180,47 @@ class Student extends MY_Controller
             $this->save_excel_process($sheetData);
             $this->session->set_flashdata('message', 'Data berhasil disimpan : ' . $this->success . ', gagal disimpan = ' . $this->fail);
             redirect(base_url('data/student'));
+        }
+    }
+
+    public function test_upload_image()
+    {
+        $this->load->view('data/student/upload');
+    }
+
+    public function test_upload_image_proses()
+    {
+        $fileName = $_FILES['file']['name'];
+
+        $path = './upload/files/';
+        $config['upload_path'] = $path;
+        $config['file_name'] = $fileName;
+        $config['allowed_types'] = 'png';
+        $config['max_size'] = 10000;
+
+        $this->load->library('upload');
+        $this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('file')) {
+            echo $this->upload->display_errors();
+        } else {
+            $path = base_url('/upload/files/');
+            $inputFileName = $path . $fileName;
+            $type = pathinfo($inputFileName, PATHINFO_EXTENSION);
+            $data = file_get_contents($inputFileName);
+
+            $rand = uniqid();
+            $data = base64_decode(base64_encode($data));
+    
+            $dir = 'upload/img/' . date('Ym') . '/';
+    
+            $filename = $dir . $rand . '.png';
+    
+            if (file_put_contents($filename, $data)) {
+                echo 'Berhasil disimpan di : ' . $filename;
+            } else {
+                echo 'Gagal';
+            }
         }
     }
 
