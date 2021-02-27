@@ -190,6 +190,10 @@ class Student extends MY_Controller
 
     public function test_upload_image_proses()
     {
+        // Start loading
+        $awal = microtime(true);
+
+        // Upload File
         $fileName = $_FILES['file']['name'];
 
         $path = './upload/files/';
@@ -204,6 +208,7 @@ class Student extends MY_Controller
         if (!$this->upload->do_upload('file')) {
             echo $this->upload->display_errors();
         } else {
+            // Pengolahan file image
             $path = base_url('/upload/files/');
             $inputFileName = $path . $fileName;
             $type = pathinfo($inputFileName, PATHINFO_EXTENSION);
@@ -211,15 +216,20 @@ class Student extends MY_Controller
 
             $rand = uniqid();
             $data = base64_decode(base64_encode($data));
-    
+
             $dir = 'upload/img/' . date('Ym') . '/';
-    
+
             $filename = $dir . $rand . '.png';
-    
+
+
+            // Menghitung waktu load
+            $akhir = microtime(true);
+            $totalwaktu = $akhir - $awal;
+
             if (file_put_contents($filename, $data)) {
-                echo 'Berhasil disimpan di : ' . $filename;
+                echo 'Berhasil disimpan di : ' . $filename . ' (eksekusi selama ' . number_format($totalwaktu, 3, '.', '') . ' detik!)';
             } else {
-                echo 'Gagal';
+                echo 'Gagal (eksekusi selama ' . $totalwaktu . ')';
             }
         }
     }
