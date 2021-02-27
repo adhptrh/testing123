@@ -249,6 +249,23 @@ class Exam_results extends MY_Controller
         $writer->save('php://output');
     }
 
+    public function detail_question($exam_id)
+    {
+        $this->filter(2);
+        $exam_id = enc($exam_id, 1);
+        $data = $this->exam->find_for_analytics($exam_id);
+        echo json_encode([
+            'question' => $data['question'],
+            'opsi_a' => $data['opsi_a'],
+            'opsi_b' => $data['opsi_b'],
+            'opsi_c' => $data['opsi_c'],
+            'opsi_d' => $data['opsi_d'],
+            'opsi_e' => $data['opsi_e'],
+            'keyword' => $data['keyword'],
+            'answer' => $data['answer'],
+        ]);
+    }
+
     public function result($period_id = 0, $exam_question_id = false, $exam_grade_id = false)
     {
         $this->filter(2);

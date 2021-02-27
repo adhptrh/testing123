@@ -16,6 +16,7 @@
 <script src="<?= base_url('template/'); ?>lib/cleave.js/cleave.min.js"></script>
 <script src="<?= base_url('template/'); ?>assets/js/quill.js"></script>
 <script src="<?= base_url('template/'); ?>assets/js/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <?= $js = (isset($header['js_file']) ? '<script src="' . base_url('template/assets/js/cbt/' . $header['js_file'] . '.js') . '"></script>' : '') ?>
 
 <script type="text/javascript">

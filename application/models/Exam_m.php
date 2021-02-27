@@ -83,7 +83,7 @@ class Exam_m extends MY_Model
         $this->db->select('a.id, a.is_del, a.exam_question_detail_id, a.answer, a.is_correct')
             ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
             ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%H:%i:%s") updated_at')
-            ->select('d.keyword')
+            ->select('d.question, d.opsi_a, d.opsi_b, d.opsi_c, d.opsi_d, d.opsi_e, d.keyword')
             ->from($this->name . ' a')
             ->join('z_profiles b', 'b.id = a.created_by', 'left')
             ->join('z_profiles c', 'c.id = a.updated_by', 'left')
