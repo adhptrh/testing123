@@ -229,7 +229,7 @@ class Student extends MY_Controller
             if (file_put_contents($filename, $data)) {
                 echo 'Berhasil disimpan di : ' . $filename . ' (eksekusi selama ' . number_format($totalwaktu, 3, '.', '') . ' detik!)';
             } else {
-                echo 'Gagal (eksekusi selama ' . $totalwaktu . ')';
+                echo 'Gagal (eksekusi selama ' . number_format($totalwaktu, 3, '.', '') . ' detik!)';
             }
         }
     }
