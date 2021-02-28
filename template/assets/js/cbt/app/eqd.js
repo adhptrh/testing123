@@ -283,6 +283,8 @@ function SetFormSubmitCek() {
 }
 
 function save(data, method = 'save') {
+    console.log(JSON.parse(JSON.stringify(data)));
+    return;
     $.ajax({
         url: '../' + method,
         method: 'post',
