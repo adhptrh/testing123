@@ -107,9 +107,9 @@ class Exam_question_detail extends MY_Controller
          */
 
         $rand = uniqid();
-        $img = str_replace('data:image/png;base64,', '', $base64);
-        $img = str_replace(' ', '+', $img);
-        $data = base64_decode($img);
+        // $img = str_replace('data:image/png;base64,', '', $base64);
+        // $img = str_replace(' ', '+', $img);
+        // $data = base64_decode($img);
 
         // Membuat folder
         $dir = 'upload/img/' . date('Ym') . '/';
