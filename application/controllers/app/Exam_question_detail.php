@@ -119,11 +119,21 @@ class Exam_question_detail extends MY_Controller
 
         $filename = $dir . $rand . '.png';
 
-        if (file_put_contents($filename, $data)) {
-            return $filename;
-        } else {
-            return false;
-        }
+        // if (file_put_contents($filename, $data)) {
+        //     return $filename;
+        // } else {
+        //     return false;
+        // }
+
+        $source = fopen($base64, 'r');
+        $destination = fopen($filename, 'w');
+
+        stream_copy_to_stream($source, $destination);
+
+        fclose($source);
+        fclose($destination);
+
+        return $filename;
     }
 
     private function content_creation($data)
@@ -227,7 +237,7 @@ class Exam_question_detail extends MY_Controller
         $sheet->setCellValue('A1', 'Kode Soal : ' . $exam_question_id);
         $sheet->setCellValue('A4', 'Mata Pelajaran : ' . $header['exam']);
         $sheet->setCellValue('A5', 'Periode : ' . $header['period']);
-        $sheet->setCellValue('A6', 'Kelas : ' . str_replace("<br/>" ,", ", $header['grade']));
+        $sheet->setCellValue('A6', 'Kelas : ' . str_replace("<br/>", ", ", $header['grade']));
 
         // Filename
         $date = new DateTime();

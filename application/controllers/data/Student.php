@@ -183,46 +183,33 @@ class Student extends MY_Controller
         }
     }
 
-    public function test_upload_image()
-    {
-        $this->load->view('data/student/upload');
-    }
+    // public function test_upload_image()
+    // {
+    //     $this->load->view('data/student/upload');
+    // }
 
-    private function sample_png_base64()
-    {
+    // private function sample_png_base64()
+    // {
 
-    }
+    // }
 
-    public function test_upload_image_proses()
-    {
-        // Start loading
-        $awal = microtime(true);
+    // public function test_upload_image_proses()
+    // {
+    //     // Start loading
+    //     $awal = microtime(true);
 
-        // Pengolahan file image
-        $inputFileName = base_url('/upload/files/test.png');
-        $data = file_get_contents($inputFileName);
+    //     // Pengolahan file image
+    //     $inputFileName = base_url('/upload/files/test.png');
+    //     $data = file_get_contents($inputFileName);
 
-        // DEBUG
-        echo '<pre>';
-        print_r($data);
-        echo '</pre>';
+    //     // Menghitung waktu load
+    //     $akhir = microtime(true);
+    //     $totalwaktu = $akhir - $awal;
 
-        // Menghitung waktu load
-        $akhir = microtime(true);
-        $totalwaktu = $akhir - $awal;
+    //     $bese64 = base64_encode($data);
 
-        echo 'Dieksekusi selama ' . number_format($totalwaktu, 3, '.', '') . ' detik!)';
-
-        die();
-
-        // Menghitung waktu load
-        $akhir = microtime(true);
-        $totalwaktu = $akhir - $awal;
-
-        $bese64 = base64_encode($data);
-
-        echo 'Dieksekusi selama ' . number_format($totalwaktu, 3, '.', '') . ' detik!)';
-    }
+    //     echo 'Dieksekusi selama ' . number_format($totalwaktu, 3, '.', '') . ' detik!)';
+    // }
 
     private function save_excel_process($data)
     {
