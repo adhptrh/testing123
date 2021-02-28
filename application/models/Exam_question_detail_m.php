@@ -405,7 +405,8 @@ class Exam_question_detail_m extends MY_Model
                     'insert' => substr($str, $v['start'], ($v['end'] - $v['start'])),
                 ];
             } else {
-                $base64 = $this->img_to_base64(base_url(substr($str, $v['start'], ($v['end'] - $v['start']))));
+                // $base64 = $this->img_to_base64(base_url(substr($str, $v['start'], ($v['end'] - $v['start']))));
+                $base64 = $this->img_to_base64('./' . substr($str, $v['start'], ($v['end'] - $v['start'])));
                 $data = [
                     'insert' => [
                         'image' => $base64,
