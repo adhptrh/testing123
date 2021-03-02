@@ -1,5 +1,48 @@
 <div class="row row-xs">
     <div class="col-md-12">
+        <div class="card mg-b-20">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <table class='table table-striped'>
+                            <tr>
+                                <td class="wd-150">Nama Ujian</td>
+                                <td><strong><?=$summary['study']?></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="wd-150">Jumlah Butir Soal</td>
+                                <td><strong><?=$summary['number_of_exam']?></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Tanggal Ujian</td>
+                                <td><strong><?=$summary['date']?></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Waktu Ujian</td>
+                                <td><strong><?=$summary['start'] . ' - ' . $summary['finish'] . ' (' . $summary['durasi'] . ')'?></strong>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <table class='table table-striped'>
+                            <tr>
+                                <td class="wd-200">Kelas</td>
+                                <td><strong><?=$summary['grade']?></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Jumlah Siswa Login</td>
+                                <td><strong><?= $start_test_info['is_login_count']; ?> <small>[<?= $start_test_info['is_login_count'] - $start_test_info['is_finish']; ?> Belum Selesai, <?= $start_test_info['is_finish']; ?> Selesai]</small> </strong></td>
+                            </tr>
+                            <tr>
+                                <td>Jumlah Siswa Belum Login</td>
+                                <td><strong><?= $start_test_info['isnot_login_count']; ?></strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="card">
             <div class="card-body">
                 <div class="row">
@@ -11,6 +54,11 @@
                             <input type="text" class="form-control" placeholder="Cari di sini" aria-label="Username"
                                 aria-describedby="basic-addon1">
                         </div>
+                    </div>
+
+                    <div class="col-md-6 d-none d-md-block">
+                        <a href="#" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i
+                                class="fa fa-print"></i> Cetak Daftar Hadir</a>
                     </div>
                 </div>
 
@@ -44,24 +92,35 @@
                                             <a class="dropdown-item bReset" href="#"
                                                 data-href="<?=base_url('app/test/reset_by_operator/' . $v['exam_schedule_id'] . '/' . $v['student_grade_exam_id']);?>"><i
                                                     class="fas fa-trash"></i> Hapus Ujian</a>
-                                            <?php if($v['finish_time'] == null): ?>
+                                            <?php if ($v['finish_time'] == null): ?>
                                             <a class="dropdown-item bSetFinish" href="#"
                                                 data-href="<?=base_url('app/test/closing_by_operator/' . $v['exam_schedule_id'] . '/' . $v['student_grade_exam_id']);?>"><i
                                                     class="fas fa-clock"></i> Set Selesai</a>
-                                            <?php endif; ?>
+                                            <?php endif;?>
                                         </div>
                                     </div>
                                 </td>
-                                <td><?= $v['name'] . $status = ($v['finish_time'] != null) ? '<br><span class="badge badge-success">Selesai</span>' : '<br><span class="badge badge-warning">Belum</span>'; ?>
+                                <td>
+                                <?php
+                                if($v['exam_schedule_id'] == null){
+                                    echo $v['name'] . '<br><span class="badge badge-danger">Belum Mulai Ujian</span>';
+                                }else{
+                                    echo $v['name'] . $status = ($v['finish_time'] != null) ? '<br><span class="badge badge-success">Selesai</span>' : '<br><span class="badge badge-warning">Belum Selesai</span>';
+                                }
+                                ?>
                                 </td>
                                 <td>
                                     <?php
-                                    $total_soal = $v['correct'] + $v['incorrect'] + $v['numbers_before_answer'];
-                                    $terjawab = $v['correct'] + $v['incorrect'];
-                                    echo ($terjawab / $total_soal) * 100;
-                                ?>
-                                    %</td>
-                                <td><?= $v['updated_at']; ?></td>
+                                        if ($v['exam_schedule_id'] == null) {
+                                            echo '-';
+                                        } else {
+                                            $total_soal = $v['correct'] + $v['incorrect'] + $v['numbers_before_answer'];
+                                            $terjawab = $v['correct'] + $v['incorrect'];
+                                            echo (($terjawab / $total_soal) * 100) . '%';
+                                        }
+                                    ?>
+                                </td>
+                                <td><?=$v['updated_at'];?></td>
                             </tr>
                             <?php endforeach;?>
                         </tbody>

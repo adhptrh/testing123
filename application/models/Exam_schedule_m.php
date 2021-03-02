@@ -9,7 +9,7 @@ class Exam_schedule_m extends MY_Model
         parent::__construct();
         $this->name = 'exam_schedules';
         $this->alias = 'Jadwal Ujian';
-        $this->load->model('Student_grade_m', 'student_grade');
+        // $this->load->model('Student_grade_m', 'student_grade');
 
         $this->rules = [
             [

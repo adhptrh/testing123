@@ -23,7 +23,7 @@ class Student_grade_m extends MY_Model {
     ];
   }
 
-  public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
+  public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0, $where_in = false)
   {
     $this->db->select('a.id, a.order_id, a.student_id, a.is_del, a.grade_period_id')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
@@ -70,7 +70,12 @@ class Student_grade_m extends MY_Model {
 
     }else{ // Jika cari semua
       if($conditions){
-        $this->db->where($conditions);
+        if($where_in){
+          $this->db->where_in($where_in['key'], $where_in['filter']);
+          $this->db->where($conditions);
+        }else{
+          $this->db->where($conditions);
+        }
       }
 
       $this->db->order_by('a.id', 'desc');

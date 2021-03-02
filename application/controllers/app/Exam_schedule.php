@@ -18,6 +18,7 @@ class Exam_schedule extends MY_Controller
         $this->load->model('Period_m', 'period');
         $this->load->model('Exam_question_m', 'exam');
         $this->load->model('Student_grade_exam_m', 'exam_student');
+        $this->load->model('Student_grade_m', 'student_grade');
         $this->load->model('Exam_m', 'exam_current');
         $this->load->model('Exam_temp_m', 'exam_current_temp');
         $this->load->model('Order_m', 'order');
@@ -43,7 +44,7 @@ class Exam_schedule extends MY_Controller
                     'href' => '#',
                 ],
                 [
-                    'label' => 'Jadwal Ujian',
+                    'label' => 'Data Ujian',
                     'icon' => '',
                     'href' => '#',
                 ],
@@ -113,23 +114,90 @@ class Exam_schedule extends MY_Controller
                     'href' => '#',
                 ],
                 [
-                    'label' => 'Jadwal Ujian',
+                    'label' => 'Data Ujian',
                     'icon' => 'fa-gear',
                     'href' => '#',
                 ],
                 [
-                    'label' => 'Detail Ujian',
+                    'label' => 'Detail',
                     'icon' => '',
                     'href' => '#',
                 ],
             ],
         ];
 
-        $data = $this->exam_student->find_with_score(false, [
-            'e.exam_schedule_id' => enc($exam_schedule_id, 1),
+        $esid = enc($exam_schedule_id, 1);
+
+        /**
+         * Data untuk info umum
+         * Ex: Nama Ujian, Jumlah Butir Ujian, Tanggal Ujian, dll
+         */
+        $summary = $this->data->find($esid);
+
+        /**
+         * Data siswa yang sedang/telah mengikuti Ujian
+         */
+        $student_exam_raw = $this->exam_student->find_with_score(false, [
+            'e.exam_schedule_id' => $esid,
         ]);
 
+        /**
+         * Data semua siswa termasuk yang belum ujian
+         * Relation : grade_period_id
+         */
+        $filter_grade_student = explode('-', $summary['grade_period_id']);
+        $student_grade = $this->student_grade->find(false, [
+            'a.order_id' => enc($summary['order_id'], 1),
+        ], false, false, [
+            'key' => 'a.grade_period_id',
+            'filter' => $filter_grade_student,
+        ]);
+
+        /**
+         * Memberikan status ujian kepada setiap siswa
+         */
+        $data = [];
+        $is_finish = 0;
+        $is_login_count = 0;
+        $isnot_login_count = 0;
+        foreach ($student_grade as $k => $v) {
+            $data[$k]['exam_schedule_id'] = null;
+            $data[$k]['student_grade_exam_id'] = null;
+            $data[$k]['finish_time'] = null;
+            $data[$k]['name'] = $v['name'];
+            $data[$k]['correct'] = null;
+            $data[$k]['incorrect'] = null;
+            $data[$k]['numbers_before_answer'] = null;
+            $data[$k]['updated_at'] = null;
+            $isnot_login_count++;
+
+            // Filter data
+            foreach ($student_exam_raw as $k1 => $v1) {
+                if ($v1['nisn'] == $v['nisn']) {
+                    $data[$k]['exam_schedule_id'] = $v1['exam_schedule_id'];
+                    $data[$k]['student_grade_exam_id'] = $v1['student_grade_exam_id'];
+                    $data[$k]['finish_time'] = $v1['finish_time'];
+                    $data[$k]['name'] = $v1['name'];
+                    $data[$k]['correct'] = $v1['correct'];
+                    $data[$k]['incorrect'] = $v1['incorrect'];
+                    $data[$k]['numbers_before_answer'] = $v1['numbers_before_answer'];
+                    $data[$k]['updated_at'] = $v1['updated_at'];
+                    $is_login_count++;
+                    $isnot_login_count--;
+                    if($v1['finish_time']){
+                        $is_finish++;
+                    }
+                }
+            }
+        }
+
         $this->temp('app/exam_schedule/detail', [
+            'summary' => $summary,
+            'start_test_info' => [
+                'is_finish' => $is_finish,
+                'is_login_count' => $is_login_count,
+                'isnot_login_count' => $isnot_login_count,
+            ],
             'data' => $data,
         ]);
     }
