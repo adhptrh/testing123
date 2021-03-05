@@ -228,7 +228,7 @@ function addStudent() {
         dataType: 'json',
         success: function(response) {
             setToken(response.token);
-            loadStudentGrade();
+            // loadStudentGrade();
         }
 
     })
@@ -293,7 +293,7 @@ function generate_row_nongrade() {
     const tableRef = document.querySelector('.dtable').getElementsByTagName('tbody')[0];
     students.forEach((item, index) => {
         html = `
-            <tr>
+            <tr id='r${index+1}'>
             <td>${index + 1}</td>
             <td><button data-id='${item['id']}' class='btn btn-sm btn-success bAddStudent'>Tambahkan</button></td>
             <td>${item['name']}</td>
@@ -306,6 +306,7 @@ function generate_row_nongrade() {
         bAddStudent[index].addEventListener('click', (e) => {
             setStudent(e.target.getAttribute('data-id'));
             addStudent();
+            e.target.closest("tr").classList.add('d-none');
         })
     });
 
