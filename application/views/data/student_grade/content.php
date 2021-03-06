@@ -6,8 +6,8 @@
                 <div class="form-group">
                     <?php $var = 'period'; ?>
                     <label>Periode</label>
-                    <select id="bperiod" name="<?= $var; ?>" class="custom-select select2">
-                        <option></option>
+                    <select id="bperiod" name="<?= $var; ?>" class="custom-select">
+                        <option>Pilih</option>
                         <?php foreach ($period as $k => $v): ?>
                         <option value="<?= $v['id'] ?>"><?= $v['name'] ?></option>
                         <?php endforeach; ?>
@@ -19,8 +19,8 @@
                 <div class="form-group">
                     <?php $var = 'grade_period'; ?>
                     <label>Kelas</label>
-                    <select id="bgrade" name="<?= $var; ?>" class="custom-select select2">
-                        <option></option>
+                    <select id="bgrade" name="<?= $var; ?>" class="custom-select">
+                        <option>Pilih</option>
                     </select>
                 </div>
             </div>

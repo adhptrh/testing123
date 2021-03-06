@@ -62,7 +62,7 @@ function setGradePeriod(data) {
 }
 
 function setGrade(data) {
-    opsi = '<option></option>';
+    opsi = '<option>Pilih</option>';
     data.forEach((value, index) => {
         opsi += '<option value="' + value.id + '">' + value.kelas + '</option>';
     });
