@@ -57,6 +57,7 @@ $('.hapus').click(function() {
 
 $('.select2').select2({
     placeholder: 'Pilih',
+    widht: '100%',
     allowClear: true
 });
 

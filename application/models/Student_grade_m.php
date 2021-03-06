@@ -25,7 +25,7 @@ class Student_grade_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0, $where_in = false)
   {
-    $this->db->select('a.id, a.order_id, a.student_id, a.is_del, a.grade_period_id')
+    $this->db->select('a.id, a.order_id, a.student_id, a.is_del, a.grade_period_id, a.room')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
     ->select('d.period_id')

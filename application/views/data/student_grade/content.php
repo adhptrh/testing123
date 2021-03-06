@@ -2,7 +2,7 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col">
+            <div class="col-md-5">
                 <div class="form-group">
                     <?php $var = 'period'; ?>
                     <label>Periode</label>
@@ -15,7 +15,7 @@
                     <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-md-5">
                 <div class="form-group">
                     <?php $var = 'grade_period'; ?>
                     <label>Kelas</label>

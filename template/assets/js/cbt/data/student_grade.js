@@ -16,6 +16,7 @@ let token = 0,
     student = 0,
     orders = 0,
     order = 0,
+    room = 0,
     ID = 0,
     gradePeriod = 0;
 
@@ -33,6 +34,10 @@ function setStudentGrades(data) {
 
 function setOrder(data) {
     order = data;
+}
+
+function setRoom(data) {
+    room = data;
 }
 
 function setOrders(data) {
@@ -133,7 +138,8 @@ function createTableList() {
     </div>
     <div class="col-md-6 d-none d-md-block">
         <a id="bAdd" href="#" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-plus"></i> Tambah</a>
-        <a target="_blank" id="bCreateCard" href="student_grade/card_print/${bgrade.value}" class="btn btn-sm pd-x-15 btn-success btn-uppercase mg-l-5 float-right"><i class="fa fa-print"></i> Cetak Kartu Ujian</a>
+        <a target="_blank" id="bCreateCard" href="student_grade/card_print/${bgrade.value}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-print"></i> Cetak Kartu Ujian</a>
+        <a target="_blank" id="bViewRoomDistribution" href="#" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i class="fa fa-users"></i> Lihat Sebaran Peserta</a>
     </div>
     </div>
     <table class='dtable table table-striped'>
@@ -144,6 +150,7 @@ function createTableList() {
                 <th>Nama</th>
                 <th>NISN</th>
                 <th>Pilih Sesi</th>
+                <th>Pilih Ruang</th>
             </tr>
         </thead>
         <tbody id='tStudentGrade'>
@@ -238,16 +245,32 @@ function generate_row() {
     createTableList();
     const tableRef = document.querySelector('.dtable').getElementsByTagName('tbody')[0];
     studentGrades.forEach((item, index) => {
-        html = `
-            <tr>
+        rooms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        html = `<tr>
             <td>${index + 1}</td>
             <td><button data-id='${item['id']}' class='btn btn-sm btn-danger bDelete'>Hapus</button></td>
             <td>${item['name']}</td>
             <td>${item['nisn']}</td>
             <td class='order'></td>
-            </tr>
-        `;
+            <td class='room'>
+            <select data-student-grade-id="${item['id']}" class="custom-select select2 bRoom">`;
+
+        rooms.forEach((item1, index1) => {
+            selected = '';
+            if (item['room'] == item1) {
+                selected = 'selected';
+            }
+            html += `<option value='${item1}' ${selected}>Ruang ${item1}</option>`;
+        });
+        html += `</select></td></tr>`;
         tableRef.insertRow().innerHTML = html;
+
+        bRooms = document.getElementsByClassName('bRoom');
+        bRooms[index].addEventListener('change', (e) => {
+            setID(e.target.getAttribute('data-student-grade-id'));
+            setRoom(e.target.value);
+            saveRoom();
+        });
 
         const fOrder = document.getElementsByClassName('order');
         let bOrders = '';
@@ -259,8 +282,9 @@ function generate_row() {
             }
             bOrders += `<button data-student-grade-id="${item['id']}" data-order-id="${item1['id']}" class="bOrder btn btn-sm ${button} mg-r-5">${item1['name']}</button>`;
         });
-        fOrder[index].innerHTML = bOrders;
 
+
+        fOrder[index].innerHTML = bOrders;
         bOrders = fOrder[index].querySelectorAll('.bOrder');
 
         bOrders.forEach((item2) => {
@@ -268,6 +292,7 @@ function generate_row() {
                 setID(item2.getAttribute('data-student-grade-id'));
                 setOrder(item2.getAttribute('data-order-id'));
                 saveOrder();
+                console.log(ID);
                 bOrders.forEach((item2) => {
                     item2.classList.remove('btn-success');
                     item2.classList.add('btn-outline-success');
@@ -293,7 +318,7 @@ function generate_row_nongrade() {
     const tableRef = document.querySelector('.dtable').getElementsByTagName('tbody')[0];
     students.forEach((item, index) => {
         html = `
-            <tr id='r${index+1}'>
+            <tr id='r${index + 1}'>
             <td>${index + 1}</td>
             <td><button data-id='${item['id']}' class='btn btn-sm btn-success bAddStudent'>Tambahkan</button></td>
             <td>${item['name']}</td>
@@ -357,6 +382,24 @@ function loadStudentNonGrade() {
             setToken(response.token);
             setStudents(response.data);
             generate_row_nongrade();
+        }
+
+    })
+}
+
+function saveRoom() {
+    url = '../data/student_grade/set_room';
+    $.ajax({
+        url: url,
+        method: 'post',
+        data: {
+            token: token,
+            room: room,
+            student_grade_id: ID,
+        },
+        dataType: 'json',
+        success: function(response) {
+            setToken(response.token);
         }
 
     })

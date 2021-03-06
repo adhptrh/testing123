@@ -118,7 +118,23 @@ class Student_grade extends MY_Controller
 
         $data = [
             'token' => $this->security->get_csrf_hash(),
-            'query' => $this->db->last_query(),
+            'post' => $this->input->post(),
+        ];
+
+        echo json_encode($data);
+    }
+
+    public function set_room(){
+        $student_grade_id = $this->input->post('student_grade_id');
+        $room = $this->input->post('room');
+
+        $save = $this->data->save([
+            'id' => enc($student_grade_id, 1),
+            'room' => $room,
+        ], true);
+
+        $data = [
+            'token' => $this->security->get_csrf_hash(),
             'post' => $this->input->post(),
         ];
 
