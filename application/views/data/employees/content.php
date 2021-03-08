@@ -48,6 +48,9 @@
                                           </button>
                                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                               <a class="dropdown-item"
+                                                  href="<?=base_url('data/employees/password_reset/' . $v['id']);?>"><i
+                                                      class="fas fa-key"></i> Reset Password</a>
+                                              <a class="dropdown-item"
                                                   href="<?=base_url('data/employees/edit/' . $v['id']);?>"><i
                                                       class="fas fa-edit"></i> Edit</a>
                                               <a class="dropdown-item hapus" href="#"

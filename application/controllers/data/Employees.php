@@ -196,6 +196,18 @@ class Employees extends MY_Controller
         }
     }
 
+    public function password_reset($user_id)
+    {
+        $id = enc($user_id, 1);
+        $this->user->save([
+            'id' => $id,
+            'password' => password_hash('123456', PASSWORD_DEFAULT),
+            'is_repassword' => 1,
+        ], 1);
+        $this->session->set_flashdata('message', 'Password berhasil direst menjadi 123456');
+        redirect('data/employees');
+    }
+
     public function edit($id, $old = [])
     {
         $this->filter(3);

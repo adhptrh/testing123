@@ -18,6 +18,10 @@ class Profile_m extends MY_Model {
     ];
   }
 
+  public function my_profile(){
+    return $this->find($this->get_profile_id());
+  }
+
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
     $this->db->select('a.id, a.name, a.is_del')

@@ -25,7 +25,7 @@ class User_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.profile_id, a.username, a.password, a.is_del')
+    $this->db->select('a.id, a.profile_id, a.username, a.password, a.is_repassword, a.is_del')
     ->select('b.name created_by, b.created_at')
     ->select('c.name updated_at, c.updated_at')
     ->select('d.name')

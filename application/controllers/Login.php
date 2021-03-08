@@ -122,7 +122,11 @@ class Login extends CI_Controller
                             }
                         }
                     } else {
-                        redirect(base_url('/'));
+                        if($get_user[0]['is_repassword'] == 1){
+                            redirect(base_url('/app/my_profile/change_password'));
+                        }else{
+                            redirect(base_url('/'));
+                        }
                     }
 
                 } else {
