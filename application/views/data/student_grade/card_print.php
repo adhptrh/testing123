@@ -9,7 +9,7 @@
     }
 
     /* footer {
-        page-break-after: always;
+        page-break-after: always.
     } */
 }
 
