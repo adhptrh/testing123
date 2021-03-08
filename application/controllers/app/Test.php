@@ -21,6 +21,7 @@ class Test extends MY_Controller
         $this->load->model('Student_grade_m', 'student_grade');
         $this->load->model('Student_grade_exam_m', 'student_exam');
         $this->load->model('Token_m', 'token');
+        $this->load->model('School_profile_m', 'school_profile');
     }
 
     public function execute($exam_schedule = 0)
@@ -28,6 +29,7 @@ class Test extends MY_Controller
         $this->filter(1);
 
         $this->header = [
+            'school_name' => $this->school_profile->find()[0]['name'],
             'title' => 'Ujian',
             'js_file' => 'app/execute',
             'sub_title' => 'Pelaksanaan Ujian',
@@ -321,6 +323,7 @@ class Test extends MY_Controller
         $this->filter(2);
 
         $this->header = [
+            'school_name' => $this->school_profile->find()[0]['name'],
             'title' => 'Ujian',
             'js_file' => 'app/test_confirm',
             'sub_title' => 'Konfirmasi Biodata dan Ujian',
@@ -420,7 +423,11 @@ class Test extends MY_Controller
                 'a.exam_question_id' => enc($this->input->post('exam_question_id'), 1),
             ]);
 
-            $exam_question_items = array_rand($exam_questions_raw, $info['number_of_exam']);
+            if (1 == 1) {
+                // Random soal
+                $exam_question_items = array_rand($exam_questions_raw, $info['number_of_exam']);
+            }
+
             $exam_questions_to_be_save = [];
 
             foreach ($exam_question_items as $k => $v) {

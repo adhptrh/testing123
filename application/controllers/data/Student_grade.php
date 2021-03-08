@@ -19,6 +19,7 @@ class Student_grade extends MY_Controller
         $this->load->model('Grade_period_m', 'grade_period');
         $this->load->model('Period_m', 'period');
         $this->load->model('Order_m', 'order');
+        $this->load->model('School_profile_m', 'school_profile');
     }
 
     public function index()
@@ -107,7 +108,8 @@ class Student_grade extends MY_Controller
         echo json_encode($data);
     }
 
-    public function set_order(){
+    public function set_order()
+    {
         $student_grade_id = $this->input->post('student_grade_id');
         $order_id = $this->input->post('order_id');
 
@@ -124,7 +126,8 @@ class Student_grade extends MY_Controller
         echo json_encode($data);
     }
 
-    public function set_room(){
+    public function set_room()
+    {
         $student_grade_id = $this->input->post('student_grade_id');
         $room = $this->input->post('room');
 
@@ -185,15 +188,19 @@ class Student_grade extends MY_Controller
         echo json_encode($data);
     }
 
-    public function card_print($grade_period_id){
+    public function card_print($grade_period_id)
+    {
         $gpi = enc($grade_period_id, 1);
         $data = $this->data->find(false, ['a.grade_period_id' => $gpi]);
-        $this->load->view('data/student_grade/card_print', ['data' => $data]);
+        $this->load->view('data/student_grade/card_print', [
+            'data' => $data,
+            'headmaster' => $this->school_profile->find()[0],   
+        ]);
 
         // $pdf = new \TCPDF();
         // $pdf->AddPage();
         // $pdf->writeHTML($page, true, false, true, false, '');
-        // $pdf->Output('tset.pdf'); 
+        // $pdf->Output('tset.pdf');
     }
 
     public function delete()

@@ -22,6 +22,7 @@ class Exam_schedule extends MY_Controller
         $this->load->model('Exam_m', 'exam_current');
         $this->load->model('Exam_temp_m', 'exam_current_temp');
         $this->load->model('Order_m', 'order');
+        $this->load->model('School_profile_m', 'school_profile');
     }
 
     public function index()
@@ -29,6 +30,7 @@ class Exam_schedule extends MY_Controller
         $this->filter(2);
 
         $this->header = [
+            'school_name' => $this->school_profile->find()[0]['name'],
             'title' => 'Jadwal Ujian',
             'sub_title' => 'Pengaturan Jadwal Ujian',
             'nav_active' => 'app/exam_schedule',

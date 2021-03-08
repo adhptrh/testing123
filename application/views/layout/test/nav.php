@@ -3,7 +3,7 @@
     <header class="navbar navbar-header navbar-header-fixed">
         <a href="#" id="mainMenuOpen" class="burger-menu"><i data-feather="menu"></i></a>
         <div class="navbar-brand">
-            <a href="<?=base_url('template/');?>index.html" class="df-logo">CBT SMAN PLUS Provinsi Riau<span></span></a>
+            <a href="<?=base_url('template/');?>index.html" class="df-logo">CBT <?= $header['school_name']; ?><span></span></a>
         </div>
         
         <div class="navbar-right">

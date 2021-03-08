@@ -95,8 +95,8 @@ td {
                 </tr>
 
                 <tr>
-                    <td>Sesi</td>
-                    <td><?=$v['order'];?></td>
+                    <td>Sesi / Ruang</td>
+                    <td><?=$v['order'];?> / Ruang <?=$v['room'];?></td>
                 </tr>
 
                 <tr>
@@ -104,8 +104,8 @@ td {
                     <td coslpan=''></td>
                     <td align='center'>
                         Kepala Sekolah<br><br><br>
-                        <strong>ANDRI KARMIDI,M.Pd<br>
-                            NIP. 197105171995121001</strong </td>
+                        <strong><?=$headmaster['headmaster'];?><br>
+                            NIP. <?=$headmaster['nip'];?></strong </td>
                 </tr>
             </table>
         </div>
