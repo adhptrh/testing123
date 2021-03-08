@@ -50,11 +50,6 @@
                     <select id="bgrade" multiple="multiple" name="<?= $var; ?>[]"
                         class="custom-select select2 <?= $has_error = (form_error($var)) ? 'is-invalid' : '' ?>">
                         <option></option>
-                        <?php foreach ($grade as $k => $v): ?>
-
-                        <option value="<?= $v['id'] ?>"><?= $v['kelas'] ?></option>
-
-                        <?php endforeach; ?>
                     </select>
                     <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>
                 </div>

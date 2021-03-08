@@ -6,6 +6,8 @@ class Study_m extends MY_Model {
   public function __construct()
   {
     parent::__construct();
+    $this->load->model('Hr_m', 'hr');
+    $this->load->model('Hr_study_m', 'hr_study');
     $this->name = 'studies';
     $this->alias = 'Mata Uji';
 
@@ -20,6 +22,27 @@ class Study_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
+    /**
+     * Filter jika guru berdasarkan studinya masing-masing
+     */
+    $filter_study = [];
+
+    if($this->get_profile_level_id() == 3){
+      // cari hr_id berdasakan profile_id
+      $hr = $this->hr->find(false, [
+        'a.profile_id' => $this->get_profile_id(),
+      ]);
+
+      // cari mapel berdasarkan hr_id
+      $study = $this->hr_study->find(false, [
+        'a.hr_id' => enc($hr[0]['id'], 1),
+      ]);
+      
+      foreach ($study as $k => $v) {
+        $filter_study[$k] = enc($v['study_id'], 1);
+      }
+    }
+
     $this->db->select('a.id, a.name, a.is_del')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
@@ -41,6 +64,10 @@ class Study_m extends MY_Model {
         'a.id' => $id
       ]);
 
+      if($filter_study){
+        $this->db->or_where_in('a.id', $filter_study);
+      }
+
       $data = $this->db->get()->row_array();
       $data['id'] = enc($data['id']);
 
@@ -50,6 +77,13 @@ class Study_m extends MY_Model {
     }else{ // Jika cari semua
       if($conditions){
         $this->db->where($conditions);
+        if($filter_study){
+          $this->db->or_where_in('a.id', $filter_study);
+        }
+      }else{
+        if($filter_study){
+          $this->db->where_in('a.id', $filter_study);
+        }
       }
 
       $this->db->order_by('a.id', 'desc');

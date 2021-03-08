@@ -198,7 +198,7 @@ class Login extends CI_Controller
             ]);
 
             $profile = array(
-                'profile_id' => $get_user[0]['id'],
+                'profile_id' => $get_user[0]['profile_id'],
                 'name' => $get_user[0]['name'],
                 'level' => 'Siswa',
                 'level_id' => enc(4),
@@ -217,7 +217,7 @@ class Login extends CI_Controller
             ]);
 
             $profile = array(
-                'profile_id' => $get_user[0]['id'],
+                'profile_id' => $get_user[0]['profile_id'],
                 'name' => $get_hr[0]['name'],
                 'level' => $get_hr[0]['level_name'],
                 'level_id' => $get_hr[0]['level_id'],

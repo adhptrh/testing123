@@ -29,7 +29,7 @@ class MY_Controller extends CI_Controller
         $this->load->model('User_m', 'model');
 
         $check = [
-            'a.id' => enc($this->get_profile()->profile_id, 1),
+            'a.profile_id' => enc($this->get_profile()->profile_id, 1),
             'a.token' => $this->get_token(),
         ];
 
