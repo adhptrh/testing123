@@ -54,14 +54,10 @@ class Exam_question_detail_m extends MY_Model
         ];
     }
 
-    public function find_for_student_id_only($id = false, $conditions = false, $show_del = false, $selected_id = 0)
+    public function find_for_student_id_only($id = false, $conditions = false, $show_del = false, $selected_id = 0, $limit = false)
     {
         $this->db->select('a.id')
-            // ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
-            // ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
             ->from($this->name . ' a')
-            // ->join('z_profiles b', 'b.id = a.created_by', 'left')
-            // ->join('z_profiles c', 'c.id = a.updated_by', 'left')
             ->order_by('a.id', 'ASC');
 
         if (!$show_del) {
@@ -85,6 +81,10 @@ class Exam_question_detail_m extends MY_Model
         } else { // Jika cari semua
             if ($conditions) {
                 $this->db->where($conditions);
+            }
+
+            if ($limit) {
+                $this->db->limit($limit);
             }
 
             $this->db->order_by('a.id', 'desc');

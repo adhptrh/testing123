@@ -419,13 +419,24 @@ class Test extends MY_Controller
 
         } else { // jika tidak ada (belum ujian)
 
-            $exam_questions_raw = $this->exam_question_detail->find_for_student_id_only(false, [
-                'a.exam_question_id' => enc($this->input->post('exam_question_id'), 1),
-            ]);
-
-            if (1 == 1) {
-                // Random soal
+            if ($info['is_random'] == 1) {
+                // Soal random
+                $exam_questions_raw = $this->exam_question_detail->find_for_student_id_only(false, [
+                    'a.exam_question_id' => enc($this->input->post('exam_question_id'), 1),
+                ]);
+                
                 $exam_question_items = array_rand($exam_questions_raw, $info['number_of_exam']);
+            }else{
+                // Soal tidak radom
+                $exam_questions_raw = $this->exam_question_detail->find_for_student_id_only(
+                    false, 
+                    [
+                        'a.exam_question_id' => enc($this->input->post('exam_question_id'), 1),
+                    ],
+                    false,
+                    0,
+                    $info['number_of_exam']
+                );
             }
 
             $exam_questions_to_be_save = [];
