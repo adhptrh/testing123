@@ -119,7 +119,7 @@
                         </div>
                         <div class="form-group">
                             <label>Tampilkan soal dengan</label><br />
-                            <?php if ($data['is_random'] == 0): ?>
+                            <?php if ($data['is_random'] == 1): ?>
                             <button type='button' data-value="1"
                                 class='btn btn-sm btn-success bSelect'>Acak</button>
                             <button type='button' data-value="0" class='btn btn-sm btn-outline-success bSelect'>Tidak
@@ -131,7 +131,7 @@
                             <button type='button' data-value="0" class='btn btn-sm btn-success bSelect'>Tidak
                                 Acak</button>
                             <?php endif;?>
-                            <input id="isRandom" type="text" name="is_random" class="form-control"
+                            <input id="isRandom" type="text" name="is_random" class="form-control d-none"
                                 value="<?=$data['is_random']?>">
                         </div>
                     </div>

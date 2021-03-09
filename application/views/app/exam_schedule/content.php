@@ -78,7 +78,7 @@
                                 <td>
                                     <?php
                                         echo $v['study'];
-                                        echo "<br><small>ditampilkan " . $random = ($v['is_random'] == 0) ? 'Acak' : 'Tidak Acak';
+                                        echo "<br><small>ditampilkan " . $random = ($v['is_random'] == 1) ? 'Acak' : 'Tidak Acak';
                                     ?>
                                 </td>
                                 <td><?=$v['grade']?></td>
