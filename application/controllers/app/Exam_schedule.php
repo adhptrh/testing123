@@ -228,7 +228,7 @@ class Exam_schedule extends MY_Controller
                 [
                     'a.grade_period_id' => $v,
                     'a.order_id' => enc($summary['order_id'], 1),
-                ],
+                ]
             ));
         }
 
