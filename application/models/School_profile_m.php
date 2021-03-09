@@ -23,11 +23,12 @@ class School_profile_m extends MY_Model {
     $this->db->select('a.id, a.name, a.address, a.is_del, a.headmaster headmaster_id')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
-    ->select('d.name headmaster, d.nip')
+    ->select('e.name headmaster, e.nip')
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
-    ->join('z_profiles d', 'd.id = a.headmaster', 'left');
+    ->join('z_human_resources d', 'd.id = a.headmaster', 'left')
+    ->join('z_profiles e', 'e.id = d.profile_id', 'left');
 
     if(!$show_del){
       $this->db->where('a.is_del', '0');
