@@ -78,12 +78,11 @@ table.content td {
 
 table.footer {
     width: 100%;
-    margin-top:20px;
+    margin-top: 20px;
 }
-
 </style>
 
-<?php foreach ($grades as $k => $v): ?>
+<?php foreach ($rooms as $k => $v): ?>
 
 <div class='title'>
     DAFTAR HADIR PESERTA UJIAN <br />
@@ -98,8 +97,8 @@ table.footer {
         <td class='col-5'>: <?=$summary['date']?></td>
     </tr>
     <tr>
-        <td>Kelas</td>
-        <td>:  <?=$v['name']?></td>
+        <td>Ruang</td>
+        <td>: <?= $v ?></td>
         <td>Sesi</td>
         <td>: <?= $summary['order']; ?></td>
     </tr>
@@ -119,7 +118,8 @@ table.footer {
         <th colspan="2">Tanda Tangan</th>
         <th class="note">Keterangan</th>
     </tr>
-    <?php foreach ($v['students'] as $k1 => $v1): ?>
+    <?php foreach ($students as $k1 => $v1): ?>
+    <?php if ($v1['room'] == $v): ?>
     <tr>
         <td class="center"><?= $k1+1 ?></td>
         <td class="center"><?= $v1['nisn'] ?></td>
@@ -128,43 +128,44 @@ table.footer {
         <td class="ttd"> <span class="ttd-number"><?= $no = ($k1 % 2 == 0) ? '' : $k1+1 ?></span> </td>
         <td></td>
     </tr>
+    <?php endif;?>
     <?php endforeach; ?>
 </table>
 
 <table class="footer">
-        <tr>
-            <td>Jumlah Peserta yang Seharusnya Hadir</td>
-            <td>: _____ orang</td>
-            <td class="pengawas" rowspan="5">
-                Pengawas,
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                (__________________________)
-                <br/>
-                NIP. -
-            </td>
-        </tr>
-        <tr>
-            <td>Jumlah Peserta yang Tidak Hadir</td>
-            <td>: _____ orang</td>
-        </tr>
-        <tr>
-            <td>Jumlah Peserta Hadir</td>
-            <td>: _____ orang</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-        </tr>
+    <tr>
+        <td>Jumlah Peserta yang Seharusnya Hadir</td>
+        <td>: _____ orang</td>
+        <td class="pengawas" rowspan="5">
+            Pengawas,
+            <br />
+            <br />
+            <br />
+            <br />
+            (__________________________)
+            <br />
+            NIP. -
+        </td>
+    </tr>
+    <tr>
+        <td>Jumlah Peserta yang Tidak Hadir</td>
+        <td>: _____ orang</td>
+    </tr>
+    <tr>
+        <td>Jumlah Peserta Hadir</td>
+        <td>: _____ orang</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
 </table>
 
-<?php if ($k < (count($grades) - 1)): ?>
+<?php if ($k < (count($rooms) - 1)): ?>
 <div style="page-break-before:always;"></div>
 <?php endif;?>
 <?php endforeach; ?>

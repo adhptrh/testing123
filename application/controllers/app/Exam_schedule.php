@@ -216,18 +216,32 @@ class Exam_schedule extends MY_Controller
         $summary = $this->data->find(enc($esid, 1));
 
         $dgrades = explode('-', $summary['grade_period_id']);
-        $grades = [];
-        foreach ($dgrades as $k => $v) {
-            $grade = $this->grade_period->find($v);
-            $grades[$k]['name'] = $grade['kelas'];
 
-            $students = $this->student_grade->find(false, ['a.grade_period_id' => $v]);
-            $grades[$k]['students'] = $students;
+        /**
+         * Mendapatkan seluruh data siswa
+         * berdasarkan exam_question_id
+         */
+        $students = [];
+        foreach ($dgrades as $k => $v) {
+            if($k == 0){
+                $students = array_merge($students, $this->student_grade->find(false, ['a.grade_period_id' => $v]));
+            }
+        }
+
+        /**
+         * Mendapatkan data ruang terkait
+         */
+        $rooms = [];
+        foreach ($students as $k => $v) {
+            if(!in_array($v['room'], $rooms)){
+                array_push($rooms, $v['room']);
+            }
         }
 
         $page = $this->load->view('app/exam_schedule/attendees', [
             'summary' => $summary,
-            'grades' => $grades,
+            'rooms' => $rooms,
+            'students' => $students,
         ], true);
 
         /**
