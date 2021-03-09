@@ -223,9 +223,13 @@ class Exam_schedule extends MY_Controller
          */
         $students = [];
         foreach ($dgrades as $k => $v) {
-            if($k == 0){
-                $students = array_merge($students, $this->student_grade->find(false, ['a.grade_period_id' => $v]));
-            }
+            $students = array_merge($students, $this->student_grade->find(
+                false, 
+                [
+                    'a.grade_period_id' => $v,
+                    'a.order_id' => enc($summary['order_id'], 1),
+                ],
+            ));
         }
 
         /**

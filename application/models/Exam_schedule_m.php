@@ -82,7 +82,8 @@ class Exam_schedule_m extends MY_Model
           ) h', 'h.exam_question_id = a.exam_question_id', 'left')
             ->join('exam_question_extend_grades i', 'i.exam_question_id = a.exam_question_id', 'left')
             ->join('periods j', 'j.id = d.period_id', 'left')
-            ->group_by('a.exam_question_id')
+            // ->group_by('a.exam_question_id')
+            ->group_by('a.id')
             ->order_by('a.id', 'ASC');
 
         if (!$show_del) {

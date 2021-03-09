@@ -81,7 +81,6 @@ table.footer {
     margin-top: 20px;
 }
 </style>
-
 <?php foreach ($rooms as $k => $v): ?>
 
 <div class='title'>
