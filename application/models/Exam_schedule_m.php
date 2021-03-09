@@ -42,7 +42,7 @@ class Exam_schedule_m extends MY_Model
 
     public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
     {
-        $this->db->select('a.id, a.is_del, DATE_FORMAT(a.start, "%H:%i") start')
+        $this->db->select('a.id, a.is_random, a.is_del, DATE_FORMAT(a.start, "%H:%i") start')
             ->select('DATE_FORMAT(TIMEDIFF(a.finish, a.start), "%H Jam %i menit") durasi')
             ->select('a.number_of_exam, DATE_FORMAT(a.finish, "%H:%i") finish') 
             ->select('UNIX_TIMESTAMP(NOW()) time_server_now')

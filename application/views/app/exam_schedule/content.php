@@ -75,7 +75,12 @@
                                     <?php endif;?>
 
                                 </td>
-                                <td><?=$v['study']?></td>
+                                <td>
+                                    <?php
+                                        echo $v['study'];
+                                        echo "<br><small>ditampilkan " . $random = ($v['is_random'] == 0) ? 'Acak' : 'Tidak Acak';
+                                    ?>
+                                </td>
                                 <td><?=$v['grade']?></td>
                                 <td><?=$v['date'] . "<br><small>" . $v['order'];?></small></td>
                                 <td>Ujian : <?=$v['number_of_exam'] . "<br> Tersedia : " . $v['stock_of_exams']?></td>

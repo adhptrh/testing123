@@ -5,6 +5,7 @@ const id = document.querySelector('input[name=id]');
 const bexam = document.getElementById("bexam");
 let token = 0,
     period = 0,
+    is_random = ' ',
     exam = '',
     numbers_of_exam = 0;
 
@@ -66,7 +67,17 @@ bSave.addEventListener("click", () => {
                 confirmButtonText: 'OK',
             })
         } else {
-            xform.submit();
+            if (is_random == ' ') {
+                Swal.fire({
+                    title: 'Peringatan',
+                    text: "Mohon tentukan soal akan ditampilkan acak atau tidak",
+                    icon: 'warning',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK',
+                })
+            } else {
+                xform.submit();
+            }
         }
     } else {
         warningNumberExam.classList.remove('d-none');
@@ -95,3 +106,10 @@ function loadExam() {
         }
     })
 }
+
+document.querySelectorAll('.bSelect').forEach(item => {
+    item.addEventListener('click', event => {
+        is_random = item.getAttribute('data-value');
+        isRandom.value = is_random;
+    })
+});

@@ -76,6 +76,21 @@ $('#customFile').on('change', function() {
     // Ubah "Choose a file" label sesuai dengan nama file yag akan diupload
     $(this).next('.custom-file-label').addClass("selected").html(fileName);
 });
+
+function setButtonOptionAllClear() {
+    document.querySelectorAll('.bSelect').forEach(item => {
+        item.classList.remove('btn-success');
+        item.classList.add('btn-outline-success');
+    })
+}
+
+document.querySelectorAll('.bSelect').forEach(item => {
+    item.addEventListener('click', event => {
+        setButtonOptionAllClear();
+        item.classList.add('btn-success')
+        item.classList.remove('btn-outline-success')
+    })
+});
 </script>
 </body>
 

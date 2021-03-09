@@ -290,6 +290,7 @@ class Exam_schedule extends MY_Controller
                 'start' => $date . " " . $this->input->post('start'),
                 'finish' => $date . " " . $this->input->post('finish'),
                 'number_of_exam' => $this->input->post('number_of_exam'),
+                'is_random' => $this->input->post('is_random'),
             ];
 
             $save = $this->data->save($save);
