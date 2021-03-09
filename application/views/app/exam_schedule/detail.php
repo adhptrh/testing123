@@ -57,7 +57,7 @@
                     </div>
 
                     <div class="col-md-6 d-none d-md-block">
-                        <a href="#" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i
+                        <a href="<?= base_url('app/exam_schedule/attendees/') . $summary['id'] ?>" target="_blank" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i
                                 class="fa fa-print"></i> Cetak Daftar Hadir</a>
                     </div>
                 </div>

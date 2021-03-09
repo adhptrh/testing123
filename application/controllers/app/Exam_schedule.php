@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use Dompdf\Dompdf;
+
 class Exam_schedule extends MY_Controller
 {
 
@@ -15,6 +17,7 @@ class Exam_schedule extends MY_Controller
         parent::__construct();
         $this->controller_id = 15;
         $this->load->model('Exam_schedule_m', 'data');
+        $this->load->model('Grade_period_m', 'grade_period');
         $this->load->model('Period_m', 'period');
         $this->load->model('Exam_question_m', 'exam');
         $this->load->model('Student_grade_exam_m', 'exam_student');
@@ -186,7 +189,7 @@ class Exam_schedule extends MY_Controller
                     $data[$k]['updated_at'] = $v1['updated_at'];
                     $is_login_count++;
                     $isnot_login_count--;
-                    if($v1['finish_time']){
+                    if ($v1['finish_time']) {
                         $is_finish++;
                     }
                 }
@@ -202,6 +205,47 @@ class Exam_schedule extends MY_Controller
             ],
             'data' => $data,
         ]);
+    }
+
+    public function attendees($esid)
+    {
+        /**
+         * Data untuk info umum
+         * Ex: Nama Ujian, Tanggal Ujian, dll
+         */
+        $summary = $this->data->find(enc($esid, 1));
+
+        $dgrades = explode('-', $summary['grade_period_id']);
+        $grades = [];
+        foreach ($dgrades as $k => $v) {
+            $grade = $this->grade_period->find($v);
+            $grades[$k]['name'] = $grade['kelas'];
+
+            $students = $this->student_grade->find(false, ['a.grade_period_id' => $v]);
+            $grades[$k]['students'] = $students;
+        }
+
+        $page = $this->load->view('app/exam_schedule/attendees', [
+            'summary' => $summary,
+            'grades' => $grades,
+        ], true);
+
+        /**
+         * Generate and show PDF
+         */
+
+        // instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($page);
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'potrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream();
     }
 
     public function get_json()

@@ -58,6 +58,7 @@ class Exam_schedule_m extends MY_Model
             ->select('f.name study')
             ->select('g.grade, g.grade_period_id')
             ->select('h.jsoal stock_of_exams')
+            ->select('j.name period_name')
             ->from($this->name . ' a')
             ->join('z_profiles b', 'b.id = a.created_by', 'left')
             ->join('z_profiles c', 'c.id = a.updated_by', 'left')
@@ -80,6 +81,7 @@ class Exam_schedule_m extends MY_Model
             GROUP BY  a.exam_question_id
           ) h', 'h.exam_question_id = a.exam_question_id', 'left')
             ->join('exam_question_extend_grades i', 'i.exam_question_id = a.exam_question_id', 'left')
+            ->join('periods j', 'j.id = d.period_id', 'left')
             ->group_by('a.exam_question_id')
             ->order_by('a.id', 'ASC');
 
