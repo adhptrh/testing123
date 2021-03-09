@@ -14,12 +14,14 @@
 
                         <div class="form-group d-none">
                             <label>ID</label>
-                            <input id="iId" name="id" type="text" class="form-control" value="<?= $data['id']; ?>" readonly>
+                            <input id="iId" name="id" type="text" class="form-control" value="<?=$data['id'];?>"
+                                readonly>
                         </div>
 
                         <div class="form-group d-none">
                             <label>Intime</label>
-                            <input id="iIntime" name="intime" type="text" class="form-control" value="<?= $data['intime']; ?>" readonly>
+                            <input id="iIntime" name="intime" type="text" class="form-control"
+                                value="<?=$data['intime'];?>" readonly>
                         </div>
 
                         <div class="form-group">
@@ -30,7 +32,7 @@
                                 <option></option>
                                 <?php foreach ($period as $k => $v): ?>
 
-                                <option <?= $v['selected']; ?> value="<?=$v['id']?>"><?=$v['name']?></option>
+                                <option <?=$v['selected'];?> value="<?=$v['id']?>"><?=$v['name']?></option>
 
                                 <?php endforeach;?>
                             </select>
@@ -45,7 +47,7 @@
                                 <option></option>
                                 <?php foreach ($exam as $k => $v): ?>
 
-                                <option <?= $v['selected']; ?> value="<?=$v['id']?>"><?=$v['exam']?></option>
+                                <option <?=$v['selected'];?> value="<?=$v['id']?>"><?=$v['exam']?></option>
 
                                 <?php endforeach;?>
                             </select>
@@ -59,7 +61,7 @@
                                 class="custom-select select2 <?=$has_error = (form_error($var)) ? 'is-invalid' : ''?>">
                                 <option></option>
                                 <?php foreach ($order as $k => $v): ?>
-                                <option <?= $v['selected']; ?> value="<?=$v['id']?>"><?=$v['name']?></option>
+                                <option <?=$v['selected'];?> value="<?=$v['id']?>"><?=$v['name']?></option>
                                 <?php endforeach;?>
                             </select>
                             <?=$has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : ''?>
@@ -114,6 +116,23 @@
                                 class="form-control <?=$has_error = (form_error($var)) ? 'is-invalid' : ''?>"
                                 value="<?=$isi = (isset($old[$var])) ? $old[$var] : $data['stock_of_exams'];?>">
                             <?=$has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : ''?>
+                        </div>
+                        <div class="form-group">
+                            <label>Tampilkan soal dengan</label><br />
+                            <?php if ($data['is_random'] == 0): ?>
+                            <button type='button' data-value="1"
+                                class='btn btn-sm btn-success bSelect'>Acak</button>
+                            <button type='button' data-value="0" class='btn btn-sm btn-outline-success bSelect'>Tidak
+                                Acak</button>
+
+                            <?php else: ?>
+                            <button type='button' data-value="1"
+                                class='btn btn-sm btn-outline-success bSelect'>Acak</button>
+                            <button type='button' data-value="0" class='btn btn-sm btn-success bSelect'>Tidak
+                                Acak</button>
+                            <?php endif;?>
+                            <input id="isRandom" type="text" name="is_random" class="form-control"
+                                value="<?=$data['is_random']?>">
                         </div>
                     </div>
                 </div>

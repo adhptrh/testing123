@@ -111,9 +111,9 @@
                         </div>
                         <div class="form-group">
                             <label>Tampilkan soal dengan</label><br/>
-                            <button type='button' data-value="0" class='btn btn-sm btn-outline-success bSelect'>Acak</button>
-                            <button type='button' data-value="1" class='btn btn-sm btn-outline-success bSelect'>Tidak Acak</button>
-                            <input id="isRandom" type="text" name="is_random" class="d-none form-control">
+                            <button type='button' data-value="1" class='btn btn-sm btn-outline-success bSelect'>Acak</button>
+                            <button type='button' data-value="0" class='btn btn-sm btn-outline-success bSelect'>Tidak Acak</button>
+                            <input id="isRandom" type="text" name="is_random" class="d-none form-control" value=" ">
                         </div>
                     </div>
 

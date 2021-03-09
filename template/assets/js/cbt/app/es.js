@@ -5,7 +5,7 @@ const id = document.querySelector('input[name=id]');
 const bexam = document.getElementById("bexam");
 let token = 0,
     period = 0,
-    is_random = ' ',
+    is_random = isRandom.value,
     exam = '',
     numbers_of_exam = 0;
 
