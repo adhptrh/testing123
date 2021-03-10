@@ -35,6 +35,7 @@ class Exam_question_grade_m extends MY_Model {
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
     ->join('grade_extend_periods d', 'd.id = a.grade_period_id', 'left')
     ->join('grades e', 'e.id = d.grade_id', 'left')
+    ->join('exam_questions f', 'f.id = a.exam_question_id', 'left')
     ->group_by('a.id')
     ->order_by('a.id', 'ASC');
 

@@ -103,19 +103,37 @@ class Exam_question extends MY_Controller
     {
         $this->filter(1);
 
-        // Cek Soal apakah sudah ada
-        $data = $this->data->find(0, [
-            'd.id' => enc($this->input->post('period'), 1),
-            'e.id' => enc($this->input->post('study'), 1),
-        ], true);
-
-        if ($data) {
-            if ($data[0]['is_del'] == '1') {
-                $link = '<a href="' . base_url('app/exam_question/restore/' . $data[0]['id']) . '" class="btn btn-sm btn-primary">Ya, kembalikan data ini</a>';
-                $this->session->set_flashdata('create_info_message', 'Soal ini sebelumnya sudah digunakan, namun sudah dihapus pada ' . $data[0]['updated_at'] . ' oleh ' . $data[0]['updated_by'] . ', apakah Anda ingin memulihkan data ini?' . $link);
-            } else {
-                $this->session->set_flashdata('create_info_message', 'Mohon gunakan Soal lain, karena Soal ini sudah terdaftar');
+        /**
+         * Cek Soal dengan kelas yang sama apakah sudah ada
+         */
+        // DEPRECATED
+        // $data = $this->data->find(0, [
+        //     'd.id' => enc($this->input->post('period'), 1),
+        //     'e.id' => enc($this->input->post('study'), 1),
+        // ], true);
+        $grades = $this->input->post('grade'); // grade_period_id
+        $study_id = enc($this->input->post('study'), 1);
+        
+        $filter = 0;
+        foreach ($grades as $k => $v) {
+            $cek = $this->eq_grade->find(false, [
+                'f.study_id' => $study_id,
+                'a.grade_period_id' => enc($v, 1),
+            ]);
+            if($cek){
+                $filter++;
             }
+        }
+
+        if ($filter) {
+            // DEPRECATED
+            // if ($data[0]['is_del'] == '1') {
+            //     $link = '<a href="' . base_url('app/exam_question/restore/' . $data[0]['id']) . '" class="btn btn-sm btn-primary">Ya, kembalikan data ini</a>';
+            //     $this->session->set_flashdata('create_info_message', 'Soal ini sebelumnya sudah digunakan, namun sudah dihapus pada ' . $data[0]['updated_at'] . ' oleh ' . $data[0]['updated_by'] . ', apakah Anda ingin memulihkan data ini?' . $link);
+            // } else {
+            //     $this->session->set_flashdata('create_info_message', 'Mohon gunakan Soal lain, karena Soal ini sudah terdaftar');
+            // }
+            $this->session->set_flashdata('create_info_message', 'Mohon gunakan Soal lain, karena Soal dengan '. $filter .' kelas yang dipilih sudah terdaftar');
             $this->create($this->input->post());
         } else {
 
@@ -124,7 +142,7 @@ class Exam_question extends MY_Controller
             // Input examp_questions
             $save = [
                 'period_id' => enc($this->input->post('period'), 1),
-                'study_id' => enc($this->input->post('study'), 1),
+                'study_id' => $study_id,
                 'number_of_options' => $this->input->post('number_of_options'),
             ];
 
@@ -132,10 +150,6 @@ class Exam_question extends MY_Controller
             $exam_question_id = $this->db->insert_id();
 
             if ($save['status'] == '200') {
-
-                // Input examp_question_extend_grades
-                $grades = $this->input->post('grade');
-
                 $data = [];
                 foreach ($grades as $k => $v) {
                     $data[] = [
