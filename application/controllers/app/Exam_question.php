@@ -105,8 +105,8 @@ class Exam_question extends MY_Controller
 
         // Cek Soal apakah sudah ada
         $data = $this->data->find(0, [
-            'a.period_id' => enc($this->input->post('period'), 1),
-            'a.study_id' => enc($this->input->post('study'), 1),
+            'd.id' => enc($this->input->post('period'), 1),
+            'e.id' => enc($this->input->post('study'), 1),
         ], true);
 
         if ($data) {
@@ -125,6 +125,7 @@ class Exam_question extends MY_Controller
             $save = [
                 'period_id' => enc($this->input->post('period'), 1),
                 'study_id' => enc($this->input->post('study'), 1),
+                'number_of_options' => $this->input->post('number_of_options'),
             ];
 
             $save = $this->data->save($save);

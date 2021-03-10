@@ -110,7 +110,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th style="width:20%">Aksi</th>
+                                <th style="width:10%">Aksi</th>
                                 <th>No. Soal</th>
                                 <th>Kunci Jawaban</th>
                                 <th>Jawaban Siswa</th>

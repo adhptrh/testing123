@@ -49,7 +49,7 @@ class Exam_question_m extends MY_Model
             }
         }
 
-        $this->db->select('a.id, a.period_id, a.study_id, a.is_del')
+        $this->db->select('a.id, a.period_id, a.study_id, a.number_of_options, a.is_del')
             ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
             ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
             ->select('d.name period')
@@ -107,7 +107,7 @@ class Exam_question_m extends MY_Model
             if($conditions){
                 $this->db->where($conditions);
                 if($filter_study){
-                  $this->db->or_where_in('e.id', $filter_study);
+                  $this->db->where_in('e.id', $filter_study);
                 }
               }else{
                 if($filter_study){

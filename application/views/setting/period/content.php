@@ -26,7 +26,7 @@
             <thead>
               <tr>
                 <th>#</th>
-                <th style="width:20%">Aksi</th>
+                <th style="width:10%">Aksi</th>
                 <th>Name</th>
                 <th>Dibuat</th>
               </tr>
