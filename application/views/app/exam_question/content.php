@@ -64,7 +64,7 @@
                                     </div>
                                 </td>
                                 <td><?= $v['period']?></td>
-                                <td><?= $v['exam']?></td>
+                                <td><?= $v['exam']?> <br/> <small><?= $option_type = ($v['number_of_options'] == 5) ? '[5 opsi : A,B,C,D,E]' : '[4 opsi : A,B,C,D]' ?></small> </td>
                                 <td><?= $v['grade']?></td>
                                 <td><?= $v['jsoal']?></td>
                                 <td><?= $v['created_by'] . '<br><small>'. $v['created_at'] .'</small>' ?></td>

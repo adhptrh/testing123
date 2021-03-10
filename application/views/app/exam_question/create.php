@@ -53,11 +53,11 @@
                     <?= $has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : '' ?>
                 </div>
 
-                <div class="form-group d-none">
+                <div class="form-group">
                     <label>Tampilkan soal dengan</label><br />
-                    <button type='button' data-value="5" class='btn btn-sm btn-outline-success bSelect'>5 Opsi (A,B,C,D,E)</button>
+                    <button type='button' data-value="5" class='btn btn-sm btn-success bSelect'>5 Opsi (A,B,C,D,E)</button>
                     <button type='button' data-value="4" class='btn btn-sm btn-outline-success bSelect'>4 Opsi (A,B,C,D)</button>
-                    <input id="numberOfOptions" type="text" name="number_of_options" class="d-none form-control" value=" ">
+                    <input id="numberOfOptions" type="text" name="number_of_options" class="d-none form-control" value="5">
                 </div>
             </div>
             <div class="card-footer">

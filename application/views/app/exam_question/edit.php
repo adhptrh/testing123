@@ -53,6 +53,18 @@
                     <?=$has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : ''?>
                 </div>
 
+                <div class="form-group">
+                    <label>Tampilkan soal dengan</label><br />
+                    <?php if ($data['number_of_options'] == 5): ?>
+                    <button type='button' data-value="5" class='btn btn-sm btn-success bSelect'>5 Opsi (A,B,C,D,E)</button>
+                    <button type='button' data-value="4" class='btn btn-sm btn-outline-success bSelect'>4 Opsi (A,B,C,D)</button>
+                    <?php else: ?>
+                    <button type='button' data-value="5" class='btn btn-sm btn-outline-success bSelect'>5 Opsi (A,B,C,D,E)</button>
+                    <button type='button' data-value="4" class='btn btn-sm btn-success bSelect'>4 Opsi (A,B,C,D)</button>
+                    <?php endif; ?>
+                    <input id="numberOfOptions" type="text" name="number_of_options" class="d-none form-control" value="<?= $data['number_of_options'] ?>">
+                </div>
+
             </div>
             <div class="card-footer">
                 <a href="<?=base_url('app/exam_question')?>" class="btn btn-sm btn-danger" type="button"

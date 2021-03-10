@@ -243,6 +243,7 @@ class Exam_question extends MY_Controller
                 'id' => $id,
                 'period_id' => enc($this->input->post('period'), 1),
                 'study_id' => enc($this->input->post('study'), 1),
+                'number_of_options' => $this->input->post('number_of_options'),
             ];
 
             $update = $this->data->save($save);

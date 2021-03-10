@@ -23,6 +23,12 @@ function setGrade(data) {
     grade = opsi;
 }
 
+document.querySelectorAll('.bSelect').forEach(item => {
+    item.addEventListener('click', event => {
+        numberOfOptions.value = item.getAttribute('data-value');
+    })
+});
+
 setToken(token_form.value);
 
 bperiod.onchange = () => {
