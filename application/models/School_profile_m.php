@@ -20,7 +20,7 @@ class School_profile_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.name, a.address, a.is_del, a.headmaster headmaster_id')
+    $this->db->select('a.id, a.name, a.long_name, a.address, a.is_del, a.headmaster headmaster_id')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
     ->select('e.name headmaster, e.nip')

@@ -22,6 +22,15 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td class="wd-200">Nama Sekolah Panjang</td>
+                                <td>
+                                    <input name="long_name" type="text"
+                                        class="form-control <?= $has_error = (form_error('long_name')) ? 'is-invalid' : '' ?>"
+                                        value="<?= $isi = (isset($old['long_name'])) ? $old['long_name'] : $data['long_name']; ?>">
+                                    <?= $has_error = (form_error('long_name')) ? '<div class="invalid-feedback">' . form_error('long_name') . '</div>' : '' ?>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>Kepala Sekolah</td>
                                 <td>
                                     <select name="headmaster" class="custom-select select2">

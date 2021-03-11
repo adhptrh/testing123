@@ -118,6 +118,7 @@ class Profile extends MY_Controller
             'name' => $this->input->post('name'),
             'headmaster' => enc($this->input->post('headmaster'), 1),
             'address' => $this->input->post('address'),
+            'long_name' => $this->input->post('long_name'),
         ];
 
 		$data_ready = $this->data->find();

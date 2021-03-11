@@ -31,6 +31,10 @@
                                 <td><?= $data['name'] ?></td>
                             </tr>
                             <tr>
+                                <td class="wd-200">Nama Sekolah Panjang</td>
+                                <td><?= $data['long_name'] ?></td>
+                            </tr>
+                            <tr>
                                 <td>Kepala Sekolah</td>
                                 <td><?= $data['headmaster'] ?></td>
                             </tr>

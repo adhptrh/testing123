@@ -93,7 +93,7 @@ class Exam_question_m extends MY_Model
             ]);
 
             if ($filter_study) {
-                $this->db->or_where_in('e.id', $filter_study);
+                $this->db->where_in('e.id', $filter_study);
             }
 
             $data = $this->db->get()->row_array();

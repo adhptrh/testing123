@@ -246,6 +246,7 @@ class Exam_schedule extends MY_Controller
             'summary' => $summary,
             'rooms' => $rooms,
             'students' => $students,
+            'school_name' => $this->school_profile->find()[0]['long_name'],
         ], true);
 
         /**
