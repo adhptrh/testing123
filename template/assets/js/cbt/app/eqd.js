@@ -26,6 +26,13 @@ button_add.addEventListener("click", () => {
 })
 
 function setButtonOption() {
+    function setButtonOptionAllClear() {
+        document.querySelectorAll('.opsi').forEach(item => {
+            item.classList.remove('btn-success');
+            item.classList.add('btn-outline-success');
+        })
+    }
+
     document.querySelectorAll('.opsi').forEach(item => {
         item.addEventListener('click', event => {
             setButtonOptionAllClear();
@@ -97,13 +104,6 @@ function xedit(data) {
             console.warn(error);
         });
 }
-
-// function setButtonOptionAllClear() {
-//     document.querySelectorAll('.opsi').forEach(item => {
-//         item.classList.remove('btn-success');
-//         item.classList.add('btn-outline-success');
-//     })
-// }
 
 function close_form(e) {
     (e || window.event).preventDefault();
