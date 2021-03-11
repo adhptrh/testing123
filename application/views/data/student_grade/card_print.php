@@ -24,6 +24,10 @@ tr.header {
     padding: 10px;
 }
 
+table.kop {
+    font-size: 13;
+}
+
 td {
     padding: 3px;
 }
@@ -53,12 +57,16 @@ td {
 
 <body>
     <div class="row">
-        <?php $last = count($data); foreach ($data as $k => $v): ?>
+        <?php 
+            $last = count($data);
+            foreach ($data as $k => $v): 
+                // echo $tick = ($k < 10) ? "0$k" : $k;
+        ?>
         <div class="column">
             <table>
                 <tr class="header">
                     <td colspan="3">
-                        <table>
+                        <table class="kop">
                             <tr>
                                 <td><img src="../../../upload/logo2.png" alt="" height="40px"></td>
                                 <td align="center"><strong>KARTU PESERTA UJIAN <br>
@@ -67,8 +75,6 @@ td {
                                 <td><img src="../../../upload/logo.png" alt="" height="40px"></td>
                             </tr>
                         </table>
-
-
                     </td>
                 </tr>
 
@@ -76,7 +82,7 @@ td {
                     <td rowspan="5" align="center" class='cLeft'><img src="../../../upload/logo3.png" alt=""
                             height="60px"></td>
                     <td>Nama</td>
-                    <td><?=ucwords(strtolower($v['name']));?></td>
+                    <td><?=ucwords(strtolower(substrwords($v['name'], 25)));?></td>
                 </tr>
 
                 <tr>
@@ -105,11 +111,14 @@ td {
                     <td align='center'>
                         Kepala Sekolah<br><br><br>
                         <strong><?=$headmaster['headmaster'];?><br>
+                        <?php if ($headmaster['nip']): ?>
                             NIP. <?=$headmaster['nip'];?></strong </td>
+                        <?php endif;?>
                 </tr>
             </table>
         </div>
-        <?php if ((($k % 8) == 0)): ?>
+        <?php if (((($k+1) % 8) == 0) && $k > 0 && $k != ($last - 1)): ?>
+        <hr>
         <div style="page-break-before:always;"></div>
         <?php endif;?>
         <?php endforeach;?>

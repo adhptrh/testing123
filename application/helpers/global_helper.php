@@ -23,3 +23,7 @@ function enc($id, $status = 0)
 
   return $output;
 }
+
+function substrwords($text, $maxchar) {
+  return mb_strimwidth($text, 0, $maxchar, "...");
+}
