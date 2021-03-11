@@ -98,12 +98,12 @@ function xedit(data) {
         });
 }
 
-function setButtonOptionAllClear() {
-    document.querySelectorAll('.opsi').forEach(item => {
-        item.classList.remove('btn-success');
-        item.classList.add('btn-outline-success');
-    })
-}
+// function setButtonOptionAllClear() {
+//     document.querySelectorAll('.opsi').forEach(item => {
+//         item.classList.remove('btn-success');
+//         item.classList.add('btn-outline-success');
+//     })
+// }
 
 function close_form(e) {
     (e || window.event).preventDefault();

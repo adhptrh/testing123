@@ -87,8 +87,8 @@ function setButtonOptionAllClear() {
 document.querySelectorAll('.bSelect').forEach(item => {
     item.addEventListener('click', event => {
         setButtonOptionAllClear();
-        item.classList.add('btn-success')
-        item.classList.remove('btn-outline-success')
+        item.classList.add('btn-success');
+        item.classList.remove('btn-outline-success');
     })
 });
 </script>

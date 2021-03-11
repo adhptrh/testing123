@@ -39,11 +39,11 @@
         </div>
         <div class="col-md-12 mg-t-25">
             <h6 class="mg-b-10">Kunci Jawaban</h6>
-            <button data-opsi="opsi_a" type="button" class="btn btn-outline-success btn-sm opsi">Opsi A</button>
-            <button data-opsi="opsi_b" type="button" class="btn btn-outline-success btn-sm opsi">Opsi B</button>
-            <button data-opsi="opsi_c" type="button" class="btn btn-outline-success btn-sm opsi">Opsi C</button>
-            <button data-opsi="opsi_d" type="button" class="btn btn-outline-success btn-sm opsi">Opsi D</button>
-            <button data-opsi="opsi_e" type="button" class="btn btn-outline-success btn-sm opsi">Opsi E</button>
+            <button data-opsi="opsi_a" type="button" class="btn btn-outline-success btn-sm opsi bSelect">Opsi A</button>
+            <button data-opsi="opsi_b" type="button" class="btn btn-outline-success btn-sm opsi bSelect">Opsi B</button>
+            <button data-opsi="opsi_c" type="button" class="btn btn-outline-success btn-sm opsi bSelect">Opsi C</button>
+            <button data-opsi="opsi_d" type="button" class="btn btn-outline-success btn-sm opsi bSelect">Opsi D</button>
+            <button data-opsi="opsi_e" type="button" class="btn btn-outline-success btn-sm opsi bSelect">Opsi E</button>
         </div>
 
     </div>
