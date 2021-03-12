@@ -80,6 +80,7 @@ class Test extends MY_Controller
         if (count($data) && ($token_server == $token_exam)) {
             $grade_period_id = enc($student_grade['grade_period_id'], 1);
             $grade_period_ids = explode("-", $data['grade_period_id']);
+
             if ((in_array($grade_period_id, $grade_period_ids)) && $data['intime'] == 1) {
                 $cek_access = true;
             }

@@ -44,7 +44,7 @@ class Exam_schedule_m extends MY_Model
     {
         $this->db->select('a.id, a.is_random, a.is_del, DATE_FORMAT(a.start, "%H:%i") start')
             ->select('DATE_FORMAT(TIMEDIFF(a.finish, a.start), "%H Jam %i menit") durasi')
-            ->select('a.number_of_exam, DATE_FORMAT(a.finish, "%H:%i") finish') 
+            ->select('a.number_of_exam, DATE_FORMAT(a.finish, "%H:%i") finish')
             ->select('UNIX_TIMESTAMP(NOW()) time_server_now')
             ->select('UNIX_TIMESTAMP(a.finish) time_left')
             ->select('UNIX_TIMESTAMP(a.start) time_start')
@@ -74,7 +74,7 @@ class Exam_schedule_m extends MY_Model
             WHERE     a.is_del = "0"
             GROUP BY  a.exam_question_id
           ) g', 'g.exam_question_id = a.exam_question_id', 'left')
-          ->join('(
+            ->join('(
             SELECT    a.id, a.exam_question_id, count(a.id) jsoal
             FROM      exam_question_extend_details a
             WHERE     a.is_del = "0"
@@ -82,7 +82,7 @@ class Exam_schedule_m extends MY_Model
           ) h', 'h.exam_question_id = a.exam_question_id', 'left')
             ->join('exam_question_extend_grades i', 'i.exam_question_id = a.exam_question_id', 'left')
             ->join('periods j', 'j.id = d.period_id', 'left')
-            // ->group_by('a.exam_question_id')
+        // ->group_by('a.exam_question_id')
             ->group_by('a.id')
             ->order_by('a.id', 'ASC');
 

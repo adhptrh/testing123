@@ -60,7 +60,6 @@ class Exam_schedule extends MY_Controller
         $this->set_student_grade_id();
 
         if (enc($this->student_grade_id, 1)) { // Jika siswa
-
             //detail student_grade
             $sg = $this->student_grade->find(enc($this->student_grade_id, 1));
 
@@ -76,9 +75,18 @@ class Exam_schedule extends MY_Controller
                 'e.id' => $oi,
                 'i.grade_period_id' => $gp,
             ]);
-
+            
+            //Filter data yang akan muncul
+            $fdata = [];
+            foreach ($data as $k => $v) {
+                $grade_available = explode('-', $v['grade_period_id']);
+                if(in_array($gp, $grade_available)){
+                    array_push($fdata, $v);
+                }
+            }
+            
             $data = [
-                'exam_schedule' => $data,
+                'exam_schedule' => $fdata,
                 'student' => true,
             ];
 
