@@ -217,7 +217,7 @@ function showTimeLeft() {
         if (hours < 1 && minutes < 10 && seconds == 59) {
             tNotifWarningTimeOut.innerHTML = `Waktu mengerjakan ujian tinggal ${minutes} menit lagi`;
             fNotifWarningTimeOut.classList.remove('d-none');
-        } else if (minutes < 1) {
+        } else if (hours < 1 && minutes < 1) {
             tNotifWarningTimeOut.innerHTML = `Waktu mengerjakan ujian tinggal ${seconds} detik lagi`;
             fNotifWarningTimeOut.classList.remove('d-none');
         }
