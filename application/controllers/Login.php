@@ -68,7 +68,7 @@ class Login extends CI_Controller
                 'a.student_id' => enc($student_id[0]['id'], 1),
                 'e.status' => 1, // Periode yang aktif
             ]);
-                
+
             if ($cek) {
                 $this->is_siswa = $cek[0]['id'];
             } else {
