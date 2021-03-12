@@ -1,7 +1,7 @@
 <div data-value="<?=$exam_schedule_id;?>" id="examSchedule"></div>
 <div data-value="<?=$student_grade_exam_id;?>" id="studentGradeExam"></div>
 <div data-value="<?=$exam_question_id;?>" id="examQuestion"></div>
-<div data-value="<?=base_url();?>" id="baseURL"></div>
+<div data-value="<?=$this->config->item('image_url');;?>" id="baseURL"></div>
 <?=form_open('#') . form_close();?>
 <div class="card mg-b-10">
     <div class="card-body">
