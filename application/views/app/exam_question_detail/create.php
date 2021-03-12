@@ -17,33 +17,21 @@
             <h6 class="mg-b-10">Soal</h6>
             <div class="editor" id="soal"></div>
         </div>
+
+        <?php foreach ($options as $option): ?>
+
         <div class="col-md-12 mg-t-25">
-            <h6 class="mg-b-10">Opsi A</h6>
-            <div class="editor" id="opsi_a"></div>
+            <h6 class="mg-b-10"><?= $option['label']; ?></h6>
+            <div class="editor" id="<?= $option['prefix']; ?>"></div>
         </div>
-        <div class="col-md-12 mg-t-25">
-            <h6 class="mg-b-10">Opsi B</h6>
-            <div class="editor" id="opsi_b"></div>
-        </div>
-        <div class="col-md-12 mg-t-25">
-            <h6 class="mg-b-10">Opsi C</h6>
-            <div class="editor" id="opsi_c"></div>
-        </div>
-        <div class="col-md-12 mg-t-25">
-            <h6 class="mg-b-10">Opsi D</h6>
-            <div class="editor" id="opsi_d"></div>
-        </div>
-        <div class="col-md-12 mg-t-25">
-            <h6 class="mg-b-10">Opsi E</h6>
-            <div class="editor" id="opsi_e"></div>
-        </div>
+
+        <?php endforeach; ?>
+
         <div class="col-md-12 mg-t-25">
             <h6 class="mg-b-10">Kunci Jawaban</h6>
-            <button data-opsi="opsi_a" type="button" class="btn btn-outline-success btn-sm opsi bSelect">Opsi A</button>
-            <button data-opsi="opsi_b" type="button" class="btn btn-outline-success btn-sm opsi bSelect">Opsi B</button>
-            <button data-opsi="opsi_c" type="button" class="btn btn-outline-success btn-sm opsi bSelect">Opsi C</button>
-            <button data-opsi="opsi_d" type="button" class="btn btn-outline-success btn-sm opsi bSelect">Opsi D</button>
-            <button data-opsi="opsi_e" type="button" class="btn btn-outline-success btn-sm opsi bSelect">Opsi E</button>
+            <?php foreach ($options as $option): ?>
+                <button data-opsi="<?= $option['prefix']; ?>" type="button" class="btn btn-outline-success btn-sm opsi bSelect"><?= $option['label']; ?></button>
+            <?php endforeach; ?>
         </div>
 
     </div>

@@ -42,11 +42,6 @@ class Exam_question_detail_m extends MY_Model
                 'rules' => 'required',
             ],
             [
-                'field' => 'opsi_e',
-                'label' => 'Pilihan E',
-                'rules' => 'required',
-            ],
-            [
                 'field' => 'keyword',
                 'label' => 'Kunci Jawaban',
                 'rules' => 'required',

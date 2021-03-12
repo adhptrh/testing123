@@ -1,4 +1,4 @@
-<div id="top_content"></div>
+<div id="top_content" data-number-of-options="<?= $number_of_options; ?>"></div>
 <div class="row row-xs">
     <div class="col-md">
         <div data-base-url="<?=base_url();?>" class="card create d-none">

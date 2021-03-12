@@ -135,4 +135,52 @@ class Exam_question_m extends MY_Model
         }
     }
 
+    public function options($number = 5){
+        if($number == 5){
+            $options = [
+                [
+                    'prefix' => 'opsi_a',
+                    'label' => 'Opsi A',
+                ],
+                [
+                    'prefix' => 'opsi_b',
+                    'label' => 'Opsi B',
+                ],
+                [
+                    'prefix' => 'opsi_c',
+                    'label' => 'Opsi C',
+                ],
+                [
+                    'prefix' => 'opsi_d',
+                    'label' => 'Opsi D',
+                ],
+                [
+                    'prefix' => 'opsi_e',
+                    'label' => 'Opsi E',
+                ],
+            ];
+        }else{
+            $options = [
+                [
+                    'prefix' => 'opsi_a',
+                    'label' => 'Opsi A',
+                ],
+                [
+                    'prefix' => 'opsi_b',
+                    'label' => 'Opsi B',
+                ],
+                [
+                    'prefix' => 'opsi_c',
+                    'label' => 'Opsi C',
+                ],
+                [
+                    'prefix' => 'opsi_d',
+                    'label' => 'Opsi D',
+                ],
+            ];
+        }
+
+        return $options;
+    }
+
 }

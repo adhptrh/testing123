@@ -35,6 +35,9 @@ class Exam_question_detail extends MY_Controller
 
         $exam_question = $this->exam_question->find($eid);
 
+        // Cek jumlah opsi
+        $number_of_options = $this->exam_question->find(enc($exam_question_id, 1));
+
         $this->header = [
             'title' => 'Butir Soal',
             'js_file' => 'app/eqd',
@@ -73,6 +76,7 @@ class Exam_question_detail extends MY_Controller
             'id' => $exam_question_id,
             'token' => $this->security->get_csrf_hash(),
             'exam_question' => $this->exam_question->find($eid),
+            'number_of_options' => $number_of_options['number_of_options'],
         ]);
     }
 
@@ -93,9 +97,20 @@ class Exam_question_detail extends MY_Controller
     {
         $this->filter(1);
 
+        // Cek jumlah opsi
+        $number_of_options = $this->exam_question->find(enc($exam_question_id, 1));
+
+        if ($number_of_options['number_of_options'] == 5) {
+            $options = $this->exam_question->options(5);
+        } else {
+            $options = $this->exam_question->options(4);
+        }
+
         $this->load->view('app/exam_question_detail/create', [
             'token' => $this->security->get_csrf_hash(),
             'master_soal_id' => $exam_question_id,
+            'number_of_options' => $number_of_options['number_of_options'],
+            'options' => $options,
         ]);
     }
 
@@ -118,12 +133,6 @@ class Exam_question_detail extends MY_Controller
         }
 
         $filename = $dir . $rand . '.png';
-
-        // if (file_put_contents($filename, $data)) {
-        //     return $filename;
-        // } else {
-        //     return false;
-        // }
 
         $source = fopen($base64, 'r');
         $destination = fopen($filename, 'w');
@@ -161,17 +170,33 @@ class Exam_question_detail extends MY_Controller
     {
         $this->filter(1);
         $post = $this->input->post('data');
+        $eqi = enc($post['master_soal_id'], 1);
 
-        $data = [
-            'exam_question_id' => enc($post['master_soal_id'], 1),
-            'question' => $this->content_creation($post['soal']),
-            'opsi_a' => $this->content_creation($post['opsi_a']),
-            'opsi_b' => $this->content_creation($post['opsi_b']),
-            'opsi_c' => $this->content_creation($post['opsi_c']),
-            'opsi_d' => $this->content_creation($post['opsi_d']),
-            'opsi_e' => $this->content_creation($post['opsi_e']),
-            'keyword' => $post['keyword'],
-        ];
+        // Cek jumlah opsi
+        $number_of_options = $this->exam_question->find($eqi);
+
+        if ($number_of_options['number_of_options'] == 5) {
+            $data = [
+                'exam_question_id' => $eqi,
+                'question' => $this->content_creation($post['soal']),
+                'opsi_a' => $this->content_creation($post['opsi_a']),
+                'opsi_b' => $this->content_creation($post['opsi_b']),
+                'opsi_c' => $this->content_creation($post['opsi_c']),
+                'opsi_d' => $this->content_creation($post['opsi_d']),
+                'opsi_e' => $this->content_creation($post['opsi_e']),
+                'keyword' => $post['keyword'],
+            ];
+        } else {
+            $data = [
+                'exam_question_id' => $eqi,
+                'question' => $this->content_creation($post['soal']),
+                'opsi_a' => $this->content_creation($post['opsi_a']),
+                'opsi_b' => $this->content_creation($post['opsi_b']),
+                'opsi_c' => $this->content_creation($post['opsi_c']),
+                'opsi_d' => $this->content_creation($post['opsi_d']),
+                'keyword' => $post['keyword'],
+            ];
+        }
 
         $create = $this->data->save($data);
 
@@ -344,12 +369,20 @@ class Exam_question_detail extends MY_Controller
 
         $data = $this->data->find(enc($id, 1));
 
-        // $data = str_replace("upload/img", "<img src='" . base_url("upload/img"), $data);
-        // $data = str_replace(".png", ".png'>", $data);
+        // Cek jumlah opsi
+        $number_of_options = $this->exam_question->find(enc($data['exam_question_id'], 1));
+
+        if ($number_of_options['number_of_options'] == 5) {
+            $options = $this->exam_question->options(5);
+        } else {
+            $options = $this->exam_question->options(4);
+        }
 
         $this->load->view('app/exam_question_detail/edit', [
             'token' => $this->security->get_csrf_hash(),
             'data' => $data,
+            'number_of_options' => $number_of_options['number_of_options'],
+            'options' => $options,
         ]);
     }
 
@@ -374,21 +407,40 @@ class Exam_question_detail extends MY_Controller
         $this->filter(3);
         $post = $this->input->post('data');
 
-        $data = [
-            'id' => enc($post['id'], 1),
-            'exam_question_id' => enc($post['master_soal_id'], 1),
-            'question' => $this->content_creation($post['soal']),
-            'opsi_a' => $this->content_creation($post['opsi_a']),
-            'opsi_b' => $this->content_creation($post['opsi_b']),
-            'opsi_c' => $this->content_creation($post['opsi_c']),
-            'opsi_d' => $this->content_creation($post['opsi_d']),
-            'opsi_e' => $this->content_creation($post['opsi_e']),
-            'keyword' => $post['keyword'],
-        ];
+        $eqi = enc($post['master_soal_id'], 1);
+
+        // Cek jumlah opsi
+        $number_of_options = $this->exam_question->find($eqi);
+
+        if ($number_of_options['number_of_options'] == 5) {
+            $data = [
+                'id' => enc($post['id'], 1),
+                'exam_question_id' => $eqi,
+                'question' => $this->content_creation($post['soal']),
+                'opsi_a' => $this->content_creation($post['opsi_a']),
+                'opsi_b' => $this->content_creation($post['opsi_b']),
+                'opsi_c' => $this->content_creation($post['opsi_c']),
+                'opsi_d' => $this->content_creation($post['opsi_d']),
+                'opsi_e' => $this->content_creation($post['opsi_e']),
+                'keyword' => $post['keyword'],
+            ];
+        }else{
+            $data = [
+                'id' => enc($post['id'], 1),
+                'exam_question_id' => $eqi,
+                'question' => $this->content_creation($post['soal']),
+                'opsi_a' => $this->content_creation($post['opsi_a']),
+                'opsi_b' => $this->content_creation($post['opsi_b']),
+                'opsi_c' => $this->content_creation($post['opsi_c']),
+                'opsi_d' => $this->content_creation($post['opsi_d']),
+                'keyword' => $post['keyword'],
+            ];
+        }
 
         $update = $this->data->save($data);
 
         $update['token'] = $this->security->get_csrf_hash();
+        $update['data'] = $data;
 
         echo json_encode($update);
     }

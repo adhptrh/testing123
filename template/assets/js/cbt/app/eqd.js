@@ -193,21 +193,23 @@ function setEditor() {
         theme: 'snow' // or 'bubble'
     });
 
-    opsi_e = new Quill('#opsi_e', {
-        modules: {
-            toolbar: [
-                [{ header: [1, 2, false] }],
-                ['bold', 'italic', 'underline', 'strike', 'image'],
-                ['link'],
-                ['blockquote'],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                [{ 'script': 'sub' }, { 'script': 'super' }],
-                ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
-            ]
-        },
-        placeholder: 'Ketikkan opsi di sini ...',
-        theme: 'snow' // or 'bubble'
-    });
+    if (top_content.getAttribute('data-number-of-options') == '5') {
+        opsi_e = new Quill('#opsi_e', {
+            modules: {
+                toolbar: [
+                    [{ header: [1, 2, false] }],
+                    ['bold', 'italic', 'underline', 'strike', 'image'],
+                    ['link'],
+                    ['blockquote'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'script': 'sub' }, { 'script': 'super' }],
+                    ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
+                ]
+            },
+            placeholder: 'Ketikkan opsi di sini ...',
+            theme: 'snow' // or 'bubble'
+        });
+    }
 }
 
 function loadExamDetail(data) {
@@ -225,7 +227,11 @@ function loadExamDetail(data) {
             opsi_b.setContents(response.opsi_b);
             opsi_c.setContents(response.opsi_c);
             opsi_d.setContents(response.opsi_d);
-            opsi_e.setContents(response.opsi_e);
+
+            if (top_content.getAttribute('data-number-of-options') == '5') {
+                opsi_e.setContents(response.opsi_e);
+            }
+
             document.querySelector('input[name=token]').value = response.token;
         }
     })
@@ -244,15 +250,27 @@ function setFormSubmit(method = 'save') {
     form.onsubmit = function(e) {
         e.preventDefault();
         if (SetFormSubmitCek()) {
-            data = {
-                master_soal_id: document.querySelector('input[name=master_soal_id]').value,
-                soal: soal.getContents(),
-                opsi_a: opsi_a.getContents(),
-                opsi_b: opsi_b.getContents(),
-                opsi_c: opsi_c.getContents(),
-                opsi_d: opsi_d.getContents(),
-                opsi_e: opsi_e.getContents(),
-                keyword: keyword,
+            if (top_content.getAttribute('data-number-of-options') == '5') {
+                data = {
+                    master_soal_id: document.querySelector('input[name=master_soal_id]').value,
+                    soal: soal.getContents(),
+                    opsi_a: opsi_a.getContents(),
+                    opsi_b: opsi_b.getContents(),
+                    opsi_c: opsi_c.getContents(),
+                    opsi_d: opsi_d.getContents(),
+                    opsi_e: opsi_e.getContents(),
+                    keyword: keyword,
+                }
+            } else {
+                data = {
+                    master_soal_id: document.querySelector('input[name=master_soal_id]').value,
+                    soal: soal.getContents(),
+                    opsi_a: opsi_a.getContents(),
+                    opsi_b: opsi_b.getContents(),
+                    opsi_c: opsi_c.getContents(),
+                    opsi_d: opsi_d.getContents(),
+                    keyword: keyword,
+                }
             }
 
             if (method == 'save') {
@@ -268,17 +286,32 @@ function setFormSubmit(method = 'save') {
 }
 
 function SetFormSubmitCek() {
-    if (soal.getLength() < 2 || opsi_b.getLength() < 2 || opsi_c.getLength() < 2 || opsi_d.getLength() < 2 || opsi_e.getLength() < 2 || opsi_a.getLength() < 2 || keyword == 0) {
-        Swal.fire({
-            title: 'Peringatan',
-            text: "Mohon lengkapi seluruh isian",
-            icon: 'warning',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Baiklah',
-        })
-        return false;
+    if (top_content.getAttribute('data-number-of-options') == '5') {
+        if (soal.getLength() < 2 || opsi_b.getLength() < 2 || opsi_c.getLength() < 2 || opsi_d.getLength() < 2 || opsi_e.getLength() < 2 || opsi_a.getLength() < 2 || keyword == 0) {
+            Swal.fire({
+                title: 'Peringatan',
+                text: "Mohon lengkapi seluruh isian",
+                icon: 'warning',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Baiklah',
+            })
+            return false;
+        } else {
+            return true;
+        }
     } else {
-        return true;
+        if (soal.getLength() < 2 || opsi_b.getLength() < 2 || opsi_c.getLength() < 2 || opsi_d.getLength() < 2 || opsi_a.getLength() < 2 || keyword == 0) {
+            Swal.fire({
+                title: 'Peringatan',
+                text: "Mohon lengkapi seluruh isian",
+                icon: 'warning',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Baiklah',
+            })
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 
@@ -371,8 +404,12 @@ function makeSoal(data) {
         item += '<p>' + imageShow(value['opsi_c']) + '</p>'
         item += '<h6>Opsi D</h6>'
         item += '<p>' + imageShow(value['opsi_d']) + '</p>'
-        item += '<h6>Opsi E</h6>'
-        item += '<p>' + imageShow(value['opsi_e']) + '</p>'
+
+        if (top_content.getAttribute('data-number-of-options') == '5') {
+            item += '<h6>Opsi E</h6>'
+            item += '<p>' + imageShow(value['opsi_e']) + '</p>'
+        }
+
         item += '<h6>Kunci Jawaban</h6>'
         item += '<p>' + imageShow(value['keyword']) + '</p>'
         item += '</div>';

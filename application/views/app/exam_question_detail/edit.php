@@ -23,33 +23,22 @@
             <h6 class="mg-b-10">Soal</h6>
             <div class="editor" id="soal"><?= $data['question'] ?></div>
         </div>
+
+        <?php foreach ($options as $option): ?>
+
         <div class="col-md-12 mg-t-25">
-            <h6 class="mg-b-10">Opsi A</h6>
-            <div class="editor" id="opsi_a"><?= $data['opsi_a'] ?></div>
+            <h6 class="mg-b-10"><?= $option['label']; ?></h6>
+            <div class="editor" id="<?= $option['prefix']; ?>"><?= $data[$option['prefix']] ?></div>
         </div>
-        <div class="col-md-12 mg-t-25">
-            <h6 class="mg-b-10">Opsi B</h6>
-            <div class="editor" id="opsi_b"><?= $data['opsi_b'] ?></div>
-        </div>
-        <div class="col-md-12 mg-t-25">
-            <h6 class="mg-b-10">Opsi C</h6>
-            <div class="editor" id="opsi_c"><?= $data['opsi_c'] ?></div>
-        </div>
-        <div class="col-md-12 mg-t-25">
-            <h6 class="mg-b-10">Opsi D</h6>
-            <div class="editor" id="opsi_d"><?= $data['opsi_d'] ?></div>
-        </div>
-        <div class="col-md-12 mg-t-25">
-            <h6 class="mg-b-10">Opsi E</h6>
-            <div class="editor" id="opsi_e"><?= $data['opsi_e'] ?></div>
-        </div>
+
+        <?php endforeach; ?>
+
         <div class="col-md-12 mg-t-25">
             <h6 class="mg-b-10">Kunci Jawaban</h6>
-            <button data-opsi="opsi_a" type="button" class="btn <?= $btn = ($data['keyword'] == 'opsi_a') ? 'btn-success btn-keyword' : 'btn-outline-success'; ?> btn-sm opsi">Opsi A</button>
-            <button data-opsi="opsi_b" type="button" class="btn <?= $btn = ($data['keyword'] == 'opsi_b') ? 'btn-success btn-keyword' : 'btn-outline-success'; ?> btn-sm opsi">Opsi B</button>
-            <button data-opsi="opsi_c" type="button" class="btn <?= $btn = ($data['keyword'] == 'opsi_c') ? 'btn-success btn-keyword' : 'btn-outline-success'; ?> btn-sm opsi">Opsi C</button>
-            <button data-opsi="opsi_d" type="button" class="btn <?= $btn = ($data['keyword'] == 'opsi_d') ? 'btn-success btn-keyword' : 'btn-outline-success'; ?> btn-sm opsi">Opsi D</button>
-            <button data-opsi="opsi_e" type="button" class="btn <?= $btn = ($data['keyword'] == 'opsi_e') ? 'btn-success btn-keyword' : 'btn-outline-success'; ?> btn-sm opsi">Opsi E</button>
+            <?php foreach ($options as $option): ?>
+                <button data-opsi="<?= $option['prefix']; ?>" type="button"
+                class="btn <?= $btn = ($data['keyword'] == $option['prefix']) ? 'btn-success btn-keyword' : 'btn-outline-success'; ?> btn-sm opsi"><?= $option['label']; ?></button>
+            <?php endforeach; ?>
         </div>
     </div>
 </div>
