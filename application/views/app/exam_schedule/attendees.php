@@ -93,15 +93,15 @@ table.footer {
 }
 </style>
 <?php
-    $path = 'upload/logo.png';
-    $type = pathinfo($path, PATHINFO_EXTENSION);
-    $data = file_get_contents($path);
-    $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+    // $path = 'upload/logo.png';
+    // $type = pathinfo($path, PATHINFO_EXTENSION);
+    // $data = file_get_contents($path);
+    // $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
-    $path = 'upload/logo2.png';
-    $type = pathinfo($path, PATHINFO_EXTENSION);
-    $data = file_get_contents($path);
-    $logo2 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+    // $path = 'upload/logo2.png';
+    // $type = pathinfo($path, PATHINFO_EXTENSION);
+    // $data = file_get_contents($path);
+    // $logo2 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 ?>
 <?php foreach ($rooms as $k => $v): ?>
 
@@ -109,7 +109,7 @@ table.footer {
     <tr>
         
         <td class='side'>
-        <img src="<?= $logo2; ?>" alt="" height="60px">
+        <img src="" alt="" height="60px">
         </td>
         <td>
             <?=strtoupper($school_name);?> <br />
@@ -117,7 +117,7 @@ table.footer {
             PERIODE <?=strtoupper($summary['period_name']);?>
         </td>
         <td class='side'>
-        <img src="<?= $logo; ?>" alt="" height="60px">
+        <img src="" alt="" height="60px">
         </td>
     </tr>
 </table>
