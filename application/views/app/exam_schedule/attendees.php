@@ -153,14 +153,14 @@ table.footer {
         <th colspan="2">Tanda Tangan</th>
         <th class="note">Keterangan</th>
     </tr>
-    <?php $xno = 0; foreach ($students as $k1 => $v1): $xno++; ?>
+    <?php foreach ($students as $k1 => $v1): ?>
     <?php if ($v1['room'] == $v): ?>
     <tr>
-        <td class="center"><?=$xno ?></td>
+        <td class="center"><?=$k1 + 1?></td>
         <td class="center"><?=$v1['nisn']?></td>
         <td><?=$v1['name']?></td>
-        <td class="ttd"> <span class="ttd-number"><?=$no = ($k1 % 2 == 0) ? $xno : ''?></span> </td>
-        <td class="ttd"> <span class="ttd-number"><?=$no = ($k1 % 2 == 0) ? '' : $xno?></span> </td>
+        <td class="ttd"> <span class="ttd-number"><?=$no = ($k1 % 2 == 0) ? $k1 + 1 : ''?></span> </td>
+        <td class="ttd"> <span class="ttd-number"><?=$no = ($k1 % 2 == 0) ? '' : $k1 + 1?></span> </td>
         <td></td>
     </tr>
     <?php endif;?>

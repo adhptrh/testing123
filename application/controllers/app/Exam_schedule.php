@@ -108,7 +108,7 @@ class Exam_schedule extends MY_Controller
 
     public function detail($exam_schedule_id)
     {
-        $this->filter(2);
+        $this->filter(1);
 
         $this->header = [
             'title' => 'Detail Ujian',
@@ -217,6 +217,7 @@ class Exam_schedule extends MY_Controller
 
     public function attendees($esid)
     {
+        $this->filter(1);
         /**
          * Data untuk info umum
          * Ex: Nama Ujian, Tanggal Ujian, dll
