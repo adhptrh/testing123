@@ -18,7 +18,8 @@ function enc($id, $status = 0)
   }
   else if( $status == '1' ){
       $data = openssl_decrypt( base64_decode( $id ), $encrypt_method, $key, 0, $iv );
-      $output = substr($data, 10, 4);
+      $output = substr($data, 10, 7);
+      // $output = substr($data, 10, 4); // Sebelumnya 4 digit, hanya bisa menampung 9_999 id
   }
 
   return $output;
