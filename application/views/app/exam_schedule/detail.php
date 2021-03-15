@@ -32,7 +32,10 @@
                             </tr>
                             <tr>
                                 <td>Jumlah Siswa Login</td>
-                                <td><strong><?= $start_test_info['is_login_count']; ?> <small>[<?= $start_test_info['is_login_count'] - $start_test_info['is_finish']; ?> Belum Selesai, <?= $start_test_info['is_finish']; ?> Selesai]</small> </strong></td>
+                                <td><strong><?= $start_test_info['is_login_count']; ?>
+                                        <small>[<?= $start_test_info['is_login_count'] - $start_test_info['is_finish']; ?>
+                                            Belum Selesai, <?= $start_test_info['is_finish']; ?> Selesai]</small>
+                                    </strong></td>
                             </tr>
                             <tr>
                                 <td>Jumlah Siswa Belum Login</td>
@@ -51,13 +54,14 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
                             </div>
-                            <input type="text" class="form-control" placeholder="Cari di sini" aria-label="Username"
+                            <input type="text" class="form-control dtp_cari" placeholder="Cari di sini" aria-label="Username"
                                 aria-describedby="basic-addon1">
                         </div>
                     </div>
 
                     <div class="col-md-6 d-none d-md-block">
-                        <a href="<?= base_url('app/exam_schedule/attendees/') . $summary['id'] ?>" target="_blank" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i
+                        <a href="<?= base_url('app/exam_schedule/attendees/') . $summary['id'] ?>" target="_blank"
+                            class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i
                                 class="fa fa-print"></i> Cetak Daftar Hadir</a>
                     </div>
                 </div>
@@ -101,7 +105,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                <?php
+                                    <?php
                                 if($v['exam_schedule_id'] == null){
                                     echo $v['name'] . '<br><span class="badge badge-danger">Belum Mulai Ujian</span>';
                                 }else{
