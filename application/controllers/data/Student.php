@@ -69,6 +69,18 @@ class Student extends MY_Controller
 
     }
 
+    public function reset_all()
+    {
+        $this->filter(3);
+
+        $save = $this->data->update_all([
+            'is_login' => 0,
+        ]);
+
+        $this->session->set_flashdata('message', $save['message']);
+        redirect(base_url('data/student'));
+    }
+
     public function create_excel()
     {
         $this->filter(1);

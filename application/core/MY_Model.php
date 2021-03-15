@@ -120,6 +120,34 @@ class MY_Model extends CI_Model
         return $respon;
     }
 
+    public function update_all($data)
+    {
+        /*
+         * --------------------------------------------------------------------------
+         * Update ALL
+         * --------------------------------------------------------------------------
+         *
+         * Comment Here
+         *
+         */
+
+        if ($this->db->update($this->name, $data)) {
+            $respon = [
+                'status' => '200',
+                'message' => 'Data ' . $this->alias . ' berhasil diperbaharui',
+                'id' => enc($data['id']),
+            ];
+        }else{
+            $respon = [
+                'status' => '201',
+                'message' => 'Data ' . $this->alias . ' gagal diperbaharui',
+                'id' => 0,
+            ];
+        }
+
+        return $respon;
+    }
+
     public function save_batch($data, $skip_validation = false)
     {
         /*

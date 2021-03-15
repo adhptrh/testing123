@@ -19,6 +19,9 @@
                         <a href="<?= base_url('data/student/create_excel'); ?>"
                             class="btn btn-sm pd-x-15 btn-success btn-uppercase mg-l-5 float-right"><i
                                 class="fa fa-plus"></i> Import Excel</a>
+                        <a href="<?= base_url('data/student/reset_all'); ?>"
+                            class="btn btn-sm pd-x-15 btn-warning btn-uppercase mg-l-5 float-right"><i
+                                class="fa fa-key"></i> Reset Semua Login</a>
                     </div>
 
                 </div>
