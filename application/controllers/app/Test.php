@@ -91,7 +91,18 @@ class Test extends MY_Controller
             $grade_period_id = enc($student_grade['grade_period_id'], 1);
             $grade_period_ids = explode("-", $data['grade_period_id']);
 
-            if ((in_array($grade_period_id, $grade_period_ids)) && $data['intime'] == 1) {
+            if (
+                // Cek apakah kelas user ini terdaftar
+                in_array($grade_period_id, $grade_period_ids) 
+                
+                // Cek apakah ujian sudah pada waktunya
+                && 
+                $data['intime'] == 1 
+
+                // Cek apakah sesi user ini terdaftar
+                && 
+                enc($data['order_id'], 1) == $student_grade['order_id']
+                ) {
                 $cek_access = true;
             }
         }
@@ -112,9 +123,10 @@ class Test extends MY_Controller
                     // Cek apakah token masih sama
 
                     //Token dari tabel student_grade_extend_exam
-                    $token_student_exam = $is_register[0]['token'];
+                    // $token_student_exam = $is_register[0]['token'];
 
-                    if (($token_exam) && $token_student_exam == $token_exam) {
+                    // if (($token_exam) && $token_student_exam == $token_exam) {
+                    if ($token_exam) {
                         // Dapatkan daftar soal dan jawaban
                         // arahkan ke laman ujian
                         $this->temp_test('app/test/content', [
@@ -161,30 +173,43 @@ class Test extends MY_Controller
                          *
                          * Lakukan update token_student dengan by_pass validation
                          */
-                        $update_token_student = $this->student_exam->save([
-                            'id' => enc($regis['id'], 1),
-                            'token' => $token_exam,
-                        ], true);
+                        // $update_token_student = $this->student_exam->save([
+                        //     'id' => enc($regis['id'], 1),
+                        //     'token' => $token_exam,
+                        // ], true);
 
-                        if ($update_token_student['status'] == '200') {
-                            // Commit db
-                            $this->db->trans_commit();
+                        // if ($update_token_student['status'] == '200') {
+                        //     // Commit db
+                        //     $this->db->trans_commit();
 
-                            // arahkan ke laman ujian
-                            $this->temp_test('app/test/content', [
-                                'exam_schedule_id' => $exam_schedule,
-                                'student_grade_exam_id' => $regis['id'],
-                                'exam_question_id' => $data['exam_question_id'],
-                                'number_of_exam' => $data['number_of_exam'],
-                                'study' => $data['study'],
-                                'order' => $data['order'],
-                            ]);
-                        } else {
-                            $this->db->trans_rollback();
-                            $this->temp_test('app/test/info', [
-                                'info' => 'Maaf, Gagal mengeksekusi perintah, silahkan hubungi penyelenggara ujian',
-                            ]);
-                        }
+                        //     // arahkan ke laman ujian
+                        //     $this->temp_test('app/test/content', [
+                        //         'exam_schedule_id' => $exam_schedule,
+                        //         'student_grade_exam_id' => $regis['id'],
+                        //         'exam_question_id' => $data['exam_question_id'],
+                        //         'number_of_exam' => $data['number_of_exam'],
+                        //         'study' => $data['study'],
+                        //         'order' => $data['order'],
+                        //     ]);
+                        // } else {
+                        //     $this->db->trans_rollback();
+                        //     $this->temp_test('app/test/info', [
+                        //         'info' => 'Maaf, Gagal mengeksekusi perintah, silahkan hubungi penyelenggara ujian',
+                        //     ]);
+                        // }
+
+                        // Commit db
+                        $this->db->trans_commit();
+
+                        // arahkan ke laman ujian
+                        $this->temp_test('app/test/content', [
+                            'exam_schedule_id' => $exam_schedule,
+                            'student_grade_exam_id' => $regis['id'],
+                            'exam_question_id' => $data['exam_question_id'],
+                            'number_of_exam' => $data['number_of_exam'],
+                            'study' => $data['study'],
+                            'order' => $data['order'],
+                        ]);
                     } else {
                         $this->db->trans_rollback();
                         $this->temp_test('app/test/info', [
@@ -414,11 +439,21 @@ class Test extends MY_Controller
         //student_grade_id_from_session
         $this->set_student_grade_id();
 
-        $this->temp_test('app/test/confirm', [
-            'exam_schedule_id' => $exam_schedule_id,
-            'data' => $this->exam_schedule->find(enc($exam_schedule_id, 1)),
-            'student' => $this->student_grade->find(enc($this->student_grade_id, 1)),
-        ]);
+        $data = $this->exam_schedule->find(enc($exam_schedule_id, 1));
+        $student_grade = $this->student_grade->find(enc($this->student_grade_id, 1));
+
+        if(enc($data['order_id'], 1) == $student_grade['order_id']){
+            $this->temp_test('app/test/confirm', [
+                'exam_schedule_id' => $exam_schedule_id,
+                'data' => $data,
+                'student' => $student_grade,
+            ]);
+        }else{
+            // Go info atau logout
+            $this->temp_test('app/test/info', [
+                'info' => 'Maaf, Anda tidak memiliki akses untuk mengikut ujian ini',
+            ]);
+        }
     }
 
     public function get_exam_detail()
@@ -563,6 +598,21 @@ class Test extends MY_Controller
         $data['token'] = $this->security->get_csrf_hash();
         echo json_encode($data);
     }
+
+    // private function token_sure_check()
+    // {
+    //     /**
+    //      * Fungsi ini untuk memastikan sekali lagi apakah token sudah valid
+    //      */
+    //     $token_server = $this->token->get();
+    //     $token_session = $this->session->userdata('token_exam');
+
+    //     if($token_sever == $token_session){
+    //         return true;
+    //     }else{
+    //         return false;
+    //     }
+    // }
 
     public function save()
     {
