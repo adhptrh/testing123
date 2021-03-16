@@ -15,6 +15,14 @@ $('.bReset').click(function() {
     })
 })
 
+document.querySelectorAll('.filterOrder').forEach(item => {
+    item.addEventListener('click', event => {
+        filter = item.getAttribute('data-value');
+        var t = $('.dtable').DataTable();
+        t.search(filter).draw();
+    })
+});
+
 $('.bSetFinish').click(function() {
     Swal.fire({
         title: 'Peringatan',

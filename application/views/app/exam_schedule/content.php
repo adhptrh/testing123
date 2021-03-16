@@ -8,8 +8,8 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
                             </div>
-                            <input type="text" class="form-control" placeholder="Cari di sini" aria-label="Username"
-                                aria-describedby="basic-addon1">
+                            <input type="text" class="form-control dtp_cari" placeholder="Cari di sini"
+                                aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <?php if (!$data['student']): ?>
@@ -17,6 +17,17 @@
                         <a href="<?=base_url('app/exam_schedule/create');?>"
                             class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i
                                 class="fa fa-plus"></i> Tambah</a>
+                        <a href="<?= base_url('app/exam_schedule/xfilter') ?>"
+                            class="btn btn-sm pd-x-15 <?= $selected = ($data['today']) ? 'btn-success' : 'btn-outline-success'; ?> btn-uppercase mg-l-5 float-right"><i
+                                class="fa fa-clock"></i> Hari Ini</a>
+                        <a href="#" data-value="Sesi-1"
+                            class="filterOrder bSelect btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5 float-right"><i
+                                class="fa fa-anchor"></i> Sesi 1</a>
+                        <a href="#" data-value="Sesi-2"
+                            class="filterOrder bSelect btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5 float-right"><i
+                                class="fa fa-anchor"></i> Sesi 2</a>
+                        <a href="<?= base_url('app/exam_schedule/') ?>" class="btn btn-sm pd-x-15 <?= $selected = ($data['all']) ? 'btn-success' : 'btn-outline-success'; ?> btn-uppercase mg-l-5 float-right"><i
+                                class="fa fa-list"></i> Semua</a>
                     </div>
                     <?php endif;?>
                 </div>
@@ -31,7 +42,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Aksi</th>
-                                <th>Soal</th>
+                                <th class="wd-30">Soal</th>
                                 <th>Kelas</th>
                                 <th>Tanggal</th>
                                 <th>Jumlah Soal</th>
@@ -82,7 +93,8 @@
                                     ?>
                                 </td>
                                 <td><?=$v['grade']?></td>
-                                <td><?=$v['date'] . "<br><small>" . $v['order'];?></small></td>
+                                <td><?=$v['date'] . "<br><small><span class='badge badge-warning'>" . str_replace(' ', '-', $v['order']) ;?></span></small>
+                                </td>
                                 <td>Ujian : <?=$v['number_of_exam'] . "<br> Tersedia : " . $v['stock_of_exams']?></td>
                                 <td><?=$v['start'] . ' - ' . $v['finish']?></td>
                                 <td><?=$v['created_by'] . '<br><small>' . $v['created_at'] . '</small>'?></td>

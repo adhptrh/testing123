@@ -35,6 +35,7 @@ class Exam_schedule extends MY_Controller
         $this->header = [
             'school_name' => $this->school_profile->find()[0]['name'],
             'title' => 'Jadwal Ujian',
+            'js_file' => 'app/exam_schedule',
             'sub_title' => 'Pengaturan Jadwal Ujian',
             'nav_active' => 'app/exam_schedule',
             'breadcrumb' => [
@@ -75,16 +76,16 @@ class Exam_schedule extends MY_Controller
                 'e.id' => $oi,
                 'i.grade_period_id' => $gp,
             ]);
-            
+
             //Filter data yang akan muncul
             $fdata = [];
             foreach ($data as $k => $v) {
                 $grade_available = explode('-', $v['grade_period_id']);
-                if(in_array($gp, $grade_available)){
+                if (in_array($gp, $grade_available)) {
                     array_push($fdata, $v);
                 }
             }
-            
+
             $data = [
                 'exam_schedule' => $fdata,
                 'student' => true,
@@ -98,12 +99,57 @@ class Exam_schedule extends MY_Controller
             $data = [
                 'exam_schedule' => $this->data->find(),
                 'student' => false,
+                'today' => false,
+                'all' => true,
             ];
 
             $this->temp('app/exam_schedule/content', [
                 'data' => $data,
             ]);
         }
+    }
+
+    public function xfilter()
+    {
+        $this->filter(2);
+
+        $this->header = [
+            'school_name' => $this->school_profile->find()[0]['name'],
+            'title' => 'Jadwal Ujian',
+            'js_file' => 'app/exam_schedule',
+            'sub_title' => 'Pengaturan Jadwal Ujian',
+            'nav_active' => 'app/exam_schedule',
+            'breadcrumb' => [
+                [
+                    'label' => 'XPanel',
+                    'icon' => 'fa-home',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Aplikasi',
+                    'icon' => 'fa-gear',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Data Ujian',
+                    'icon' => '',
+                    'href' => '#',
+                ],
+            ],
+        ];
+
+        $data = [
+            'exam_schedule' => $this->data->find(false, [
+                'a.date' => date('Y-m-d'),
+            ]),
+            'student' => false,
+            'today' => true,
+            'all' => false,
+        ];
+
+        $this->temp('app/exam_schedule/content', [
+            'data' => $data,
+        ]);
     }
 
     public function detail($exam_schedule_id)
@@ -233,7 +279,7 @@ class Exam_schedule extends MY_Controller
         $students = [];
         foreach ($dgrades as $k => $v) {
             $students = array_merge($students, $this->student_grade->find(
-                false, 
+                false,
                 [
                     'a.grade_period_id' => $v,
                     'a.order_id' => enc($summary['order_id'], 1),
@@ -246,7 +292,7 @@ class Exam_schedule extends MY_Controller
          */
         $rooms = [];
         foreach ($students as $k => $v) {
-            if(!in_array($v['room'], $rooms)){
+            if (!in_array($v['room'], $rooms)) {
                 array_push($rooms, $v['room']);
             }
         }
