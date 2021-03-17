@@ -25,6 +25,7 @@ class Exam_question_detail extends MY_Controller
         $this->load->model('Exam_question_m', 'exam_question');
         $this->load->model('Period_m', 'period');
         $this->load->model('Study_m', 'study');
+        $this->load->model('Grade_period_m', 'grade');
         $this->load->helper('string');
     }
 
@@ -363,6 +364,116 @@ class Exam_question_detail extends MY_Controller
         }
     }
 
+    public function create_from_another_period($exam_question_id, $study_id = false, $period_id = false, $old = [])
+    {
+        $this->filter(1);
+
+        $eid = enc($exam_question_id, 1);
+
+        $exam_question = $this->exam_question->find($eid);
+
+        $this->header = [
+            'title' => 'Import Butir Soal',
+            'js_file' => 'app/eqd_import_another_period',
+            'sub_title' => 'Import Butir Soal',
+            'nav_active' => 'app/exam_question',
+            'breadcrumb' => [
+                [
+                    'label' => 'XPanel',
+                    'icon' => 'fa-home',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Aplikasi',
+                    'icon' => 'fa-gear',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Soal',
+                    'icon' => 'fa-gear',
+                    'href' => '#',
+                ],
+                [
+                    'label' => $exam_question['exam'],
+                    'icon' => 'fa-list',
+                    'href' => base_url('app/exam_question_detail'),
+                ],
+                [
+                    'label' => 'Import dari Periode Lain',
+                    'icon' => '',
+                    'href' => '#',
+                ],
+            ],
+        ];
+
+        $current = $this->exam_question->find($eid);
+        $period = $this->period->find();
+
+        /**
+         * Filter period
+         * menghapus period exam_question ini dari daftar
+         */
+        $dperiod = [];
+        foreach ($period as $k => $v) {
+            $period_id_in_loop = enc($v['id'], 1);
+            if ($period_id_in_loop != enc($current['period_id'], 1)) {
+                if ($period_id) {
+                    if (enc($period_id, 1) == $period_id_in_loop) {
+                        $v['selected'] = 'selected';
+                    }
+                }
+                $dperiod[] = $v;
+            }
+        }
+
+        /**
+         * Mendapatkan data daftar soal yang akan dimport
+         */
+
+        $target = [];
+        if ($study_id && $period_id) {
+            $target = $this->exam_question->find(false, [
+                'a.period_id' => enc($period_id, 1),
+                'a.study_id' => enc($study_id, 1),
+            ]);
+        }
+
+        $this->temp('app/exam_question_detail/import_from_antoher_period', [
+            'old' => $old,
+            'period' => $dperiod,
+            'exam_question_id' => $exam_question_id,
+            'study_id' => $current['study_id'],
+            'data' => $target,
+        ]);
+    }
+
+    public function import_from_another_period($exam_question_id_source, $exam_question_id_target)
+    {
+        $eqi_source = enc($exam_question_id_source, 1);
+        $eqi_target = enc($exam_question_id_target, 1);
+
+        $source = $this->data->find(false, [
+            'a.exam_question_id' => $eqi_source,
+        ]);
+
+        $data = [];
+        foreach ($source as $k => $v) {
+            unset($v['id']);
+            unset($v['selected']);
+            $v['exam_question_id'] = $eqi_target;
+            $data[] = $v;
+        }
+
+        $save = $this->data->save_batch($data);
+        if($save['status'] == 200){
+            $this->session->set_flashdata('message', $save['message']);
+            redirect(base_url('app/exam_question_detail/list/' . $exam_question_id_target));
+        }else{
+            $this->session->set_flashdata('message', $save['message']);
+            redirect(base_url('app/exam_question_detial/create_from_another_period/' . $eqi_target));
+        }
+    }
+
     public function edit($id)
     {
         $this->filter(3);
@@ -424,7 +535,7 @@ class Exam_question_detail extends MY_Controller
                 'opsi_e' => $this->content_creation($post['opsi_e']),
                 'keyword' => $post['keyword'],
             ];
-        }else{
+        } else {
             $data = [
                 'id' => enc($post['id'], 1),
                 'exam_question_id' => $eqi,

@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="<?= base_url('app/exam_question') ?>" class="btn btn-sm btn-danger" type="button"
+                <a href="<?= base_url('app/exam_question/') ?>" class="btn btn-sm btn-danger" type="button"
                     name="">Batal</a>
                 <button class="btn btn-sm btn-primary float-right" type="submit" name="">Simpan</button>
             </div>

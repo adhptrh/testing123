@@ -32,6 +32,9 @@
                             class="add btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i
                                 class="fa fa-plus"></i>
                             Tambah</a>
+                            <a href="<?=base_url('app/exam_question_detail/create_from_another_period/' . $id);?>"
+                            class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i
+                                class="fa fa-clock"></i> Import Dari Periode Lain</a>
                             <a href="<?=base_url('app/exam_question_detail/create_excel/' . $id);?>"
                             class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 float-right"><i
                                 class="fa fa-download"></i> Import Excel
