@@ -38,7 +38,8 @@ function tInit() {
 
 tInit();
 
-$('.hapus').click(function() {
+$('.dtable').on('click', '.hapus', function() {
+    console.log($(this).data('href'));
     Swal.fire({
         title: 'Peringatan',
         text: "Apakah Anda yakin akan menghapus data ini?",
@@ -53,7 +54,7 @@ $('.hapus').click(function() {
             window.location.href = $(this).data('href');
         }
     })
-})
+});
 
 $('.select2').select2({
     placeholder: 'Pilih',
