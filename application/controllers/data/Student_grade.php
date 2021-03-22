@@ -78,16 +78,16 @@ class Student_grade extends MY_Controller
     {
         $this->filter(2);
         $post = $this->input->post('filter');
-        $grade_period_id = enc($post['gradePeriod'], 1);
+        $period = enc($post['period'], 1);
 
         // Siswa yang sudah terdaftar di periode ini.
         $data = $this->data->find(false, [
-            'a.grade_period_id' => $grade_period_id,
+            'd.period_id' => $period,
             // 'e.status' => 1,
         ]);
 
         // DEBUG
-        $xsg = $data;
+        // $xsg = $data;
 
         $siswa_terdaftar = [];
 
@@ -106,8 +106,7 @@ class Student_grade extends MY_Controller
         $student_ready = array_values($data);
         $data['data'] = $student_ready;
         $data['token'] = $this->security->get_csrf_hash();
-        $data['siswa_terdaftar'] = $siswa_terdaftar;
-        $data['studentGrade'] = $grade_period_id;
+        // $data['siswa_terdaftar'] = $siswa_terdaftar;
 
         echo json_encode($data);
     }
