@@ -372,7 +372,7 @@ function loadStudentNonGrade() {
         data: {
             token: token,
             filter: {
-                'gradePeriod': gradePeriod
+                'period': period
             }
         },
         dataType: 'json',

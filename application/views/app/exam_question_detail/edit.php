@@ -22,6 +22,7 @@
         <div class="col-md-12">
             <h6 class="mg-b-10">Soal</h6>
             <div class="editor" id="soal"><?= $data['question'] ?></div>
+            <!-- <div class="editor" id="soal"></div> -->
         </div>
 
         <?php foreach ($options as $option): ?>
@@ -29,6 +30,7 @@
         <div class="col-md-12 mg-t-25">
             <h6 class="mg-b-10"><?= $option['label']; ?></h6>
             <div class="editor" id="<?= $option['prefix']; ?>"><?= $data[$option['prefix']] ?></div>
+            <!-- <div class="editor" id="<?= $option['prefix']; ?>"></div> -->
         </div>
 
         <?php endforeach; ?>

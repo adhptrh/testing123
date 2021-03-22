@@ -123,9 +123,6 @@ class Exam_question_detail extends MY_Controller
          */
 
         $rand = uniqid();
-        // $img = str_replace('data:image/png;base64,', '', $base64);
-        // $img = str_replace(' ', '+', $img);
-        // $data = base64_decode($img);
 
         // Membuat folder
         $dir = 'upload/img/' . date('Ym') . '/';
@@ -146,25 +143,50 @@ class Exam_question_detail extends MY_Controller
         return $filename;
     }
 
+    // private function content_creation($data)
+    // {
+    //     /* 
+    //      * DEPRECATED
+    //      * Menguraikan kontent
+    //      * jika ada object image kemudian disimpan di storage
+    //      * menggambungkan semua object
+    //      * return content
+    //      */
+
+    //     $contents = '';
+    //     foreach ($data['ops'] as $k => $v) {
+    //         if (isset($v['insert']['image'])) {
+    //             $save_image = $this->save_image($v['insert']['image']);
+    //             $contents .= ' ' . $save_image;
+    //         } else {
+    //             $contents .= ' ' . $v['insert'];
+    //         }
+    //     }
+
+    //     return $contents;
+    // }
+
     private function content_creation($data)
     {
-        /* Menguraikan kontent
+        /**
+         * Menguraikan kontent
          * jika ada object image kemudian disimpan di storage
          * menggambungkan semua object
          * return content
          */
 
-        $contents = '';
+        // $contents = '';
         foreach ($data['ops'] as $k => $v) {
             if (isset($v['insert']['image'])) {
                 $save_image = $this->save_image($v['insert']['image']);
-                $contents .= ' ' . $save_image;
+                $data['ops'][$k]['insert'] = "<img src='" . $save_image;
+                // $contents .= ' ' . $save_image;
             } else {
-                $contents .= ' ' . $v['insert'];
+                // $contents .= ' ' . $v['insert'];
             }
         }
 
-        return $contents;
+        return $data;
     }
 
     public function save()
@@ -179,12 +201,18 @@ class Exam_question_detail extends MY_Controller
         if ($number_of_options['number_of_options'] == 5) {
             $data = [
                 'exam_question_id' => $eqi,
-                'question' => $this->content_creation($post['soal']),
-                'opsi_a' => $this->content_creation($post['opsi_a']),
-                'opsi_b' => $this->content_creation($post['opsi_b']),
-                'opsi_c' => $this->content_creation($post['opsi_c']),
-                'opsi_d' => $this->content_creation($post['opsi_d']),
-                'opsi_e' => $this->content_creation($post['opsi_e']),
+                // 'question' => $this->content_creation($post['soal']),
+                // 'opsi_a' => $this->content_creation($post['opsi_a']),
+                // 'opsi_b' => $this->content_creation($post['opsi_b']),
+                // 'opsi_c' => $this->content_creation($post['opsi_c']),
+                // 'opsi_d' => $this->content_creation($post['opsi_d']),
+                // 'opsi_e' => $this->content_creation($post['opsi_e']),
+                'question' => $post['soal'],
+                'opsi_a' => $post['opsi_a'],
+                'opsi_b' => $post['opsi_b'],
+                'opsi_c' => $post['opsi_c'],
+                'opsi_d' => $post['opsi_d'],
+                'opsi_e' => $post['opsi_e'],
                 'keyword' => $post['keyword'],
             ];
         } else {
@@ -202,6 +230,9 @@ class Exam_question_detail extends MY_Controller
         $create = $this->data->save($data);
 
         $create['token'] = $this->security->get_csrf_hash();
+        $create['query'] = $this->db->last_query();
+        $create['data'] = $data;
+        $create['soal'] = $post['soal'];
 
         echo json_encode($create);
     }
@@ -465,10 +496,10 @@ class Exam_question_detail extends MY_Controller
         }
 
         $save = $this->data->save_batch($data);
-        if($save['status'] == 200){
+        if ($save['status'] == 200) {
             $this->session->set_flashdata('message', $save['message']);
             redirect(base_url('app/exam_question_detail/list/' . $exam_question_id_target));
-        }else{
+        } else {
             $this->session->set_flashdata('message', $save['message']);
             redirect(base_url('app/exam_question_detial/create_from_another_period/' . $eqi_target));
         }
@@ -568,5 +599,38 @@ class Exam_question_detail extends MY_Controller
     public function restore($id)
     {
         $this->filter(4);
+    }
+
+    public function upload($file_type = "jpg|png")
+    {
+        // $upload = $this->xupload();
+        // echo json_encode($upload);
+
+        // Membuat folder
+        $dir = './upload/img/' . date('Ym') . '/';
+        if (!is_dir($dir)) {
+            mkdir($dir);
+        }
+
+        $path = $dir;
+        $config['upload_path'] = $path; //path upload
+        $config['encrypt_name'] = true;
+        $config['allowed_types'] = $file_type; //tipe file yang diperbolehkan
+        $config['max_size'] = 10000; // maksimal sizze
+
+        $this->load->library('upload'); //meload librari upload
+        $this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('file')) {
+            echo json_encode([
+                'error' => [
+                    'message' => $this->upload->display_errors(),
+                ],
+            ]);
+        } else {
+            echo json_encode([
+                'url' => base_url('upload/img/' . date('Ym') . '/' . $this->upload->data('filename')),
+            ]);
+        }
     }
 }

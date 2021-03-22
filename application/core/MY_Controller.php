@@ -237,4 +237,32 @@ class MY_Controller extends CI_Controller
         return date($format, strtotime($tanggal));
     }
 
+    protected function xupload($file_type = "jpg|png")
+    {
+        // Membuat folder
+        $dir = './upload/img/' . date('Ym') . '/';
+        if (!is_dir($dir)) {
+            mkdir($dir);
+        }
+
+        $path = $dir;
+        $config['upload_path'] = $path; //path upload
+        $config['encrypt_name'] = TRUE;
+        $config['allowed_types'] = $file_type; //tipe file yang diperbolehkan
+        $config['max_size'] = 10000; // maksimal sizze
+
+        $this->load->library('upload'); //meload librari upload
+        $this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('file')) {
+            return [
+                'error' => $this->upload->display_errors(),
+            ];
+        } else {
+            return [
+                'url' => base_url('upload/img/' . date('Ym') . '/' . $this->upload->data('filename')),
+            ];
+        }
+    }
+
 }

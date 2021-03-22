@@ -121,7 +121,7 @@ function setEditor() {
                 ['link'],
                 ['blockquote'],
                 [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                [{ 'script': 'sub' }, { 'script': 'super' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }, 'formula'],
                 ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }],
             ]
         },
@@ -212,6 +212,25 @@ function setEditor() {
     }
 }
 
+function isJson(item) {
+    item = typeof item !== "string" ?
+        JSON.stringify(item) :
+        item;
+
+    try {
+        item = JSON.parse(item);
+    } catch (e) {
+        return false;
+    }
+
+    if (typeof item === "object" && item !== null) {
+        return true;
+    }
+
+    return false;
+}
+
+
 function loadExamDetail(data) {
     $.ajax({
         url: '../data_for_edit/' + data,
@@ -221,15 +240,43 @@ function loadExamDetail(data) {
         },
         dataType: 'json',
         success: function(response) {
-            // console.log(response);
-            soal.setContents(response.soal);
-            opsi_a.setContents(response.opsi_a);
-            opsi_b.setContents(response.opsi_b);
-            opsi_c.setContents(response.opsi_c);
-            opsi_d.setContents(response.opsi_d);
+
+            if (isJson(response.soal[0]['insert'])) {
+                soal.setContents(JSON.parse(response.soal[0]['insert']));
+            } else {
+                soal.setContents(response.soal);
+            }
+
+            if (isJson(response.opsi_a[0]['insert'])) {
+                opsi_a.setContents(JSON.parse(response.opsi_a[0]['insert']));
+            } else {
+                opsi_a.setContents(response.opsi_a);
+            }
+
+            if (isJson(response.opsi_b[0]['insert'])) {
+                opsi_b.setContents(JSON.parse(response.opsi_b[0]['insert']));
+            } else {
+                opsi_b.setContents(response.opsi_b);
+            }
+
+            if (isJson(response.opsi_c[0]['insert'])) {
+                opsi_c.setContents(JSON.parse(response.opsi_c[0]['insert']));
+            } else {
+                opsi_c.setContents(response.opsi_c);
+            }
+
+            if (isJson(response.opsi_d[0]['insert'])) {
+                opsi_d.setContents(JSON.parse(response.opsi_d[0]['insert']));
+            } else {
+                opsi_d.setContents(response.opsi_d);
+            }
 
             if (top_content.getAttribute('data-number-of-options') == '5') {
-                opsi_e.setContents(response.opsi_e);
+                if (isJson(response.opsi_e[0]['insert'])) {
+                    opsi_e.setContents(JSON.parse(response.opsi_e[0]['insert']));
+                } else {
+                    opsi_e.setContents(response.opsi_e);
+                }
             }
 
             document.querySelector('input[name=token]').value = response.token;
@@ -259,6 +306,12 @@ function setFormSubmit(method = 'save') {
                     opsi_c: opsi_c.getContents(),
                     opsi_d: opsi_d.getContents(),
                     opsi_e: opsi_e.getContents(),
+                    // soal: soal.root.innerHTML,
+                    // opsi_a: opsi_a.root.innerHTML,
+                    // opsi_b: opsi_b.root.innerHTML,
+                    // opsi_c: opsi_c.root.innerHTML,
+                    // opsi_d: opsi_d.root.innerHTML,
+                    // opsi_e: opsi_e.root.innerHTML,
                     keyword: keyword,
                 }
             } else {
@@ -395,7 +448,9 @@ function makeSoal(data) {
         item += '</div>';
         item += '</div>';
         item += '<div class="card-body">';
-        item += '<p>' + imageShow(value['question']) + '</p>'
+        item += '<p class="itemQuestion">' + imageShow(value['question']) + '</p>'
+            // item += '<p class="itemQuestion">' + quillGetHTML([{ "insert": "asdf\n" }]) + '</p>'
+            // item += '<p class="itemQuestion">' + quillGetHTML([{ "attributes": { "italic": "true", "bold": "true" }, "insert": "asdf" }, { "insert": "\n" }]) + '</p>'
         item += '<h6>Opsi A</h6>'
         item += '<p>' + imageShow(value['opsi_a']) + '</p>'
         item += '<h6>Opsi B</h6>'
@@ -419,7 +474,14 @@ function makeSoal(data) {
     eq_list.innerHTML = item;
 }
 
+// function quillGetHTML(inputDelta) {
+//     var tempCont = document.createElement("div");
+//     (new Quill(tempCont)).setContents(inputDelta);
+//     return tempCont.getElementsByClassName("ql-editor")[0].innerHTML;
+// }
+
 function imageShow(data) {
     data = data.replace(/upload\/img/g, "<img src='" + base_url + "upload/img");
-    return data.replace(/.png/g, ".png'>");
+    data = data.replace(/.png/g, ".png'>");
+    return data;
 }
