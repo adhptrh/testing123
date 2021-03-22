@@ -15,6 +15,7 @@ let soal = 0,
     content = 0,
     dsimpan = 0,
     keyword = 0,
+    // tempConverter = '',
     base_url = 'http://localhost/';
 
 let button_cancel, form, item;
@@ -137,7 +138,7 @@ function setEditor() {
                 ['link'],
                 ['blockquote'],
                 [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                [{ 'script': 'sub' }, { 'script': 'super' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }, 'formula'],
                 ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
             ]
         },
@@ -153,7 +154,7 @@ function setEditor() {
                 ['link'],
                 ['blockquote'],
                 [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                [{ 'script': 'sub' }, { 'script': 'super' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }, 'formula'],
                 ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
             ]
         },
@@ -169,7 +170,7 @@ function setEditor() {
                 ['link'],
                 ['blockquote'],
                 [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                [{ 'script': 'sub' }, { 'script': 'super' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }, 'formula'],
                 ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
             ]
         },
@@ -185,7 +186,7 @@ function setEditor() {
                 ['link'],
                 ['blockquote'],
                 [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                [{ 'script': 'sub' }, { 'script': 'super' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }, 'formula'],
                 ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
             ]
         },
@@ -202,7 +203,7 @@ function setEditor() {
                     ['link'],
                     ['blockquote'],
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                    [{ 'script': 'sub' }, { 'script': 'super' }],
+                    [{ 'script': 'sub' }, { 'script': 'super' }, 'formula'],
                     ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }]
                 ]
             },
@@ -449,8 +450,6 @@ function makeSoal(data) {
         item += '</div>';
         item += '<div class="card-body">';
         item += '<p class="itemQuestion">' + imageShow(value['question']) + '</p>'
-            // item += '<p class="itemQuestion">' + quillGetHTML([{ "insert": "asdf\n" }]) + '</p>'
-            // item += '<p class="itemQuestion">' + quillGetHTML([{ "attributes": { "italic": "true", "bold": "true" }, "insert": "asdf" }, { "insert": "\n" }]) + '</p>'
         item += '<h6>Opsi A</h6>'
         item += '<p>' + imageShow(value['opsi_a']) + '</p>'
         item += '<h6>Opsi B</h6>'
@@ -474,14 +473,33 @@ function makeSoal(data) {
     eq_list.innerHTML = item;
 }
 
-// function quillGetHTML(inputDelta) {
-//     var tempCont = document.createElement("div");
-//     (new Quill(tempCont)).setContents(inputDelta);
-//     return tempCont.getElementsByClassName("ql-editor")[0].innerHTML;
-// }
-
 function imageShow(data) {
     data = data.replace(/upload\/img/g, "<img src='" + base_url + "upload/img");
     data = data.replace(/.png/g, ".png'>");
-    return data;
+    return doConvert(data);
+}
+
+var converter = new Quill('#dConverter', {
+    modules: {
+        toolbar: [
+            [{ header: [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike', 'image'],
+            ['link'],
+            ['blockquote'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }, 'formula'],
+            ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }],
+        ]
+    },
+    placeholder: 'Ketikkan soal di sini ...',
+    theme: 'snow' // or 'bubble'
+});
+
+function doConvert(data) {
+    if (isJson(data)) {
+        converter.setContents(JSON.parse(data));
+        return converter.root.innerHTML;
+    } else {
+        return data;
+    }
 }
