@@ -186,7 +186,7 @@ class Exam_question_detail extends MY_Controller
             }
         }
 
-        return $data;
+        return json_encode($data);
     }
 
     public function save()
@@ -201,18 +201,18 @@ class Exam_question_detail extends MY_Controller
         if ($number_of_options['number_of_options'] == 5) {
             $data = [
                 'exam_question_id' => $eqi,
-                // 'question' => $this->content_creation($post['soal']),
-                // 'opsi_a' => $this->content_creation($post['opsi_a']),
-                // 'opsi_b' => $this->content_creation($post['opsi_b']),
-                // 'opsi_c' => $this->content_creation($post['opsi_c']),
-                // 'opsi_d' => $this->content_creation($post['opsi_d']),
-                // 'opsi_e' => $this->content_creation($post['opsi_e']),
-                'question' => $post['soal'],
-                'opsi_a' => $post['opsi_a'],
-                'opsi_b' => $post['opsi_b'],
-                'opsi_c' => $post['opsi_c'],
-                'opsi_d' => $post['opsi_d'],
-                'opsi_e' => $post['opsi_e'],
+                'question' => $this->content_creation($post['soal']),
+                'opsi_a' => $this->content_creation($post['opsi_a']),
+                'opsi_b' => $this->content_creation($post['opsi_b']),
+                'opsi_c' => $this->content_creation($post['opsi_c']),
+                'opsi_d' => $this->content_creation($post['opsi_d']),
+                'opsi_e' => $this->content_creation($post['opsi_e']),
+                // 'question' => $post['soal'],
+                // 'opsi_a' => $post['opsi_a'],
+                // 'opsi_b' => $post['opsi_b'],
+                // 'opsi_c' => $post['opsi_c'],
+                // 'opsi_d' => $post['opsi_d'],
+                // 'opsi_e' => $post['opsi_e'],
                 'keyword' => $post['keyword'],
             ];
         } else {
