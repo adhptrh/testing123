@@ -144,12 +144,21 @@ function loadExamDetails() {
 
 function showExamDetails() {
     loadIndicator.classList.add('d-none');
-    tExamDetail.innerHTML = imageShow(examDetail['question']);
-    tOpsiA.innerHTML = imageShow(examDetail['opsi_a']);
-    tOpsiB.innerHTML = imageShow(examDetail['opsi_b']);
-    tOpsiC.innerHTML = imageShow(examDetail['opsi_c']);
-    tOpsiD.innerHTML = imageShow(examDetail['opsi_d']);
-    tOpsiE.innerHTML = imageShow(examDetail['opsi_e']);
+    // tExamDetail.innerHTML = imageShow(examDetail['question']);
+    // tOpsiA.innerHTML = imageShow(examDetail['opsi_a']);
+    // tOpsiB.innerHTML = imageShow(examDetail['opsi_b']);
+    // tOpsiC.innerHTML = imageShow(examDetail['opsi_c']);
+    // tOpsiD.innerHTML = imageShow(examDetail['opsi_d']);
+    // tOpsiE.innerHTML = imageShow(examDetail['opsi_e']);
+
+    tExamDetail.innerHTML = doConvert(examDetail['question']);
+    tOpsiA.innerHTML = doConvert(examDetail['opsi_a']);
+    tOpsiB.innerHTML = doConvert(examDetail['opsi_b']);
+    tOpsiC.innerHTML = doConvert(examDetail['opsi_c']);
+    tOpsiD.innerHTML = doConvert(examDetail['opsi_d']);
+    tOpsiE.innerHTML = doConvert(examDetail['opsi_e']);
+
+
     fExamDetail.classList.remove('d-none');
     noExam.innerHTML = (numberOfExam + 1)
 
@@ -436,4 +445,32 @@ function lock(status = true) {
 
     bPrev.disabled = status;
     bNext.disabled = status;
+}
+
+converter = new Quill('#converter', {
+    modules: {
+        toolbar: [
+            [{ header: [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike', 'image'],
+            ['link'],
+            ['blockquote'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }, 'formula'],
+            ['align', { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }],
+        ]
+    },
+    theme: 'snow'
+});
+
+function doConvert(data) {
+    data = data.replace("upload", baseURL.getAttribute('data-value') + "/upload");
+    console.info(data);
+
+    // value = isJson(data) ? 'mantap' : 'kurang';
+    try {
+        converter.setContents(JSON.parse(data));
+        return converter.root.innerHTML;
+    } catch (error) {
+        return data;
+    }
 }

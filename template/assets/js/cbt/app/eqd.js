@@ -474,8 +474,8 @@ function makeSoal(data) {
 }
 
 function imageShow(data) {
-    data = data.replace(/upload\/img/g, "<img src='" + base_url + "upload/img");
-    data = data.replace(/.png/g, ".png'>");
+    // data = data.replace(/upload\/img/g, "<img src='" + base_url + "upload/img");
+    // data = data.replace(/.png/g, ".png'>");
     return doConvert(data);
 }
 
@@ -497,6 +497,8 @@ var converter = new Quill('#dConverter', {
 
 function doConvert(data) {
     if (isJson(data)) {
+        data = data.replace(/upload\/img/g, "<img src='" + base_url + "upload/img");
+        console.log(data);
         converter.setContents(JSON.parse(data));
         return converter.root.innerHTML;
     } else {

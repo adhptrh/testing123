@@ -44,6 +44,11 @@
                 <div class="d-none" id="loadIndicator">
                     <div class="spinner-border spinner-border-sm"></div> Memuat butir soal ...
                 </div>
+                
+                <div class="card d-none">
+                    <div id="converter"></div>
+                </div>
+
                 <div id="fExamDetail" class="d-none">
                     <p id="tExamDetail"></p>
 

@@ -179,7 +179,7 @@ class Exam_question_detail extends MY_Controller
         foreach ($data['ops'] as $k => $v) {
             if (isset($v['insert']['image'])) {
                 $save_image = $this->save_image($v['insert']['image']);
-                $data['ops'][$k]['insert'] = "<img src='" . $save_image;
+                $data['ops'][$k]['insert']['image'] = $save_image;
                 // $contents .= ' ' . $save_image;
             } else {
                 // $contents .= ' ' . $v['insert'];
