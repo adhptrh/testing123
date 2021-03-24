@@ -464,9 +464,6 @@ converter = new Quill('#converter', {
 
 function doConvert(data) {
     data = data.replace("upload", baseURL.getAttribute('data-value') + "/upload");
-    console.info(data);
-
-    // value = isJson(data) ? 'mantap' : 'kurang';
     try {
         converter.setContents(JSON.parse(data));
         return converter.root.innerHTML;

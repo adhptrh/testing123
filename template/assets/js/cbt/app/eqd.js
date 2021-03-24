@@ -496,12 +496,11 @@ var converter = new Quill('#dConverter', {
 });
 
 function doConvert(data) {
-    if (isJson(data)) {
-        data = data.replace(/upload\/img/g, "<img src='" + base_url + "upload/img");
-        console.log(data);
+    data = data.replace("upload", baseURL.getAttribute('data-value') + "/upload");
+    try {
         converter.setContents(JSON.parse(data));
         return converter.root.innerHTML;
-    } else {
+    } catch (error) {
         return data;
     }
 }
