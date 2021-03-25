@@ -10,7 +10,7 @@
                 <div class="col-md">
                     <div class="alert alert-info d-none" id="falert">
                         <i class="fa fa-info-circle"></i>
-                        <span id="malert"></span>
+                        <span id="malert"></span>                                       
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>

@@ -230,7 +230,6 @@ class Exam_question_detail extends MY_Controller
         $create = $this->data->save($data);
 
         $create['token'] = $this->security->get_csrf_hash();
-        $create['query'] = $this->db->last_query();
         $create['data'] = $data;
         $create['soal'] = $post['soal'];
 

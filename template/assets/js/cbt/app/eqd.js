@@ -242,42 +242,14 @@ function loadExamDetail(data) {
         dataType: 'json',
         success: function(response) {
 
-            if (isJson(response.soal[0]['insert'])) {
-                soal.setContents(JSON.parse(response.soal[0]['insert']));
-            } else {
-                soal.setContents(response.soal);
-            }
-
-            if (isJson(response.opsi_a[0]['insert'])) {
-                opsi_a.setContents(JSON.parse(response.opsi_a[0]['insert']));
-            } else {
-                opsi_a.setContents(response.opsi_a);
-            }
-
-            if (isJson(response.opsi_b[0]['insert'])) {
-                opsi_b.setContents(JSON.parse(response.opsi_b[0]['insert']));
-            } else {
-                opsi_b.setContents(response.opsi_b);
-            }
-
-            if (isJson(response.opsi_c[0]['insert'])) {
-                opsi_c.setContents(JSON.parse(response.opsi_c[0]['insert']));
-            } else {
-                opsi_c.setContents(response.opsi_c);
-            }
-
-            if (isJson(response.opsi_d[0]['insert'])) {
-                opsi_d.setContents(JSON.parse(response.opsi_d[0]['insert']));
-            } else {
-                opsi_d.setContents(response.opsi_d);
-            }
+            stringToEditor(response.soal, soal);
+            stringToEditor(response.opsi_a, opsi_a);
+            stringToEditor(response.opsi_b, opsi_b);
+            stringToEditor(response.opsi_c, opsi_c);
+            stringToEditor(response.opsi_d, opsi_d);
 
             if (top_content.getAttribute('data-number-of-options') == '5') {
-                if (isJson(response.opsi_e[0]['insert'])) {
-                    opsi_e.setContents(JSON.parse(response.opsi_e[0]['insert']));
-                } else {
-                    opsi_e.setContents(response.opsi_e);
-                }
+                stringToEditor(response.opsi_e, opsi_e);
             }
 
             document.querySelector('input[name=token]').value = response.token;
@@ -449,23 +421,23 @@ function makeSoal(data) {
         item += '</div>';
         item += '</div>';
         item += '<div class="card-body">';
-        item += '<p class="itemQuestion">' + imageShow(value['question']) + '</p>'
+        item += '<p class="itemQuestion">' + doConvert(value['question']) + '</p>'
         item += '<h6>Opsi A</h6>'
-        item += '<p>' + imageShow(value['opsi_a']) + '</p>'
+        item += '<p>' + doConvert(value['opsi_a']) + '</p>'
         item += '<h6>Opsi B</h6>'
-        item += '<p>' + imageShow(value['opsi_b']) + '</p>'
+        item += '<p>' + doConvert(value['opsi_b']) + '</p>'
         item += '<h6>Opsi C</h6>'
-        item += '<p>' + imageShow(value['opsi_c']) + '</p>'
+        item += '<p>' + doConvert(value['opsi_c']) + '</p>'
         item += '<h6>Opsi D</h6>'
-        item += '<p>' + imageShow(value['opsi_d']) + '</p>'
+        item += '<p>' + doConvert(value['opsi_d']) + '</p>'
 
         if (top_content.getAttribute('data-number-of-options') == '5') {
             item += '<h6>Opsi E</h6>'
-            item += '<p>' + imageShow(value['opsi_e']) + '</p>'
+            item += '<p>' + doConvert(value['opsi_e']) + '</p>'
         }
 
         item += '<h6>Kunci Jawaban</h6>'
-        item += '<p>' + imageShow(value['keyword']) + '</p>'
+        item += '<p>' + doConvert(value['keyword']) + '</p>'
         item += '</div>';
         item += '</div>';
     })
@@ -476,7 +448,8 @@ function makeSoal(data) {
 function imageShow(data) {
     // data = data.replace(/upload\/img/g, "<img src='" + base_url + "upload/img");
     // data = data.replace(/.png/g, ".png'>");
-    return doConvert(data);
+    // return doConvert(data);
+    return data.replace("upload", baseURL.getAttribute('data-value') + "/upload");
 }
 
 var converter = new Quill('#dConverter', {
@@ -502,5 +475,12 @@ function doConvert(data) {
         return converter.root.innerHTML;
     } catch (error) {
         return data;
+    }
+}
+
+function stringToEditor(string, editor) {
+    if (isJson(string)) {
+        data = imageShow(string);
+        editor.setContents(JSON.parse(data)['ops']);
     }
 }
