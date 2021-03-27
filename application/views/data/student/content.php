@@ -38,6 +38,7 @@
                                 <th>#</th>
                                 <th style="width:10%">Aksi</th>
                                 <th>Name</th>
+                                <th>Kabupaten/Kota</th>
                                 <th>Login Terkahir</th>
                                 <th>Dibuat</th>
                             </tr>
@@ -66,7 +67,19 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td><?= $v['name'] . "<br/><small> NISN : " .$v['nisn']. "</small>"; ?></td>
+                                <?php
+                                    if($v['gender']){
+                                        if($v['gender'] == 1){
+                                            $gender = '<small>[Laki-laki]</small>';
+                                        }else{
+                                            $gender = '<small>[Perempuan]</small>';
+                                        }
+                                    }else{
+                                        $gender = '';
+                                    }
+                                ?>
+                                <td><?= $v['name'] . ' ' . $gender . "<br/><small> NISN : " .$v['nisn']. "</small>"; ?></td>
+                                <td><?= $v['regency']; ?></td>
                                 <td><?= $v['last_login']; ?></td>
                                 <td><?= $v['created_by'] . '<br><small>'. $v['created_at'] .'</small>' ?></td>
                             </tr>

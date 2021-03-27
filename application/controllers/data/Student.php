@@ -21,6 +21,7 @@ class Student extends MY_Controller
         $this->load->model('Student_m', 'data');
         $this->load->model('Profile_m', 'profile');
         $this->load->model('User_m', 'user');
+        $this->load->model('Regency_m', 'regency');
     }
 
     public function index()
@@ -124,7 +125,7 @@ class Student extends MY_Controller
         $this->header = [
             'title' => 'Siswa',
             'sub_title' => 'Tambah Siswa',
-            'sub_title' => 'Tambah Siswa',
+            'js_file' => 'data/student_crud',
             'nav_active' => 'data/student',
             'breadcrumb' => [
                 [
@@ -151,6 +152,9 @@ class Student extends MY_Controller
         ];
 
         $this->temp('data/student/create', [
+            'regency' => $this->regency->find(false, [
+                'a.province_id' => 4, // Riau
+            ]),
             'old' => $old,
         ]);
     }
@@ -297,8 +301,12 @@ class Student extends MY_Controller
             $this->db->trans_begin();
 
             // Input profile
+            $gender = ($this->input->post('gender') == 0) ? null : $this->input->post('gender');
+            $regency_id = ($this->input->post('not_riau_province')) ? null : enc($this->input->post('regency'), 1);
             $save = $this->profile->save([
                 'name' => $this->input->post('name'),
+                'gender' => $gender,
+                'regency_id' => $regency_id,
             ]);
 
             if ($save['status'] != '200') {
@@ -349,6 +357,7 @@ class Student extends MY_Controller
         $this->header = [
             'title' => 'Siswa',
             'sub_title' => 'Ubah Siswa',
+            'js_file' => 'data/student_crud',
             'nav_active' => 'data/student',
             'breadcrumb' => [
                 [
@@ -377,6 +386,9 @@ class Student extends MY_Controller
         $data = $this->data->find(enc($id, 1));
 
         $this->temp('data/student/edit', [
+            'regency' => $this->regency->find(false, [
+                'a.province_id' => 4, // Riau
+            ], false, enc($data['regency_id'], 1)), 
             'data' => $data = $this->data->find(enc($id, 1)),
             'old' => $old,
         ]);
@@ -407,11 +419,17 @@ class Student extends MY_Controller
 
             // Update profile
             $profile = $this->data->find($id);
+
+            $gender = ($this->input->post('gender') == 0) ? null : $this->input->post('gender');
+            $regency_id = ($this->input->post('not_riau_province')) ? null : enc($this->input->post('regency'), 1);
+
             $profile_id = enc($profile['profile_id'], 1);
 
             $save = $this->profile->save([
                 'id' => $profile_id,
                 'name' => $this->input->post('name'),
+                'gender' => $gender,
+                'regency_id' => $regency_id,
             ]);
 
             if ($save['status'] != '200') {

@@ -26,13 +26,14 @@ class Student_m extends MY_Model {
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
     $this->db->select('a.id, a.profile_id, a.nisn, a.is_login, a.is_del')
-    ->select('d.name')
+    ->select('d.name, d.gender, d.regency_id')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
     ->select('g.name kelas')
     ->select('e.id student_grade_id, e.grade_period_id')
     ->select('f.period_id')
     ->select('DATE_FORMAT(h.updated_at, "%d-%m-%Y %H:%i:%s") last_login')
+    ->select('i.name regency') 
     ->from($this->name . ' a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
     ->join('z_profiles c', 'c.id = a.updated_by', 'left')
@@ -41,6 +42,7 @@ class Student_m extends MY_Model {
     ->join('grade_extend_periods f', 'f.id = e.grade_period_id', 'left')
     ->join('grades g', 'g.id = f.grade_id', 'left')
     ->join('z_users h', 'h.profile_id = a.profile_id', 'left')
+    ->join('address_regency i', 'i.id = d.regency_id', 'left')
     ->group_by('a.id')
     ->order_by('a.id', 'ASC');
 
@@ -63,6 +65,7 @@ class Student_m extends MY_Model {
       $data['student_grade_id'] = enc($data['student_grade_id']);
       $data['grade_period_id'] = enc($data['grade_period_id']);
       $data['period_id'] = enc($data['period_id']);
+      $data['regency_id'] = enc($data['regency_id']);
 
 
       return $data;
@@ -88,6 +91,7 @@ class Student_m extends MY_Model {
         $data[$k]['student_grade_id'] = enc($v['student_grade_id']);
         $data[$k]['grade_period_id'] = enc($v['grade_period_id']);
         $data[$k]['period_id'] = enc($v['period_id']);
+        $data[$k]['regency_id'] = enc($v['regency_id']);
       }
 
       return $data;
