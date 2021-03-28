@@ -176,7 +176,8 @@ class Student extends MY_Controller
 
         $path = './upload/files/';
         $config['upload_path'] = $path; //path upload
-        $config['file_name'] = $fileName; // nama file
+        // $config['file_name'] = $fileName; // nama file
+        $config['encrypt_name'] = TRUE;
         $config['allowed_types'] = 'xls|xlsx'; //tipe file yang diperbolehkan
         $config['max_size'] = 10000; // maksimal sizze
 
@@ -187,7 +188,7 @@ class Student extends MY_Controller
             $this->session->set_flashdata('create_info_message', $this->upload->display_errors());
             $this->create_excel();
         } else {
-            $inputFileName = $path . $fileName;
+            $inputFileName = $path . $this->upload->data('file_name');
 
             $reader = new Xls;
             $spreadsheet = $reader->load($inputFileName);
@@ -232,6 +233,8 @@ class Student extends MY_Controller
         foreach ($data as $k => $v) {
             $nisn = $v[1];
             $nama = $v[2];
+            $gender = $v[3];
+            $regency = $v[4];
 
             if ($k != 0) {
                 $cek = $this->data->find(0, ['a.nisn' => $nisn], true);
@@ -241,8 +244,12 @@ class Student extends MY_Controller
                 } else {
                     $this->db->trans_begin();
                     // Input profile
+                    $gender = ($gender == '') ? null : $gender;
+                    $regency = ($regency == '') ? null : $regency;
                     $save = $this->profile->save([
                         'name' => $nama,
+                        'gender' => $gender,
+                        'regency_id' => $regency,
                     ]);
 
                     if ($save['status'] != '200') {
@@ -388,7 +395,7 @@ class Student extends MY_Controller
         $this->temp('data/student/edit', [
             'regency' => $this->regency->find(false, [
                 'a.province_id' => 4, // Riau
-            ], false, enc($data['regency_id'], 1)), 
+            ], false, enc($data['regency_id'], 1)),
             'data' => $data = $this->data->find(enc($id, 1)),
             'old' => $old,
         ]);
