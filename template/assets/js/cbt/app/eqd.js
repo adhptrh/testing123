@@ -449,7 +449,7 @@ function imageShow(data) {
     // data = data.replace(/upload\/img/g, "<img src='" + base_url + "upload/img");
     // data = data.replace(/.png/g, ".png'>");
     // return doConvert(data);
-    return data.replace("upload", baseURL.getAttribute('data-value') + "/upload");
+    return data.replaceAll("upload", baseURL.getAttribute('data-value') + "/upload");
 }
 
 var converter = new Quill('#dConverter', {
@@ -469,7 +469,7 @@ var converter = new Quill('#dConverter', {
 });
 
 function doConvert(data) {
-    data = data.replace("upload", baseURL.getAttribute('data-value') + "/upload");
+    data = data.replaceAll("upload", baseURL.getAttribute('data-value') + "/upload");
     try {
         converter.setContents(JSON.parse(data));
         return converter.root.innerHTML;
