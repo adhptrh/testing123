@@ -463,7 +463,7 @@ converter = new Quill('#converter', {
 });
 
 function doConvert(data) {
-    data = data.replace("upload", baseURL.getAttribute('data-value') + "/upload");
+    data = data.replaceAll("upload", baseURL.getAttribute('data-value') + "/upload");
     try {
         converter.setContents(JSON.parse(data));
         return converter.root.innerHTML;
