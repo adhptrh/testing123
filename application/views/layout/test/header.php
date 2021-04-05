@@ -28,6 +28,7 @@
     <link rel="stylesheet"
         href="<?=base_url('template/');?>lib/datatables.net-responsive-dt/css/responsive.dataTables.min.css">
     <link rel="stylesheet" href="<?=base_url('template/');?>assets/css/quill.snow.css">
+    <link rel="stylesheet" href="<?=base_url('template/');?>assets/css/katex.min.css">
 
     <style media="screen">
     .dataTables_wrapper .dataTables_filter {
