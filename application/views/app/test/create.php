@@ -68,17 +68,15 @@
                         <input data-value="opsi_c" type="radio" id="ftOpsiC" name="bOpsi" class="custom-control-input">
                         <label class="custom-control-label tx-medium" for="ftOpsiC">C</label>
                         <div id="tOpsiC"></div>
-
                     </div>
 
                     <div class="custom-control custom-radio mg-b-20">
                         <input data-value="opsi_d" type="radio" id="ftOpsiD" name="bOpsi" class="custom-control-input">
                         <label class="custom-control-label tx-medium" for="ftOpsiD">D</label>
                         <div id="tOpsiD"></div>
-
                     </div>
 
-                    <div class="custom-control custom-radio mg-b-20">
+                    <div id="fOpsiE" class="custom-control custom-radio mg-b-20">
                         <input data-value="opsi_e" type="radio" id="ftOpsiE" name="bOpsi" class="custom-control-input">
                         <label class="custom-control-label tx-medium" for="ftOpsiE">E</label>
                         <div id="tOpsiE"></div>

@@ -158,7 +158,6 @@ function showExamDetails() {
     tOpsiD.innerHTML = doConvert(examDetail['opsi_d']);
     tOpsiE.innerHTML = doConvert(examDetail['opsi_e']);
 
-
     fExamDetail.classList.remove('d-none');
     noExam.innerHTML = (numberOfExam + 1)
 
@@ -320,6 +319,9 @@ function loadingLandingData() {
             showTimeLeft();
             asignBExamItems(response.exam_questions);
             numberOfExamMax = response.number_of_exam;
+            if (response.number_of_options == "4") {
+                fOpsiE.classList.add('d-none');
+            }
             bExamItems[0].click();
         }
     })

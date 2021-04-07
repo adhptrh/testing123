@@ -509,6 +509,7 @@ class Test extends MY_Controller
                 'time_left' => $info['time_left'],
                 'time_server_now' => $info['time_server_now'],
                 'exam_questions' => $exams,
+                'number_of_options' => $info['number_of_options'],
             ];
 
         } else { // jika tidak ada (belum ujian)

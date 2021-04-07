@@ -53,7 +53,7 @@ class Exam_schedule_m extends MY_Model
             ->select('DATE_FORMAT(a.date, "%d-%m-%Y") date')
             ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
             ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
-            ->select('d.period_id')
+            ->select('d.period_id, d.number_of_options')
             ->select('e.name order')
             ->select('f.name study')
             ->select('g.grade, g.grade_period_id')
