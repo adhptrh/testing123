@@ -82,7 +82,6 @@ class Exam_question_detail_m extends MY_Model
                 $this->db->limit($limit);
             }
 
-            $this->db->order_by('a.id', 'desc');
 
             $data = $this->db->get()->result_array();
 

@@ -40,7 +40,7 @@ class Exam_temp_m extends MY_Model
             $this->db->where('a.is_del', '0');
         }
 
-        $this->db->order_by('a.id', 'desc');
+        // $this->db->order_by('a.id', 'desc');
 
         // Jika cari berdasarkan id
         if ($id) {
@@ -60,7 +60,7 @@ class Exam_temp_m extends MY_Model
                 $this->db->where($conditions);
             }
 
-            $this->db->order_by('a.id', 'desc');
+            $this->db->order_by('a.id', 'asc');
 
             $data = $this->db->get()->result_array();
 
