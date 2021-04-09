@@ -223,7 +223,7 @@ class Ranking extends MY_Controller
         if ($regency_id) {
             $button = [
                 'disabled' => '',
-                'href' => base_url('data/ranking/export/'),
+                'href' => base_url("data/ranking/export/$period_id/".enc($exam_question_id)."/".enc($exam_grade_id)."/$regency_id/$gender"),
             ];
         } else {
             $button = [
@@ -249,7 +249,7 @@ class Ranking extends MY_Controller
         ]);
     }
 
-    public function export()
+    public function export($period_id = 0, $exam_question_id = false, $exam_grade_id = false, $regency_id = false, $gender = false)
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -276,6 +276,7 @@ class Ranking extends MY_Controller
 
         // Write data
         $this->set_student_with_score();
+
         $last_row_cell = 1;
         foreach ($this->student_with_score as $k => $v) {
             $sheet->setCellValue('A' . ($k + 2), $k + 1);
