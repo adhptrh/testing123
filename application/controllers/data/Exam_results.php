@@ -39,8 +39,9 @@ class Exam_results extends MY_Controller
 
     private function set_studies($period_id = 0, $selected_id = 0)
     {
-        if ($selected_id == 0) {
+        if ($period_id == 0) {
             $this->studies = $this->exam_question->find();
+
         } else {
             $this->studies = $this->exam_question->find(false, [
                 'a.period_id' => $period_id,

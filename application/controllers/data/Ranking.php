@@ -60,7 +60,9 @@ class Ranking extends MY_Controller
                     'a.period_id' => enc($period_id, 1),
                 ], false, enc($study_id, 1));
             } else {
-                $this->studies = $this->exam_question->find();
+                $this->studies = $this->exam_question->find(false, [
+                    'a.period_id' => enc($period_id, 1),
+                ]);
             }
         }
     }
