@@ -265,14 +265,15 @@ class Ranking extends MY_Controller
             ],
         ];
 
-        $sheet->getStyle('A1:E1')->applyFromArray($styleArray);
+        $sheet->getStyle('A1:F1')->applyFromArray($styleArray);
 
         // Set Header Name
         $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Nama Siswa');
-        $sheet->setCellValue('C1', 'Waktu Ujian');
-        $sheet->setCellValue('D1', 'Nilai');
-        $sheet->setCellValue('E1', 'Keterangan');
+        $sheet->setCellValue('B1', 'Kabupaten');
+        $sheet->setCellValue('C1', 'Nama Siswa');
+        $sheet->setCellValue('D1', 'Waktu Ujian');
+        $sheet->setCellValue('E1', 'Nilai');
+        $sheet->setCellValue('F1', 'Keterangan');
 
         // Write data
         $this->set_student_with_score();
@@ -280,15 +281,16 @@ class Ranking extends MY_Controller
         $last_row_cell = 1;
         foreach ($this->student_with_score as $k => $v) {
             $sheet->setCellValue('A' . ($k + 2), $k + 1);
-            $sheet->setCellValue('B' . ($k + 2), $v['name']);
-            $sheet->setCellValue('C' . ($k + 2), $v['date']);
-            $sheet->setCellValue('D' . ($k + 2), $v['score']);
-            $sheet->setCellValue('E' . ($k + 2), "Benar (" . $v['correct'] . ") - Salah (" . $v['incorrect'] . ")");
+            $sheet->setCellValue('B' . ($k + 2), $v['regency']);
+            $sheet->setCellValue('C' . ($k + 2), $v['name']);
+            $sheet->setCellValue('D' . ($k + 2), $v['date']);
+            $sheet->setCellValue('E' . ($k + 2), $v['score']);
+            $sheet->setCellValue('F' . ($k + 2), "Benar (" . $v['correct'] . ") - Salah (" . $v['incorrect'] . ")");
             $last_row_cell++;
         }
 
         // Set AutoSize
-        foreach(range('A','E') as $columnID) {
+        foreach(range('A','F') as $columnID) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
 
@@ -303,7 +305,7 @@ class Ranking extends MY_Controller
             ),
         );
 
-        $sheet->getStyle('A1:E' . $last_row_cell)->applyFromArray($styleArray);
+        $sheet->getStyle('A1:F' . $last_row_cell)->applyFromArray($styleArray);
 
         // Filename
         $filename = 'laporan-hasil-ujian';

@@ -85,6 +85,7 @@ class Student_grade_exam_m extends MY_Model {
     $this->db->select('a.id, a.nisn, DATE_FORMAT(a.updated_at, "%d-%m-%Y, %H:%i:%m") updated_at')
     ->select('e.numbers_before_answer,e.exam_schedule_id, e.correct, e.incorrect, e.score, e.id student_grade_exam_id, DATE_FORMAT(e.finish_time, "%H:%i:%s") finish_time')
     ->select('g.name')
+    ->select('h.name regency')
     ->select('DATE_FORMAT(f.start, "%d-%m-%Y %H:%i:%s") date')
     ->from('students a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
@@ -92,7 +93,8 @@ class Student_grade_exam_m extends MY_Model {
     ->join('student_extend_grades d', 'd.student_id = a.id', 'left')
     ->join('student_grade_extend_exams e', 'e.student_grade_id = d.id', 'left')
     ->join('exam_schedules f', 'f.id = e.exam_schedule_id', 'left')
-    ->join('z_profiles g', 'g.id = a.profile_id', 'left');
+    ->join('z_profiles g', 'g.id = a.profile_id', 'left')
+    ->join('address_regency h', 'h.id = g.regency_id', 'left');
 
     if(!$show_del){
       $this->db->where('a.is_del', '0');
