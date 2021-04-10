@@ -20,7 +20,7 @@ class Period_m extends MY_Model {
 
   public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
   {
-    $this->db->select('a.id, a.name, a.is_del')
+    $this->db->select('a.id, a.name, a.is_del, a.status')
     ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
     ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
     ->from($this->name . ' a')

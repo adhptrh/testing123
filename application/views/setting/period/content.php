@@ -28,6 +28,7 @@
                 <th>#</th>
                 <th style="width:10%">Aksi</th>
                 <th>Name</th>
+                <th>Status</th>
                 <th>Dibuat</th>
               </tr>
             </thead>
@@ -42,11 +43,13 @@
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="<?= base_url('setting/period/edit/' . $v['id']); ?>"><i class="fas fa-edit"></i> Edit</a>
+                        <a class="dropdown-item" href="<?= base_url('setting/period/set_active/' . $v['id']); ?>"><i class="fas fa-random"></i> Aktifkan</a>
                         <a class="dropdown-item hapus" href="#" data-href="<?= base_url('setting/period/delete/' . $v['id']); ?>"><i class="fas fa-trash"></i> Hapus</a>
                       </div>
                     </div>
                   </td>
                   <td><?= $v['name'] ?></td>
+                  <td><?= $status = ($v['status'] == 1) ? 'Aktif' : ' Non-Aktif' ?></td>
                   <td><?= $v['created_by'] . '<br><small>'. $v['created_at'] .'</small>' ?></td>
                 </tr>
               <?php endforeach; ?>
