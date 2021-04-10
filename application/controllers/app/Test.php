@@ -488,6 +488,12 @@ class Test extends MY_Controller
         echo json_encode($data);
     }
 
+    private function UniqueRandomNumbersWithinRange($min, $max, $quantity) {
+        $numbers = range($min, $max);
+        shuffle($numbers);
+        return array_slice($numbers, 0, $quantity);
+    }
+
     public function get_landing_data()
     {
         $this->filter(2);
@@ -522,14 +528,35 @@ class Test extends MY_Controller
                     'a.exam_question_id' => enc($this->input->post('exam_question_id'), 1),
                 ]);
 
-                $exam_question_items = array_rand($exam_questions_raw, $info['number_of_exam']);
-                foreach ($exam_question_items as $k => $v) {
-                    // for save to db
-                    array_push($exam_questions_to_be_save, [
-                        'student_grade_exam_id' => $student_grade_exam_id,
-                        'exam_question_detail_id' => enc($exam_questions_raw[$v]['id'], 1),
-                    ]);
+                // Jika jumlah soal == jumlah soal yang akan ditampilkan
+                if(count($exam_questions_raw) == $info['number_of_exam']){
+                    // $exam_question_items = array_rand($exam_questions_raw, $info['number_of_exam']);
+                    $max = ($info['number_of_exam'] - 1);
+                    $index = $this->UniqueRandomNumbersWithinRange(0, $max, $info['number_of_exam']);
+                    foreach ($index as $k => $v) {
+                        $exam_question_items[] = $exam_questions_raw[$v];
+                    }
+
+                    foreach ($exam_question_items as $k => $v) {
+                        // for save to db
+                        array_push($exam_questions_to_be_save, [
+                            'student_grade_exam_id' => $student_grade_exam_id,
+                            'exam_question_detail_id' => enc($v['id'], 1),
+                        ]);
+                    }
+
+                }else{ // Jika tidak
+                    $exam_question_items = array_rand($exam_questions_raw, $info['number_of_exam']);
+
+                    foreach ($exam_question_items as $k => $v) {
+                        // for save to db
+                        array_push($exam_questions_to_be_save, [
+                            'student_grade_exam_id' => $student_grade_exam_id,
+                            'exam_question_detail_id' => enc($exam_questions_raw[$v]['id'], 1),
+                        ]);
+                    }
                 }
+
             } else {
                 // Soal tidak radom
                 $exam_questions_raw = $this->exam_question_detail->find_for_student_id_only(false, [
