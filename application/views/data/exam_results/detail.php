@@ -33,6 +33,10 @@
                                 <td>Waktu</td>
                                 <td>: <?=$data['summary']['time']?></td>
                             </tr>
+                            <tr>
+                                <td>Nilai</td>
+                                <td>: <?=$data['summary']['score']?></td>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -128,6 +132,19 @@
                                         class="btn btn-sm btn-primary bShowQuestion">
                                         Lihat Soal
                                     </button>
+                                    <?php if (allow_resolution()): ?>
+                                        <?php if ($v['is_correct'] == 1): ?>
+                                            <!-- <a href="<?=base_url('data/exam_results/resolution/' . $v['id'] . '/0/' . $this->uri->segment(4, 0) . '/' . $this->uri->segment(5, 0) . '/' . $this->uri->segment(6, 0));?>"
+                                            class="btn btn-sm btn-warning">
+                                            Down
+                                            </a> -->
+                                            <?php else:?>
+                                                <a href="<?=base_url('data/exam_results/resolution/' . $v['id'] . '/1/' . $this->uri->segment(4, 0) . '/' . $this->uri->segment(5, 0) . '/' . $this->uri->segment(6, 0));?>"
+                                            class="btn btn-sm btn-success">
+                                            Up
+                                            </a>
+                                        <?php endif;?>
+                                    <?php endif;?>
                                 </td>
                                 <td><?=$v['exam_question_detail_id'];?></td>
                                 <td><?=$v['keyword'];?></td>

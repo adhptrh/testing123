@@ -2,9 +2,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Exam_results extends MY_Controller
 {
@@ -122,7 +122,8 @@ class Exam_results extends MY_Controller
         ]);
     }
 
-    public function detail($student_grade_exam_id, $exam_question_id = 0, $exam_grade_id = 0){
+    public function detail($student_grade_exam_id, $exam_question_id = 0, $exam_grade_id = 0)
+    {
 
         /**
          * Menampilkan detail jawaban siswa
@@ -156,18 +157,18 @@ class Exam_results extends MY_Controller
                 ],
             ],
         ];
-        
+
         $sgei = enc($student_grade_exam_id, 1);
         $details = $this->exam->find_for_analytics(false, [
-            'a.student_grade_exam_id' => $sgei
+            'a.student_grade_exam_id' => $sgei,
         ]);
 
         $student = $this->student_exam->find_with_score(false, [
-            'e.id' => $sgei
+            'e.id' => $sgei,
         ]);
         $exam_question = $this->exam_question->find(enc($exam_question_id, 1));
         $grade = $this->exam_grade->find(enc($exam_grade_id, 1));
-        $dateTime = $this->student_exam->find($sgei);
+        $sgxe = $this->student_exam->find($sgei);
 
         $this->temp('data/exam_results/detail', [
             'data' => [
@@ -177,8 +178,9 @@ class Exam_results extends MY_Controller
                     'nisn' => $student[0]['nisn'],
                     'grade' => $grade['grade'],
                     'study' => $exam_question['exam'],
-                    'date' => $dateTime['date'],
-                    'time' => $dateTime['start_time'] . ' s.d ' . $dateTime['finish_time'],
+                    'score' => $sgxe['score'],
+                    'date' => $sgxe['date'],
+                    'time' => $sgxe['start_time'] . ' s.d ' . $sgxe['finish_time'],
                 ],
             ],
         ]);
@@ -235,7 +237,7 @@ class Exam_results extends MY_Controller
         }
 
         // Set AutoSize
-        foreach(range('A','K') as $columnID) {
+        foreach (range('A', 'K') as $columnID) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
 
@@ -325,7 +327,6 @@ class Exam_results extends MY_Controller
         $this->set_grades($exam_question_id, $exam_grade_id);
         $this->set_student_with_score($exam_grade_id);
 
-        
         if ($exam_grade_id) {
             $button = [
                 'disabled' => '',
@@ -351,5 +352,58 @@ class Exam_results extends MY_Controller
                 ],
             ],
         ]);
+    }
+
+    public function resolution($exam_id = 0, $up = true, $var1 = 0, $var2 = 0, $var3 = 0)
+    {
+        // $data = [
+        //     'exams.id' => '0',
+        //     'exams.exam_question_detail_id' => '0',
+        //     'exams.answer' => '0',
+        //     'exams.is_correct' => '0',
+        //     'exams.student_grade_exam_id' => '0',
+
+        //     'exam_question_details.id' => '0',
+        //     'exam_question_details.keyword' => '0',
+
+        //     'student_grade_extend_exams.id' => '0',
+        //     'student_grade_extend_exams.correct' => '0',
+        //     'student_grade_extend_exams.incorrect' => '0',
+        //     'student_grade_extend_exams.number_before_answer' => '0',
+        //     'student_grade_extend_exams.score' => '0',
+        // ];
+
+        $data = $this->exam->find_for_resolution(enc($exam_id, 1));
+        $numbers_of_question = $data['correct'] + $data['incorrect'] + $data['numbers_before_answer'];
+        $data['numbers_of_question'] = $numbers_of_question;
+
+        // If Up
+        if ($up) {
+            $this->db->trans_begin();
+            $save = $this->exam->save([
+                'id' => enc($data['id'], 1),
+                'answer' => $data['keyword'],
+                'is_correct' => '1',
+            ], 1);
+
+            if ($save['status'] == '200') {
+                $correct = $data['correct'];
+                $incorrect = $data['incorrect'];
+                $numbers_before_answer = $data['numbers_before_answer'];
+                $score = ($correct / ($correct + $incorrect + $numbers_before_answer)) * 10;
+
+                $save = $this->student_exam->save([
+                    'id' => $data['sgxe_id'],
+                    'correct' => ($correct + 1),
+                    'incorrect' => ($incorrect - 1),
+                    'numbers_before_answer' => ($numbers_before_answer - 1),
+                    'score' => round($score, 1),
+                ], 1);
+                if ($save['status'] == '200') {
+                    $this->db->trans_commit();
+                }
+            }
+        }
+        redirect(base_url('data/exam_results/detail/' . $var1 . '/' . $var2 . '/' . $var3));
     }
 }

@@ -133,4 +133,27 @@ class Exam_m extends MY_Model
         }
     }
 
+    public function find_for_resolution($exam_id)
+    {
+        $this->db->select('a.id, a.is_correct, a.answer')
+            ->select('b.keyword')
+            ->select('c.id sgxe_id')
+            ->select('c.correct')
+            ->select('c.incorrect')
+            ->select('c.numbers_before_answer')
+            ->select('c.score')
+            ->from($this->name . ' a')
+            ->join('exam_question_extend_details b', 'b.id = a.exam_question_detail_id', 'left')
+            ->join('student_grade_extend_exams c', 'c.id = a.student_grade_exam_id', 'left');
+
+        $this->db->where([
+            'a.id' => $exam_id,
+        ]);
+
+        $data = $this->db->get()->row_array();
+        $data['id'] = enc($data['id']);
+
+        return $data;
+    }
+
 }
