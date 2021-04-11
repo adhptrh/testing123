@@ -23,7 +23,7 @@ class Dashboard extends MY_Controller
      * Mendapatkan profile dari session
      *
      */
-
+    
     public function index()
     {
         $this->filter(2);
@@ -46,18 +46,18 @@ class Dashboard extends MY_Controller
             ],
         ];
 
-		//student_grade_id_from_session
-		$this->set_student_grade_id();
-		
-		if (enc($this->student_grade_id, 1)) { // Jika siswa
-			$this->temp('dashboard/content_student');
-		}else{
-			$this->temp('dashboard/content', [
-				'token' => $this->token->get(),
-				'student' => count($this->student->find()),
-				'schedule' => count($this->schedule->find()),
-			]);
-		}
+        //student_grade_id_from_session
+        $this->set_student_grade_id();
+
+        if (enc($this->student_grade_id, 1)) { // Jika siswa
+            $this->temp('dashboard/content_student');
+        } else {
+            $this->temp('dashboard/content', [
+                'token' => $this->token->get(),
+                'student' => count($this->student->find()),
+                'schedule' => count($this->schedule->find()),
+            ]);
+        }
     }
 
     public function create()

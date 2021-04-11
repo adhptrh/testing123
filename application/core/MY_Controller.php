@@ -102,6 +102,7 @@ class MY_Controller extends CI_Controller
 
     protected function temp_test($content, $data = [])
     {
+        $client_info = getClienInfo();
         $this->load->view('layout/test/header', [
             'header' => $this->header,
             'profile' => $this->get_profile(),
@@ -110,7 +111,7 @@ class MY_Controller extends CI_Controller
             'menu' => $this->get_menu(),
         ]);
         $this->load->view($content, $data);
-        $this->load->view('layout/test/footer');
+        $this->load->view('layout/test/footer', ['client_info' => $client_info]);
     }
 
     private function get_token()

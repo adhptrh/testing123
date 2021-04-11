@@ -8,9 +8,7 @@
         </div>
         <div>
             <nav class="nav">
-                <a href="#" class="nav-link">Licenses</a>
-                <a href="#" class="nav-link">Change Log</a>
-                <a href="#" class="nav-link">Get Help</a>
+                <a href="#" class="nav-link"><?= $client_info['name'] . ' - ' . $client_info['version'] . ' - ' . $client_info['bit']; ?></a>
             </nav>
         </div>
     </footer>
