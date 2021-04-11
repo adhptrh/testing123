@@ -200,29 +200,42 @@ class Exam_results extends MY_Controller
             ],
         ];
 
-        $sheet->getStyle('A1:E1')->applyFromArray($styleArray);
+        $sheet->getStyle('A1:K1')->applyFromArray($styleArray);
 
         // Set Header Name
         $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Nama Siswa');
-        $sheet->setCellValue('C1', 'Waktu Ujian');
-        $sheet->setCellValue('D1', 'Nilai');
-        $sheet->setCellValue('E1', 'Keterangan');
+        $sheet->setCellValue('B1', 'Mata Uji');
+        $sheet->setCellValue('C1', 'Kabupaten');
+        $sheet->setCellValue('D1', 'Nama Siswa');
+        $sheet->setCellValue('E1', 'L/P');
+        $sheet->setCellValue('F1', 'Waktu Ujian');
+        $sheet->setCellValue('G1', 'Nilai');
+        $sheet->setCellValue('H1', 'Jumlah Benar');
+        $sheet->setCellValue('I1', 'Jumlah Salah');
+        $sheet->setCellValue('J1', 'Soal Terjawab');
+        $sheet->setCellValue('K1', 'Soal Tidak Terjawab');
 
         // Write data
         $this->set_student_with_score(enc($exam_grade_id, 1));
         $last_row_cell = 1;
         foreach ($this->student_with_score as $k => $v) {
+            $numbers_answered = ($v['correct'] + $v['incorrect']);
             $sheet->setCellValue('A' . ($k + 2), $k + 1);
-            $sheet->setCellValue('B' . ($k + 2), $v['name']);
-            $sheet->setCellValue('C' . ($k + 2), $v['date']);
-            $sheet->setCellValue('D' . ($k + 2), $v['score']);
-            $sheet->setCellValue('E' . ($k + 2), "Benar (" . $v['correct'] . ") - Salah (" . $v['incorrect'] . ")");
+            $sheet->setCellValue('B' . ($k + 2), $v['study']);
+            $sheet->setCellValue('C' . ($k + 2), $v['regency']);
+            $sheet->setCellValue('D' . ($k + 2), $v['name']);
+            $sheet->setCellValue('E' . ($k + 2), $gender = ($v['gender'] == '1') ? 'L' : 'P');
+            $sheet->setCellValue('F' . ($k + 2), $v['date']);
+            $sheet->setCellValue('G' . ($k + 2), $v['score']);
+            $sheet->setCellValue('H' . ($k + 2), $v['correct']);
+            $sheet->setCellValue('I' . ($k + 2), $v['incorrect']);
+            $sheet->setCellValue('J' . ($k + 2), $numbers_answered);
+            $sheet->setCellValue('K' . ($k + 2), $v['numbers_before_answer']);
             $last_row_cell++;
         }
 
         // Set AutoSize
-        foreach(range('A','E') as $columnID) {
+        foreach(range('A','K') as $columnID) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
 
@@ -237,7 +250,7 @@ class Exam_results extends MY_Controller
             ),
         );
 
-        $sheet->getStyle('A1:E' . $last_row_cell)->applyFromArray($styleArray);
+        $sheet->getStyle('A1:K' . $last_row_cell)->applyFromArray($styleArray);
 
         // Filename
         $filename = 'laporan-hasil-ujian';

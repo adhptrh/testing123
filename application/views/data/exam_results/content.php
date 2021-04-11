@@ -74,7 +74,9 @@
                             <tr>
                                 <th>#</th>
                                 <th style="width:10%">Aksi</th>
+                                <th>Kabupaten/Kota</th>
                                 <th>Nama</th>
+                                <th>L/P</th>
                                 <th>Waktu Ujian</th>
                                 <th>Nilai</th>
                                 <th>Keterangan</th>
@@ -85,10 +87,12 @@
                             <tr>
                                 <td><?=$k++ + 1?></td>
                                 <td> <a href="<?= base_url('data/exam_results/detail/') . $v['student_grade_exam_id'] .'/' . $data['bdetail']['exam_question_id'] .'/' . $data['bdetail']['exam_grade_id'] ?>" class="btn btn-sm btn-primary">Detail</a> </td>
+                                <td><?=$v['regency']?></td>
                                 <td><?=$v['name']?></td>
+                                <td><?= $gender = ($v['gender']=='1') ? 'L' : 'P' ?></td>
                                 <td><?=$v['date']?></td>
                                 <td><?=$v['score']?></td>
-                                <td><?= "Benar (" . $v['correct'] . ") - Salah (" . $v['incorrect'] .")";?></td>
+                                <td><?= "B (" . $v['correct'] . ") - S (" . $v['incorrect'] .")";?></td>
                             </tr>
                             <?php endforeach;?>
                         </tbody>
