@@ -112,5 +112,5 @@ function getClienInfo()
 
 function allow_resolution()
 {
-    return true;
+    // return true;
 }
