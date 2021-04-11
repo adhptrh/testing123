@@ -21,8 +21,7 @@ function enc($id, $status = 0)
         // $output = substr($data, 10, 4); // Sebelumnya 4 digit, hanya bisa menampung 9_999 id
     }
 
-    // return $output;
-    return $id;
+    return $output;
 }
 
 function substrwords($text, $maxchar)
