@@ -87,6 +87,7 @@ class Student_grade_exam_m extends MY_Model {
     ->select('g.name, g.gender')
     ->select('h.name regency')
     ->select('j.name study')
+    ->select('m.name major')
     ->select('DATE_FORMAT(f.start, "%d-%m-%Y %H:%i:%s") date')
     ->from('students a')
     ->join('z_profiles b', 'b.id = a.created_by', 'left')
@@ -97,7 +98,10 @@ class Student_grade_exam_m extends MY_Model {
     ->join('z_profiles g', 'g.id = a.profile_id', 'left')
     ->join('address_regency h', 'h.id = g.regency_id', 'left')
     ->join('exam_questions i', 'i.id = f.exam_question_id', 'left')
-    ->join('studies j', 'j.id = i.study_id', 'left');
+    ->join('studies j', 'j.id = i.study_id', 'left')
+    ->join('grade_extend_periods k', 'k.id = d.grade_period_id', 'left')
+    ->join('grades l', 'l.id = k.grade_id', 'left')
+    ->join('majors m', 'm.id = l.major_id', 'left');
 
     if(!$show_del){
       $this->db->where('a.is_del', '0');
