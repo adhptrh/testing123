@@ -2,7 +2,7 @@ const button_add = document.getElementsByClassName("add")[0];
 const create_form = document.getElementsByClassName("create")[0];
 const list = document.getElementsByClassName("list")[0]; // Frame of list
 const eq_list = document.getElementById("eq_list"); //list of exam_questions
-const token = document.getElementById("eq_list").getAttribute('data-token');
+let token = document.getElementById("eq_list").getAttribute('data-token');
 const falert = document.getElementById("falert");
 const malert = document.getElementById("malert");
 const span_jsoal = document.getElementById("jsoal");
@@ -62,11 +62,12 @@ function xdelete(data) {
                 url: '../delete/' + data.getAttribute('data-id'),
                 method: 'post',
                 data: {
-                    token: document.querySelector('#eq_list').getAttribute('data-token'),
+                    token: token,
                 },
                 dataType: 'json',
                 success: function(response) {
-                    document.querySelector('#eq_list').setAttribute('data-token', response.token);
+                    // document.querySelector('#eq_list').setAttribute('data-token', response.token);
+                    token = response.token;
                     if (response.status != 200) {
                         Swal.fire({
                             title: 'Peringatan',
@@ -239,7 +240,7 @@ function loadExamDetail(data) {
         url: '../data_for_edit/' + data,
         method: 'post',
         data: {
-            token: document.querySelector('input[name=token]').value,
+            token: token,
         },
         dataType: 'json',
         success: function(response) {
@@ -254,7 +255,8 @@ function loadExamDetail(data) {
                 stringToEditor(response.opsi_e, opsi_e);
             }
 
-            document.querySelector('input[name=token]').value = response.token;
+            // document.querySelector('input[name=token]').value = response.token;
+            token = response.token;
         }
     })
 }
@@ -349,11 +351,12 @@ function save(data, method = 'save') {
         method: 'post',
         data: {
             data: JSON.parse(JSON.stringify(data)),
-            token: document.querySelector('input[name=token]').value,
+            token: token,
         },
         dataType: 'json',
         success: function(response) {
-            document.querySelector('#eq_list').setAttribute('data-token', response.token);
+            // document.querySelector('#eq_list').setAttribute('data-token', response.token);
+            token = response.token;
             if (response.status != 200) {
                 Swal.fire({
                     title: 'Peringatan',
@@ -398,7 +401,7 @@ function getList() {
         url: '../reload/' + button_add.getAttribute('data-id'),
         method: 'get',
         data: {
-            // token: token,
+            token: token,
         },
         dataType: 'json',
         success: function(response) {
@@ -407,7 +410,7 @@ function getList() {
                 createUpdateTimeleft();
             });
             span_jsoal.innerHTML = response.data.length;
-            document.getElementById('top_content').scrollIntoView();
+            token = response.token
         }
     })
 }
@@ -547,7 +550,8 @@ function getTimeLeftTotal() {
         },
         dataType: 'json',
         success: function(response) {
-            eq_list.setAttribute('data-token', response.token)
+            // eq_list.setAttribute('data-token', response.token)
+            token = response.token;
             tDuration.innerHTML = response.data;
         }
     })

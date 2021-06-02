@@ -91,6 +91,7 @@ class Exam_question_detail extends MY_Controller
                 'exam_question_id' => $exam_question_id,
             ]),
             'base_url' => base_url(),
+            'token' => $this->security->get_csrf_hash(),
         ]);
     }
 
