@@ -153,6 +153,7 @@ class Exam_question_detail_m extends MY_Model
     public function find($id = false, $conditions = false, $show_del = false, $selected_id = 0)
     {
         $this->db->select('a.id, a.exam_question_id, a.question, a.opsi_a, a.opsi_b, a.opsi_c, a.opsi_d, a.opsi_e, a.keyword, a.is_del')
+            ->select('a.timeleft_second')
             ->select('b.name created_by, DATE_FORMAT(a.created_at, "%d-%m-%Y") created_at')
             ->select('c.name updated_by, DATE_FORMAT(a.updated_at, "%d-%m-%Y") updated_at')
             ->from($this->name . ' a')
@@ -431,6 +432,22 @@ class Exam_question_detail_m extends MY_Model
         $data = file_get_contents($path);
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
         return $base64;
+    }
+
+    public function set_timing($data = []){
+        if($data){
+            $save = $this->save([
+                'id' => $data['id'],
+                'timeleft_second' => $data['timeleft'],
+            ], true);
+
+            return $save;
+        }else{
+            return [
+                'status' => '201',
+                'message' => 'Data tidak ada',
+            ];
+        }
     }
 
 }

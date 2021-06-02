@@ -632,4 +632,39 @@ class Exam_question_detail extends MY_Controller
             ]);
         }
     }
+
+    public function update_timeleft()
+    {
+        $this->filter(3);
+
+        $post = $this->input->post('data');
+        $save = $this->data->set_timing([
+            'id' => enc($post['id'], 1),
+            'timeleft' => $post['timeleft'],
+        ]);
+        
+        $save['token'] = $this->security->get_csrf_hash();
+        echo json_encode($save);
+    }
+
+    public function get_timeleft(){
+        $this->filter(3);
+        $post = $this->input->post('data');
+        $data = $this->data->find(false, [
+            'a.exam_question_id' => enc($post['id'], 1),
+        ]);
+
+        $timeleft = 0;
+        foreach ($data as $k => $v) {
+            $timeleft += $v['timeleft_second'];
+        }
+
+        $mins = floor ($timeleft / 60);
+        $secs = $timeleft % 60;
+
+        echo json_encode([
+            'token' => $this->security->get_csrf_hash(),
+            'data' => $mins . " menit, " . $secs . " detik",
+        ]);
+    }
 }

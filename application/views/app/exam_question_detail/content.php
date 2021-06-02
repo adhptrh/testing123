@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="card">
-                <table class="table">
+                <table id="tSummary" data-id="<?=$exam_question['id']?>" class="table">
                     <thead class="thead-primary">
                         <tr>
                             <th colspan="2">Ringkasan Informasi Soal</th>
@@ -36,7 +36,7 @@
                         <tr>
                             <td>Total Durasi Ujian</td>
                             <td>
-                                00 Menit, 00 Detik
+                                <span id="tDuration">menghitung ...</span>
                                 <br>
                                 <small>
                                     <i class="fa fa-info-circle"></i> Jika ujian dilaksanakan dengan motode distrubusi waktu per butir soal

@@ -6,7 +6,8 @@ const token = document.getElementById("eq_list").getAttribute('data-token');
 const falert = document.getElementById("falert");
 const malert = document.getElementById("malert");
 const span_jsoal = document.getElementById("jsoal");
-let soal = 0,
+let id = 0,
+    soal = 0,
     opsi_a = 0,
     opsi_b = 0,
     opsi_c = 0,
@@ -20,6 +21,7 @@ let soal = 0,
 
 let button_cancel, form, item;
 
+getTimeLeftTotal();
 getList();
 
 button_add.addEventListener("click", () => {
@@ -401,14 +403,16 @@ function getList() {
         dataType: 'json',
         success: function(response) {
             base_url = response.base_url;
-            makeSoal(response.data);
+            makeSoal(response.data, () => {
+                createUpdateTimeleft();
+            });
             span_jsoal.innerHTML = response.data.length;
             document.getElementById('top_content').scrollIntoView();
         }
     })
 }
 
-function makeSoal(data) {
+function makeSoal(data, callback) {
     item = '';
     let no = 1;
     data.forEach(function(value, index) {
@@ -442,8 +446,8 @@ function makeSoal(data) {
         item += '<h6>Durasi waktu ujian (satuan detik)</h6>'
         item += '<div class="input-group">';
         item += '<div class="input-group-append">';
-        item += '<input type="text" class="form-control">';
-        item += '<button class="btn btn-secondary" type="button" id="button-addon2">Update</button>';
+        item += '<input type="text" class="form-control iTimeleft" value="' + value['timeleft_second'] + '">';
+        item += '<button data-id="' + value['id'] + '" class="btn btn-secondary bUpdateTimeLeft" type="button" id="button-addon2">Update</button>';
         item += '</div>';
         item += '</div>';
 
@@ -452,6 +456,7 @@ function makeSoal(data) {
     })
 
     eq_list.innerHTML = item;
+    callback();
 }
 
 function imageShow(data) {
@@ -492,4 +497,58 @@ function stringToEditor(string, editor) {
         data = imageShow(string);
         editor.setContents(JSON.parse(data)['ops']);
     }
+}
+
+function createUpdateTimeleft() {
+    document.querySelectorAll('.bUpdateTimeLeft').forEach(item => {
+        item.onclick = () => {
+            id = item.getAttribute('data-id');
+            second = item.previousElementSibling.value;
+
+            $.ajax({
+                url: '../update_timeleft',
+                method: 'post',
+                data: {
+                    data: {
+                        id: id,
+                        timeleft: second,
+                    },
+                    token: token,
+                },
+                dataType: 'json',
+                success: function(response) {
+                    token = response.token
+                    if (response.status != 200) {
+                        Swal.fire({
+                            title: 'Peringatan',
+                            text: "Terjadi kesalahan, silahkan hubungi Administrator",
+                            icon: 'warning',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Baiklah',
+                        })
+                    } else {
+                        getTimeLeftTotal();
+                    }
+                }
+            })
+        }
+    })
+}
+
+function getTimeLeftTotal() {
+    $.ajax({
+        url: '../get_timeleft',
+        method: 'post',
+        data: {
+            data: {
+                id: tSummary.getAttribute('data-id')
+            },
+            token: token,
+        },
+        dataType: 'json',
+        success: function(response) {
+            eq_list.setAttribute('data-token', response.token)
+            tDuration.innerHTML = response.data;
+        }
+    })
 }

@@ -1,5 +1,5 @@
-<div class="row row-xs">
-    <div class="col">
+<div class="row">
+    <div class="col-md-4 mg-b-20">
         <div class="card card-body">
             <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Token</h6>
             <div class="d-flex d-lg-block d-xl-flex align-items-end">
@@ -7,7 +7,7 @@
             </div>
         </div>
     </div><!-- col -->
-    <div class="col mg-t-10 mg-sm-t-0">
+    <div class="col-md-4 mg-b-20">
         <div class="card card-body">
             <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Siswa Terdaftar</h6>
             <div class="d-flex d-lg-block d-xl-flex align-items-end">
@@ -15,7 +15,7 @@
             </div>
         </div>
     </div><!-- col -->
-    <div class="col mg-t-10 mg-lg-t-0">
+    <div class="col-md-4 mg-b-20">
         <div class="card card-body">
             <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Ujian Terjadwal</h6>
             <div class="d-flex d-lg-block d-xl-flex align-items-end">
