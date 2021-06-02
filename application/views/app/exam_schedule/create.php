@@ -92,27 +92,46 @@
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <?php $var = 'number_of_exam';?>
-                            <label>Jumlah soal yang akan diujiankan</label>
-                            <input id="numbersToExam" autocomplete="off" name="<?=$var;?>" type="text"
-                                class="form-control <?=$has_error = (form_error($var)) ? 'is-invalid' : ''?>"
-                                value="<?=$isi = (isset($old[$var])) ? $old[$var] : 0;?>">
-                            <?=$has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : ''?>
-                            <small id="warningNumberExam" class="d-none tx-danger">Jumlah soal yang diujiankan harus
-                                lebih kecil atau sama dengan jumlah soal tersedia</small>
+                            <label>Metode Distrisbusi Waktu Ujian</label>
+                            <select name="timing" class="custom-select select2">
+                                <?php 
+                                    foreach ($timing as $k => $v) {
+                                        echo "<option value=". $v['id'] .">". $v['name'] ."</option>";
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <?php $var = 'number_of_exam';?>
+                                    <label>Jumlah soal</label>
+                                    <input id="numbersToExam" autocomplete="off" name="<?=$var;?>" type="text"
+                                        class="form-control <?=$has_error = (form_error($var)) ? 'is-invalid' : ''?>"
+                                        value="<?=$isi = (isset($old[$var])) ? $old[$var] : 0;?>">
+                                    <?=$has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : ''?>
+                                    <small id="warningNumberExam" class="d-none tx-danger">Jumlah soal yang diujiankan
+                                        harus
+                                        lebih kecil atau sama dengan jumlah soal tersedia</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <?php $var = 'number_of_all_exam';?>
+                                    <label>Soal tersedia</label>
+                                    <input id="iJSoal" disabled autocomplete="off" name="" type="text"
+                                        class="form-control <?=$has_error = (form_error($var)) ? 'is-invalid' : ''?>"
+                                        value="<?=$isi = (isset($old[$var])) ? $old[$var] : '';?>">
+                                    <?=$has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : ''?>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <?php $var = 'number_of_all_exam';?>
-                            <label>Jumlah soal tersedia</label>
-                            <input id="iJSoal" disabled autocomplete="off" name="" type="text"
-                                class="form-control <?=$has_error = (form_error($var)) ? 'is-invalid' : ''?>"
-                                value="<?=$isi = (isset($old[$var])) ? $old[$var] : '';?>">
-                            <?=$has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : ''?>
-                        </div>
-                        <div class="form-group">
-                            <label>Tampilkan soal dengan</label><br/>
-                            <button type='button' data-value="1" class='btn btn-sm btn-outline-success bSelect'>Acak</button>
-                            <button type='button' data-value="0" class='btn btn-sm btn-outline-success bSelect'>Tidak Acak</button>
+                            <label>Tampilkan soal dengan</label><br />
+                            <button type='button' data-value="1"
+                                class='btn btn-sm btn-outline-success bSelect'>Acak</button>
+                            <button type='button' data-value="0" class='btn btn-sm btn-outline-success bSelect'>Tidak
+                                Acak</button>
                             <input id="isRandom" type="text" name="is_random" class="d-none form-control" value=" ">
                         </div>
                     </div>

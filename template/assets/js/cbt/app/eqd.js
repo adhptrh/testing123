@@ -438,6 +438,15 @@ function makeSoal(data) {
 
         item += '<h6>Kunci Jawaban</h6>'
         item += '<p>' + doConvert(value['keyword']) + '</p>'
+
+        item += '<h6>Durasi waktu ujian (satuan detik)</h6>'
+        item += '<div class="input-group">';
+        item += '<div class="input-group-append">';
+        item += '<input type="text" class="form-control">';
+        item += '<button class="btn btn-secondary" type="button" id="button-addon2">Update</button>';
+        item += '</div>';
+        item += '</div>';
+
         item += '</div>';
         item += '</div>';
     })

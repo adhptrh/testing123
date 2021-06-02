@@ -28,6 +28,11 @@ class Exam_schedule_m extends MY_Model
                 'rules' => 'required',
             ],
             [
+                'field' => 'timing',
+                'label' => 'Metode Distribusi Waktu',
+                'rules' => 'required',
+            ],
+            [
                 'field' => 'start',
                 'label' => 'Jadwal Mulai',
                 'rules' => 'required',
@@ -45,6 +50,7 @@ class Exam_schedule_m extends MY_Model
         $this->db->select('a.id, a.is_random, a.is_del, DATE_FORMAT(a.start, "%H:%i") start')
             ->select('DATE_FORMAT(TIMEDIFF(a.finish, a.start), "%H Jam %i menit") durasi')
             ->select('a.number_of_exam, DATE_FORMAT(a.finish, "%H:%i") finish')
+            ->select('a.timing')
             ->select('UNIX_TIMESTAMP(NOW()) time_server_now')
             ->select('UNIX_TIMESTAMP(a.finish) time_left')
             ->select('UNIX_TIMESTAMP(a.start) time_start')
@@ -131,6 +137,29 @@ class Exam_schedule_m extends MY_Model
 
             return $data;
         }
+    }
+
+    public function get_timing_method($id = 1){
+        $data = [
+            [
+                'id' => 1,
+                'name' => 'Per Mata Ujian',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Per Butir Soal',
+            ],
+        ];
+
+        foreach ($data as $k => $v) {
+            if($v['id'] == $id){
+                $data[$k]['selected'] = 'selected';
+            }else{
+                $data[$k]['selected'] = '';
+            }
+        }
+
+        return $data;
     }
 
 }

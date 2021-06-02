@@ -375,6 +375,7 @@ class Exam_schedule extends MY_Controller
 
         $this->temp('app/exam_schedule/create', [
             'old' => $old,
+            'timing' => $this->data->get_timing_method(),
             'period' => $this->period->find(),
             'order' => $this->order->find(),
         ]);
@@ -404,6 +405,7 @@ class Exam_schedule extends MY_Controller
             $save = [
                 'exam_question_id' => enc($this->input->post('exam'), 1),
                 'order_id' => enc($this->input->post('order'), 1),
+                'timing' => $this->input->post('timing'),
                 'date' => $date,
                 'start' => $date . " " . $this->input->post('start'),
                 'finish' => $date . " " . $this->input->post('finish'),
@@ -460,6 +462,7 @@ class Exam_schedule extends MY_Controller
 
         $this->temp('app/exam_schedule/edit', [
             'data' => $data,
+            'timing' => $this->data->get_timing_method($data['timing']),
             'period' => $this->period->find(false, false, false, $period_id),
             'exam' => $this->exam->find(false, ['a.period_id' => $period_id], false, enc($data['exam_question_id'], 1)),
             'order' => $this->order->find(false, false, false, enc($data['order_id'], 1)),
@@ -493,6 +496,7 @@ class Exam_schedule extends MY_Controller
             $save = [
                 'id' => enc($this->input->post('id'), 1),
                 'exam_question_id' => enc($this->input->post('exam'), 1),
+                'timing' => $this->input->post('timing'),
                 'order_id' => enc($this->input->post('order'), 1),
                 'date' => $date,
                 'start' => $date . " " . $this->input->post('start'),

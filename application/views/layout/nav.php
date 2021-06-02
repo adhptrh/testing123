@@ -1,6 +1,6 @@
 <aside class="aside aside-fixed">
   <div class="aside-header">
-    <a href="#" class="aside-logo">C<span>BT</span></a>
+    <a href="#" class="aside-logo">Labschool Exam</a>
     <a href="" class="aside-menu-link">
       <i data-feather="menu"></i>
       <i data-feather="x"></i>

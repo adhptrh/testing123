@@ -49,13 +49,14 @@
 <body>
 
     <header class="navbar navbar-header navbar-header-fixed">
-        <a href="#" id="mainMenuOpen" class="burger-menu"><i data-feather="menu"></i></a>
+        <!-- <a href="#" id="mainMenuOpen" class="burger-menu"><i data-feather="menu"></i></a> -->
         <div class="navbar-brand">
-            <a href="<?=base_url('template/');?>index.html" class="df-logo">C<span>BT</span></a>
+            <!-- <a href="#" class="df-logo">C<span>BT</span>Labschool Pekanbaru</a> -->
+            <a href="#" class="df-logo">Labschool Exam</a>
         </div><!-- navbar-brand -->
         <div id="navbarMenu" class="navbar-menu-wrapper">
             <div class="navbar-menu-header">
-                <a href="<?=base_url('template/');?>index.html" class="df-logo">X<span>Panel</span></a>
+                <a href="#" class="df-logo">X<span>Panel</span></a>
                 <a id="mainMenuClose" href=""><i data-feather="x"></i></a>
             </div><!-- navbar-menu-header -->
             <ul class="nav navbar-menu">
@@ -74,15 +75,19 @@
 
     <div class="content content-fixed content-auth">
         <div class="container">
-            <div class="row mg-t-70 mg-l-50">
-                <div class="col-md-5 text-right">
-                    <img src="<?=base_url('upload/logo.png')?>" class="img-fluid" alt=""
-                        width="50%">
-                </div>
-                <div class="col-md-7">
-                <?=form_open(base_url('login/authorization'), ['class' => 'form-signin']);?>
-                <div class="sign-wrapper">
-                    <div class="">
+        <?=form_open(base_url('login/authorization'), ['class' => 'form-signin']);?>
+            <div class="media align-items-stretch justify-content-center ht-100p pos-relative">
+                <div class="media-body align-items-center d-none d-lg-flex">
+                    <div class="mx-wd-300">
+                        <img src="<?=base_url('upload/logo.png')?>" class="img-fluid" alt="">
+                    </div>
+                    <!-- <div class="pos-absolute b-0 l-0 tx-12 tx-center">
+                        Workspace design vector is created by <a href="https://www.freepik.com/pikisuperstar"
+                            target="_blank">pikisuperstar (freepik.com)</a>
+                    </div> -->
+                </div><!-- media-body -->
+                <div class="sign-wrapper mg-lg-l-50 mg-xl-l-60">
+                    <div class="wd-100p">
                         <h3 class="tx-color-01 mg-b-5">Log In</h3>
                         <p class="tx-color-03 tx-16 mg-b-40">Selamat datang! Silahkan login untuk masuk.</p>
 
@@ -93,41 +98,32 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Email address</label>
-                            <input name="username" type="text"
-                                class="form-control <?=$invalid = (form_error('username')) ? 'is-invalid' : ''?>"
-                                placeholder="nama@email.com" value="<?=$this->input->post('username');?>">
-                            <div class="invalid-feedback">
-                                <?=form_error('username')?>
+                                <label>Email address</label>
+                                <input name="username" type="text"
+                                    class="form-control <?=$invalid = (form_error('username')) ? 'is-invalid' : ''?>"
+                                    placeholder="nama@email.com" value="<?=$this->input->post('username');?>">
+                                <div class="invalid-feedback">
+                                    <?=form_error('username')?>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="d-flex justify-content-between mg-b-5">
-                                <label class="mg-b-0-f">Password</label>
-                                <!-- <a href="" class="tx-13">Forgot password?</a> -->
+                            <div class="form-group">
+                                <div class="d-flex justify-content-between mg-b-5">
+                                    <label class="mg-b-0-f">Password</label>
+                                    <!-- <a href="" class="tx-13">Forgot password?</a> -->
+                                </div>
+                                <input name="password" value="<?=$this->input->post('password');?>" type="password"
+                                    class="form-control <?=$invalid = (form_error('password')) ? 'is-invalid' : ''?>"
+                                    placeholder="Masukkan password">
+                                <div class="invalid-feedback">
+                                    <?=form_error('password')?>
+                                </div>
                             </div>
-                            <input name="password" value="<?=$this->input->post('password');?>" type="password"
-                                class="form-control <?=$invalid = (form_error('password')) ? 'is-invalid' : ''?>"
-                                placeholder="Masukkan password">
-                            <div class="invalid-feedback">
-                                <?=form_error('password')?>
-                            </div>
-                        </div>
-                        <button class="btn btn-brand-02 btn-block">Log In</button>
+                            <button class="btn btn-brand-02 btn-block">Log In</button>
                     </div>
-                </div>
-                <?=form_close();?>
-                </div>
-            </div>
-            <!-- <div class="media align-items-stretch justify-content-center ht-100p pos-relative">
-                <div class="media-body align-items-center d-none d-lg-flex text-right">
-                    <div class="mx-wd-600">
-                        <img src="<?=base_url('template/assets/img/login-amico.png')?>" class="img-fluid" alt=""
-                            width="40%">
-                    </div>
-                </div>
-            </div> -->
-        </div>
+                </div><!-- sign-wrapper -->
+            </div><!-- media -->
+        </div><!-- container -->
+        <?=form_close();?>
     </div>
 
     <footer class="footer">
