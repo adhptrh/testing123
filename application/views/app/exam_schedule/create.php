@@ -92,13 +92,13 @@
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>Metode Distrisbusi Waktu Ujian</label>
+                            <label>Distrisbusi Waktu Ujian</label>
                             <select name="timing" class="custom-select select2">
-                                <?php 
-                                    foreach ($timing as $k => $v) {
-                                        echo "<option value=". $v['id'] .">". $v['name'] ."</option>";
-                                    }
-                                ?>
+                                <?php
+                                foreach ($timing as $k => $v) {
+                                    echo "<option value=" . $v['id'] . ">" . $v['name'] . "</option>";
+                                }
+                            ?>
                             </select>
                         </div>
                         <div class="row">
@@ -126,13 +126,30 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Tampilkan soal dengan</label><br />
-                            <button type='button' data-value="1"
-                                class='btn btn-sm btn-outline-success bSelect'>Acak</button>
-                            <button type='button' data-value="0" class='btn btn-sm btn-outline-success bSelect'>Tidak
-                                Acak</button>
-                            <input id="isRandom" type="text" name="is_random" class="d-none form-control" value=" ">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tampilkan soal dengan</label><br />
+                                    <button type='button' data-value="1"
+                                        class='btn btn-sm btn-outline-success bSelect'>Acak</button>
+                                    <button type='button' data-value="0"
+                                        class='btn btn-sm btn-outline-success bSelect'>Urutan</button>
+                                    <input id="isRandom" type="text" name="is_random" class="d-none form-control"
+                                        value=" ">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Metode Ujian</label><br />
+                                    <button type='button' data-value="1"
+                                        class='btn btn-sm btn-success bSelect2'>Offline</button>
+                                    <button type='button' data-value="2"
+                                        class='btn btn-sm btn-outline-success bSelect2'>Online</button>
+                                    <input id="iMode" type="text" name="mode" class="d-none form-control"
+                                        value="1">
+                                </div>
+                            </div>
                         </div>
                     </div>
 

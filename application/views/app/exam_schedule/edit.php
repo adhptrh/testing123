@@ -101,7 +101,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <?php $var = 'timing';?>
-                            <label>Metode Distrisbusi Waktu Ujian</label>
+                            <label>Distrisbusi Waktu Ujian</label>
                             <select name="<?=$var;?>" class="custom-select select2">
                                 <?php 
                                     foreach ($timing as $k => $v) {
@@ -120,7 +120,8 @@
                                         class="form-control <?=$has_error = (form_error($var)) ? 'is-invalid' : ''?>"
                                         value="<?=$isi = (isset($old[$var])) ? $old[$var] : $data['number_of_exam'];?>">
                                     <?=$has_error = (form_error($var)) ? '<div class="invalid-feedback">' . form_error($var) . '</div>' : ''?>
-                                    <small id="warningNumberExam" class="d-none tx-danger">Jumlah soal yang diujiankan harus lebih kecil atau sama dengan jumlah soal tersedia</small>
+                                    <small id="warningNumberExam" class="d-none tx-danger">Jumlah soal yang diujiankan
+                                        harus lebih kecil atau sama dengan jumlah soal tersedia</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -134,21 +135,44 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Tampilkan soal dengan</label><br />
-                            <?php if ($data['is_random'] == 1): ?>
-                            <button type='button' data-value="1" class='btn btn-sm btn-success bSelect'>Acak</button>
-                            <button type='button' data-value="0" class='btn btn-sm btn-outline-success bSelect'>Tidak
-                                Acak</button>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tampilkan soal dengan</label><br />
+                                    <?php if ($data['is_random'] == 1): ?>
+                                    <button type='button' data-value="1"
+                                        class='btn btn-sm btn-success bSelect'>Acak</button>
+                                    <button type='button' data-value="0"
+                                        class='btn btn-sm btn-outline-success bSelect'>Urutan</button>
 
-                            <?php else: ?>
-                            <button type='button' data-value="1"
-                                class='btn btn-sm btn-outline-success bSelect'>Acak</button>
-                            <button type='button' data-value="0" class='btn btn-sm btn-success bSelect'>Tidak
-                                Acak</button>
-                            <?php endif;?>
-                            <input id="isRandom" type="text" name="is_random" class="form-control d-none"
-                                value="<?=$data['is_random']?>">
+                                    <?php else: ?>
+                                    <button type='button' data-value="1"
+                                        class='btn btn-sm btn-outline-success bSelect'>Acak</button>
+                                    <button type='button' data-value="0"
+                                        class='btn btn-sm btn-success bSelect'>Urutan</button>
+                                    <?php endif;?>
+                                    <input id="isRandom" type="text" name="is_random" class="form-control d-none"
+                                        value="<?=$data['is_random']?>">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Metode Ujian</label><br />
+                                    <?php if ($data['mode'] == 1): ?>
+                                    <button type='button' data-value="1"
+                                        class='btn btn-sm btn-success bSelect2'>Offline</button>
+                                    <button type='button' data-value="2"
+                                        class='btn btn-sm btn-outline-success bSelect2'>Online</button>
+                                    <?php else: ?>
+                                    <button type='button' data-value="1"
+                                        class='btn btn-sm btn-outline-success bSelect2'>Offline</button>
+                                    <button type='button' data-value="2"
+                                        class='btn btn-sm btn-success bSelect2'>Online</button>
+                                    <?php endif;?>
+                                    <input id="iMode" type="text" name="mode" class="d-none form-control" value="<?=$data['mode']?>">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

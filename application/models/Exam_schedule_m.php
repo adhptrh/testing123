@@ -50,7 +50,7 @@ class Exam_schedule_m extends MY_Model
         $this->db->select('a.id, a.is_random, a.is_del, DATE_FORMAT(a.start, "%H:%i") start')
             ->select('DATE_FORMAT(TIMEDIFF(a.finish, a.start), "%H Jam %i menit") durasi')
             ->select('a.number_of_exam, DATE_FORMAT(a.finish, "%H:%i") finish')
-            ->select('a.timing')
+            ->select('a.timing, a.mode')
             ->select('UNIX_TIMESTAMP(NOW()) time_server_now')
             ->select('UNIX_TIMESTAMP(a.finish) time_left')
             ->select('UNIX_TIMESTAMP(a.start) time_start')
@@ -88,9 +88,11 @@ class Exam_schedule_m extends MY_Model
           ) h', 'h.exam_question_id = a.exam_question_id', 'left')
             ->join('exam_question_extend_grades i', 'i.exam_question_id = a.exam_question_id', 'left')
             ->join('periods j', 'j.id = d.period_id', 'left')
-        // ->group_by('a.exam_question_id')
+            // ->group_by('a.exam_question_id')
             ->group_by('a.id')
             ->order_by('a.id', 'ASC');
+        
+        $this->db->where('j.status', '1');
 
         if (!$show_del) {
             $this->db->where('a.is_del', '0');
@@ -139,7 +141,8 @@ class Exam_schedule_m extends MY_Model
         }
     }
 
-    public function get_timing_method($id = 1){
+    public function get_timing_method($id = 1)
+    {
         $data = [
             [
                 'id' => 1,
@@ -152,9 +155,9 @@ class Exam_schedule_m extends MY_Model
         ];
 
         foreach ($data as $k => $v) {
-            if($v['id'] == $id){
+            if ($v['id'] == $id) {
                 $data[$k]['selected'] = 'selected';
-            }else{
+            } else {
                 $data[$k]['selected'] = '';
             }
         }

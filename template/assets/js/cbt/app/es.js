@@ -6,6 +6,7 @@ const bexam = document.getElementById("bexam");
 let token = 0,
     period = 0,
     is_random = isRandom.value,
+    mode = iMode.value,
     exam = '',
     numbers_of_exam = 0;
 
@@ -111,5 +112,22 @@ document.querySelectorAll('.bSelect').forEach(item => {
     item.addEventListener('click', event => {
         is_random = item.getAttribute('data-value');
         isRandom.value = is_random;
+    })
+});
+
+function setButtonOptionAllClearMode() {
+    document.querySelectorAll('.bSelect2').forEach(item => {
+        item.classList.remove('btn-success');
+        item.classList.add('btn-outline-success');
+    })
+}
+
+document.querySelectorAll('.bSelect2').forEach(item => {
+    item.addEventListener('click', event => {
+        setButtonOptionAllClearMode();
+        item.classList.add('btn-success');
+        item.classList.remove('btn-outline-success');
+
+        mode = iMode.value = item.getAttribute('data-value');
     })
 });

@@ -411,6 +411,7 @@ class Exam_schedule extends MY_Controller
                 'finish' => $date . " " . $this->input->post('finish'),
                 'number_of_exam' => $this->input->post('number_of_exam'),
                 'is_random' => $this->input->post('is_random'),
+                'mode' => $this->input->post('mode'),
             ];
 
             $save = $this->data->save($save);
@@ -503,6 +504,7 @@ class Exam_schedule extends MY_Controller
                 'finish' => $date . " " . $this->input->post('finish'),
                 'number_of_exam' => $this->input->post('number_of_exam'),
                 'is_random' => $this->input->post('is_random'),
+                'mode' => $this->input->post('mode'),
             ];
 
             $update = $this->data->save($save);
