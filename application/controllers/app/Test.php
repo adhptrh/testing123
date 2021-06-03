@@ -93,16 +93,16 @@ class Test extends MY_Controller
 
             if (
                 // Cek apakah kelas user ini terdaftar
-                in_array($grade_period_id, $grade_period_ids) 
-                
+                in_array($grade_period_id, $grade_period_ids)
+
                 // Cek apakah ujian sudah pada waktunya
-                && 
-                $data['intime'] == 1 
+                 &&
+                $data['intime'] == 1
 
                 // Cek apakah sesi user ini terdaftar
-                && 
+                 &&
                 enc($data['order_id'], 1) == $student_grade['order_id']
-                ) {
+            ) {
                 $cek_access = true;
             }
         }
@@ -126,17 +126,23 @@ class Test extends MY_Controller
                     // $token_student_exam = $is_register[0]['token'];
 
                     // if (($token_exam) && $token_student_exam == $token_exam) {
-                    if ($token_exam) {
-                        // Dapatkan daftar soal dan jawaban
-                        // arahkan ke laman ujian
-                        $this->temp_test('app/test/content', [
+                    if ($token_exam || $data['mode'] == '2') {
+                        $xdata = [
                             'student_grade_exam_id' => $is_register[0]['id'],
                             'exam_schedule_id' => $exam_schedule,
                             'exam_question_id' => $data['exam_question_id'],
                             'number_of_exam' => $data['number_of_exam'],
                             'study' => $data['study'],
                             'order' => $data['order'],
-                        ]);
+                        ];
+
+                        // Dapatkan daftar soal dan jawaban
+                        // arahkan ke laman ujian
+                        if ($data['mode'] == '2') {
+                            $this->temp_test('app/test/content_mobile', $xdata);
+                        } else {
+                            $this->temp_test('app/test/content', $xdata);
+                        }
                     } else {
                         // Go info atau logout
                         $this->temp_test('app/test/info', [
@@ -153,7 +159,7 @@ class Test extends MY_Controller
             } else { // (1) Jika belum
                 // Cek token
                 $token_server = $this->token->get(); // Token server
-                if ($token_exam == $token_server) {
+                if ($token_exam == $token_server || $data['mode'] == '2') {
                     // Daftarkan
                     $this->db->trans_begin();
                     $regis = $this->student_exam->save([
@@ -201,15 +207,22 @@ class Test extends MY_Controller
                         // Commit db
                         $this->db->trans_commit();
 
-                        // arahkan ke laman ujian
-                        $this->temp_test('app/test/content', [
+                        $xdata = [
                             'exam_schedule_id' => $exam_schedule,
                             'student_grade_exam_id' => $regis['id'],
                             'exam_question_id' => $data['exam_question_id'],
                             'number_of_exam' => $data['number_of_exam'],
                             'study' => $data['study'],
                             'order' => $data['order'],
-                        ]);
+                        ];
+
+                        if ($data['mode'] == '2') {
+                            // arahkan ke laman online-mode
+                            $this->temp_test('app/test/content_mobile', $xdata);
+                        } else {
+                            // arahkan ke laman ujian
+                            $this->temp_test('app/test/content', $xdata);
+                        }
                     } else {
                         $this->db->trans_rollback();
                         $this->temp_test('app/test/info', [
@@ -442,13 +455,22 @@ class Test extends MY_Controller
         $data = $this->exam_schedule->find(enc($exam_schedule_id, 1));
         $student_grade = $this->student_grade->find(enc($this->student_grade_id, 1));
 
-        if(enc($data['order_id'], 1) == $student_grade['order_id']){
-            $this->temp_test('app/test/confirm', [
-                'exam_schedule_id' => $exam_schedule_id,
-                'data' => $data,
-                'student' => $student_grade,
-            ]);
-        }else{
+        if (enc($data['order_id'], 1) == $student_grade['order_id']) {
+            // Cek mode
+            if ($data['mode'] == '2') { // Online
+                $this->temp_test('app/test/confirm_mobile', [
+                    'exam_schedule_id' => $exam_schedule_id,
+                    'data' => $data,
+                    'student' => $student_grade,
+                ]);
+            } else { // Offline
+                $this->temp_test('app/test/confirm', [
+                    'exam_schedule_id' => $exam_schedule_id,
+                    'data' => $data,
+                    'student' => $student_grade,
+                ]);
+            }
+        } else {
             // Go info atau logout
             $this->temp_test('app/test/info', [
                 'info' => 'Maaf, Anda tidak memiliki akses untuk mengikut ujian ini',
@@ -488,7 +510,8 @@ class Test extends MY_Controller
         echo json_encode($data);
     }
 
-    private function UniqueRandomNumbersWithinRange($min, $max, $quantity) {
+    private function UniqueRandomNumbersWithinRange($min, $max, $quantity)
+    {
         $numbers = range($min, $max);
         shuffle($numbers);
         return array_slice($numbers, 0, $quantity);
@@ -529,7 +552,7 @@ class Test extends MY_Controller
                 ]);
 
                 // Jika jumlah soal == jumlah soal yang akan ditampilkan
-                if(count($exam_questions_raw) == $info['number_of_exam']){
+                if (count($exam_questions_raw) == $info['number_of_exam']) {
                     // $exam_question_items = array_rand($exam_questions_raw, $info['number_of_exam']);
                     $max = ($info['number_of_exam'] - 1);
                     $index = $this->UniqueRandomNumbersWithinRange(0, $max, $info['number_of_exam']);
@@ -545,7 +568,7 @@ class Test extends MY_Controller
                         ]);
                     }
 
-                }else{ // Jika tidak
+                } else { // Jika tidak
                     $exam_question_items = array_rand($exam_questions_raw, $info['number_of_exam']);
 
                     foreach ($exam_question_items as $k => $v) {
@@ -562,7 +585,7 @@ class Test extends MY_Controller
                 $exam_questions_raw = $this->exam_question_detail->find_for_student_id_only(false, [
                     'a.exam_question_id' => enc($this->input->post('exam_question_id'), 1),
                 ], false, 0, $info['number_of_exam']);
-                
+
                 foreach ($exam_questions_raw as $k => $v) {
                     // for save to db
                     array_push($exam_questions_to_be_save, [

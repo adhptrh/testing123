@@ -90,15 +90,13 @@ class Exam_schedule_m extends MY_Model
             ->join('periods j', 'j.id = d.period_id', 'left')
             // ->group_by('a.exam_question_id')
             ->group_by('a.id')
-            ->order_by('a.id', 'ASC');
+            ->order_by('a.id', 'DESC');
         
         $this->db->where('j.status', '1');
 
         if (!$show_del) {
             $this->db->where('a.is_del', '0');
         }
-
-        $this->db->order_by('a.id', 'desc');
 
         // Jika cari berdasarkan id
         if ($id) {
