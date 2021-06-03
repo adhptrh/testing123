@@ -7,11 +7,11 @@
                     <?=$pesan = ($this->session->flashdata('message')) ? $this->session->flashdata('message') : ''?>
                 </div>
 
-                <div class="media-list">
+                <div class="media-list mg-sm-t-60">
                     <?php foreach ($data['exam_schedule'] as $k => $v): ?>
                     <?php if ( (date("d-m-Y", $v['time_server_now']) == $v['date'] && date("H:i:s", ($v['time_server_now'] + 900)) >= $v['start'] && date("H:i:s", $v['time_server_now']) <= $v['finish']) || !$data['student'] ): ?>
                     <div class="d-sm-flex mg-b-20">
-                        <div class="media-body mg-sm-t-40 mg-t-0">
+                        <div class="media-body mg-sm-t-20 mg-t-0">
                             <a href="" class="d-block tx-uppercase tx-11 tx-medium mg-b-5"><?=$v['period_name'];?></a>
                             <h6><a href="" class="link-01"><?=$v['study'];?></a></h6>
                             <p class="tx-13 mg-b-0">Soal ini tersedia dalam rentang pukul <?=$v['start'];?> s.d

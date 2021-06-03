@@ -139,7 +139,8 @@ class Test extends MY_Controller
                         // Dapatkan daftar soal dan jawaban
                         // arahkan ke laman ujian
                         if ($data['mode'] == '2') {
-                            $this->temp_test('app/test/content_mobile', $xdata);
+                            // $this->temp_test('app/test/content_mobile', $xdata);
+                            redirect(base_url('/app/test/execute_mobile/' . $exam_schedule));
                         } else {
                             $this->temp_test('app/test/content', $xdata);
                         }
@@ -218,11 +219,169 @@ class Test extends MY_Controller
 
                         if ($data['mode'] == '2') {
                             // arahkan ke laman online-mode
-                            $this->temp_test('app/test/content_mobile', $xdata);
+                            // $this->temp_test('app/test/content_mobile', $xdata);
+                            redirect(base_url('/app/test/execute_mobile/' . $exam_schedule));
                         } else {
                             // arahkan ke laman ujian
                             $this->temp_test('app/test/content', $xdata);
                         }
+                    } else {
+                        $this->db->trans_rollback();
+                        $this->temp_test('app/test/info', [
+                            'info' => 'Maaf, Gagal mengeksekusi perintah, silahkan hubungi penyelenggara ujian',
+                        ]);
+                    }
+                } else {
+                    // Go info atau logout
+                    $this->temp_test('app/test/info', [
+                        'info' => 'Maaf, Anda tidak memiliki akses untuk mengikut ujian ini',
+                    ]);
+                }
+            }
+        } else { // (0) Jika Tidak
+            // Go info atau logout
+            $this->temp_test('app/test/info', [
+                'info' => 'Maaf, Anda tidak memiliki akses untuk mengikut ujian ini',
+            ]);
+        }
+    }
+
+    public function execute_mobile($exam_schedule = 0)
+    {
+        $this->filter(1);
+
+        $this->header = [
+            'school_name' => $this->school_profile->find()[0]['name'],
+            'title' => 'Ujian',
+            'js_file' => 'app/execute_mobile',
+            'sub_title' => 'Pelaksanaan Ujian',
+            'nav_active' => 'app/test/execute',
+            'breadcrumb' => [
+                [
+                    'label' => 'XPanel',
+                    'icon' => 'fa-home',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Aplikasi',
+                    'icon' => 'fa-gear',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Ujian',
+                    'icon' => '',
+                    'href' => '#',
+                ],
+            ],
+        ];
+
+        if ($exam_schedule === 0) {
+            $this->temp_test('app/test/info', [
+                'info' => 'Maaf, Anda belum menentukan Mata Uji, silahkan cek menu jadwal ujian',
+            ]);
+        }
+
+        // get student_grade_id
+        $this->set_student_grade_id();
+        $sgi = enc($this->student_grade_id, 1); // Student_grade_id
+        $esi = enc($exam_schedule, 1); // exam_schedule_id
+
+        // Cek apakah student_grade_id memiliki hak atas ujian ini bedasarkan sesi, kelas, token dan waktu
+        $student_grade = $this->student_grade->find($sgi);
+
+        # Data jadwal ujian
+        $data = $this->exam_schedule->find($esi);
+
+        $cek_access = false;
+
+        # Cek kelas dan waktu
+        if (count($data)) {
+            $grade_period_id = enc($student_grade['grade_period_id'], 1);
+            $grade_period_ids = explode("-", $data['grade_period_id']);
+
+            if (
+                // Cek apakah kelas user ini terdaftar
+                in_array($grade_period_id, $grade_period_ids)
+
+                // Cek apakah ujian sudah pada waktunya
+                 &&
+                $data['intime'] == 1
+
+                // Cek apakah sesi user ini terdaftar
+                 &&
+                enc($data['order_id'], 1) == $student_grade['order_id']
+            ) {
+                $cek_access = true;
+            }
+        }
+
+        // token dari session
+        $token_exam = $this->session->userdata('token_exam');
+
+        if ($cek_access) { // (0) Jika Ya
+            // is_register ?
+            $is_register = $this->student_exam->find(false, [
+                'a.student_grade_id' => $sgi,
+                'a.exam_schedule_id' => $esi,
+            ]);
+
+            if (count($is_register)) { // (1) Jika sudah
+                // Cek apakah student_grade_id sudah menyelesaikan ujian ini
+                if ($is_register[0]['finish_time'] == null) { // (2) Jika belum
+                    
+                    if ($data['mode'] == '2') {
+                        $xdata = [
+                            'student_grade_exam_id' => $is_register[0]['id'],
+                            'exam_schedule_id' => $exam_schedule,
+                            'exam_question_id' => $data['exam_question_id'],
+                            'number_of_exam' => $data['number_of_exam'],
+                            'study' => $data['study'],
+                            'order' => $data['order'],
+                        ];
+
+                        // Dapatkan daftar soal dan jawaban
+                        // arahkan ke laman ujian
+                        $this->temp_test('app/test/content_mobile', $xdata);
+                    } else {
+                        // Go info atau logout
+                        $this->temp_test('app/test/info', [
+                            'info' => 'Maaf, Anda tidak memiliki akses untuk mengikut ujian ini',
+                        ]);
+                    }
+
+                } else { // (2) Jika sudah
+                    // Go info atau logout
+                    $this->temp_test('app/test/info', [
+                        'info' => 'Maaf, Anda telah menyelesaikan ujian ini pada ' . $is_register[0]['finish_time'],
+                    ]);
+                }
+            } else { // (1) Jika belum
+                // Cek token
+                $token_server = $this->token->get(); // Token server
+                if ($data['mode'] == '2') {
+                    // Daftarkan
+                    $this->db->trans_begin();
+                    $regis = $this->student_exam->save([
+                        'student_grade_id' => $sgi,
+                        'exam_schedule_id' => $esi,
+                        'numbers_before_answer' => $data['number_of_exam'],
+                    ]);
+
+                    if ($regis['status'] == '200') {
+
+                        // Commit db
+                        $this->db->trans_commit();
+
+                        $xdata = [
+                            'exam_schedule_id' => $exam_schedule,
+                            'student_grade_exam_id' => $regis['id'],
+                            'exam_question_id' => $data['exam_question_id'],
+                            'number_of_exam' => $data['number_of_exam'],
+                            'study' => $data['study'],
+                            'order' => $data['order'],
+                        ];
+
+                        $this->temp_test('app/test/content_mobile', $xdata);
                     } else {
                         $this->db->trans_rollback();
                         $this->temp_test('app/test/info', [

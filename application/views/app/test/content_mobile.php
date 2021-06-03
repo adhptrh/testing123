@@ -7,5 +7,5 @@
     </div>
 </div>
 <div id="examQuestionDetails" class="">
-    <?php $this->load->view("app/test/create"); ?>
+    <?php $this->load->view("app/test/create_mobile"); ?>
 </div>
