@@ -17,11 +17,11 @@ class Exam_schedule_m extends MY_Model
                 'label' => 'Soal',
                 'rules' => 'required',
             ],
-            [
-                'field' => 'order_id',
-                'label' => 'Sesi',
-                'rules' => 'required',
-            ],
+            // [
+            //     'field' => 'order_id',
+            //     'label' => 'Sesi',
+            //     'rules' => 'required',
+            // ],
             [
                 'field' => 'date',
                 'label' => 'Tanggal',

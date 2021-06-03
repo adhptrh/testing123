@@ -91,7 +91,7 @@ class Exam_schedule extends MY_Controller
                 'student' => true,
             ];
 
-            $this->temp_test('app/exam_schedule/content', [
+            $this->temp_test('app/exam_schedule/content_mobile_ready', [
                 'data' => $data,
             ]);
 

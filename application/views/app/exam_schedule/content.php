@@ -96,7 +96,7 @@
                                 <td><?=$v['date'] . "<br><small><span class='badge badge-warning'>" . str_replace(' ', '-', $v['order']) ;?></span></small>
                                 </td>
                                 <td>Ujian : <?=$v['number_of_exam'] . "<br> Tersedia : " . $v['stock_of_exams']?></td>
-                                <td><?=$v['start'] . ' - ' . $v['finish']?></td>
+                                <td><?=$v['start'] . ' - ' . $v['finish'] . "<br/><small>Metode : " . $timing = ($v['timing'] == 1) ? 'Durasi Per Mata Uji' : 'Durasi Per Butir Soal' . "</small>"?></td>
                                 <td><?=$v['created_by'] . '<br><small>' . $v['created_at'] . '</small>'?></td>
                             </tr>
                             <?php endif;?>

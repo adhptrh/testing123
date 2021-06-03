@@ -3,7 +3,7 @@
     <header class="navbar navbar-header navbar-header-fixed">
         <a href="#" id="mainMenuOpen" class="burger-menu"><i data-feather="menu"></i></a>
         <div class="navbar-brand">
-            <a href="#" class="df-logo">CBT <?= $header['school_name']; ?><span></span></a>
+            <a href="#" class="df-logo"><?= $header['school_name']; ?></a>
         </div>
         
         <div class="navbar-right">
@@ -18,5 +18,5 @@
         </div><!-- navbar-right -->
     </header><!-- navbar -->
 
-    <div class="content content-fixed">
-        <div class="container">
+    <!-- <div class="content content-fixed">
+        <div class="container"> -->

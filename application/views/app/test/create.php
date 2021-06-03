@@ -44,7 +44,7 @@
                 <div class="d-none" id="loadIndicator">
                     <div class="spinner-border spinner-border-sm"></div> Memuat butir soal ...
                 </div>
-                
+
                 <div class="card d-none">
                     <div id="converter"></div>
                 </div>
@@ -103,15 +103,15 @@
             </div>
             <div id="tListOfNumber" class="card-body text-center">
                 <?php
-for ($i = 0; $i < $number_of_exam; $i++) {
-    // $no = $i + 1;
-    if ($i == ($number_of_exam - 1)) {
-        echo '<button data-is-last-exam-item="1" data-answer="0" data-exam-item="0" data-exam-question-detail="0" type="button" class="bExamItems btn btn-sm btn-outline-secondary mg-r-5 mg-b-5 w-15">' . $no = ($i < 9) ? '0' . ($i + 1) : ($i + 1) . '</button>';
-    } else {
-        echo '<button data-is-last-exam-item="0" data-answer="0" data-exam-item="0" data-exam-question-detail="0" type="button" class="bExamItems btn btn-sm btn-outline-secondary mg-r-5 mg-b-5 w-15">' . $no = ($i < 9) ? '0' . ($i + 1) : ($i + 1) . '</button>';
-    }
-}
-?>
+                    for ($i = 0; $i < $number_of_exam; $i++) {
+                        // $no = $i + 1;
+                        if ($i == ($number_of_exam - 1)) {
+                            echo '<button data-is-last-exam-item="1" data-answer="0" data-exam-item="0" data-exam-question-detail="0" type="button" class="bExamItems btn btn-sm btn-outline-secondary mg-r-5 mg-b-5 w-15">' . $no = ($i < 9) ? '0' . ($i + 1) : ($i + 1) . '</button>';
+                        } else {
+                            echo '<button data-is-last-exam-item="0" data-answer="0" data-exam-item="0" data-exam-question-detail="0" type="button" class="bExamItems btn btn-sm btn-outline-secondary mg-r-5 mg-b-5 w-15">' . $no = ($i < 9) ? '0' . ($i + 1) : ($i + 1) . '</button>';
+                        }
+                    }
+                ?>
             </div>
             <div id="fBFinish" class="card-footer d-none">
                 <button id="bFinish" class="btn btn-sm btn-success btn-block" type="" name="">Selesai</button>

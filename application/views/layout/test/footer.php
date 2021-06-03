@@ -1,5 +1,7 @@
-</div><!-- container -->
-    </div><!-- content -->
+<!-- container -->
+<!-- </div> -->
+    <!-- content -->
+    <!-- </div> -->
 
     <footer id="footer" class="footer fixed-bottom">
         <div>
