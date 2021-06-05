@@ -78,6 +78,7 @@ class Exam_question_m extends MY_Model
             ) g', 'g.exam_question_id = a.id', 'left')
             ->group_by('a.id')
             ->order_by('a.id', 'ASC');
+        $this->db->where('d.status', '1');
 
         if (!$show_del) {
             $this->db->where('a.is_del', '0');

@@ -31,7 +31,7 @@
                         </tr>
                         <tr>
                             <td>Jumlah Soal</td>
-                            <td><?=$exam_question['jsoal']?></td>
+                            <td id="jsoal"><?=$exam_question['jsoal']?></td>
                         </tr>
                         <tr>
                             <td>Total Durasi Ujian</td>

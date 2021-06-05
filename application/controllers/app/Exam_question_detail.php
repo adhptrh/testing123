@@ -85,11 +85,13 @@ class Exam_question_detail extends MY_Controller
     {
         $this->filter(2);
         $exam_question_id = enc($id, 1);
+        $data = $this->data->find(false, [
+            'exam_question_id' => $exam_question_id,
+        ]);
 
         echo json_encode([
-            'data' => $this->data->find(false, [
-                'exam_question_id' => $exam_question_id,
-            ]),
+            'data' => $data,
+            'length' => count($data),
             'base_url' => base_url(),
             'token' => $this->security->get_csrf_hash(),
         ]);
