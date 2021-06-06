@@ -1,11 +1,27 @@
+<div data-value="<?=$exam_schedule_id;?>" id="examSchedule"></div>
+<div data-value="<?=$exam_question_id;?>" id="examQuestion"></div>
+<div data-value="<?=$student_grade_exam_id;?>" id="studentGradeExam"></div>
+<div data-value="<?=$this->config->item('image_url');?>" id="baseURL"></div>
+<?=form_open('#') . form_close();?>
 <div class="row">
-    <div class="col">
-        <div class="card">
-        <div class="card-header mg-sm-t-60">
-            Waktu Anda : <strong>145</strong> detik
-            <button class="btn btn-xs btn-primary float-right"><i class="fa fa-forward"></i> Next</button>
+    <div class="col-md-12 mg-sm-t-60">
+        <div id="fNotifCountDownExamShow" class="align-items-center alert alert-warning d-none">
+            <i data-feather="alert-circle" class="mg-r-10"></i> <span id="tNotifCountDownExamShow">sedang
+                memuat...</span>
         </div>
-        <div class="card-body">
+
+        <div id="fNotifCountDownExamThinking" class="align-items-center alert alert-warning d-none">
+            <i data-feather="alert-circle" class="mg-r-10"></i> <span>Waktu Anda : <strong id="tTimeleft">sedang memuat
+                    ...</strong></span>
+        </div>
+    </div>
+    <div id="fExamDetail" class="col-md-12 d-none">
+        <div class="card">
+            <!-- <div class="card-header mg-sm-t-60">
+                <button id="bNext" class="btn btn-xs btn-primary float-right"><i class="fa fa-forward"></i>
+                    Next</button>
+            </div> -->
+            <div class="card-body">
                 <div class="d-none" id="loadIndicator">
                     <div class="spinner-border spinner-border-sm"></div> Memuat butir soal ...
                 </div>
@@ -14,7 +30,7 @@
                     <div id="converter"></div>
                 </div>
 
-                <div id="fExamDetail" class="">
+                <div class="">
                     <p id="tExamDetail">Exam Text</p>
 
                     <div class="custom-control custom-radio mg-b-20">

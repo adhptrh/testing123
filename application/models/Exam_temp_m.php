@@ -29,7 +29,7 @@ class Exam_temp_m extends MY_Model
         if ($is_student) {
             $this->db->select('a.id, a.is_del, a.exam_question_detail_id, a.answer, a.is_correct');
         } else {
-            $this->db->select('a.id, a.is_del, a.exam_question_detail_id, a.answer');
+            $this->db->select('a.id, a.is_del, a.exam_question_detail_id, a.answer, a.is_lock');
         }
 
         $this->db->from($this->name . ' a')
@@ -77,6 +77,20 @@ class Exam_temp_m extends MY_Model
 
             return $data;
         }
+    }
+
+    /**
+     * Lock Question
+     * Mengunci soal pada ujian-online
+     */
+    public function lock_question($id){
+        $save = $this->save(
+            [
+                'id' => $id,
+                'is_lock' => '1',
+            ],
+            true
+        );
     }
 
 }

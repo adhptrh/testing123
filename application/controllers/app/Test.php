@@ -316,7 +316,7 @@ class Test extends MY_Controller
         }
 
         // token dari session
-        $token_exam = $this->session->userdata('token_exam');
+        // $token_exam = $this->session->userdata('token_exam');
 
         if ($cek_access) { // (0) Jika Ya
             // is_register ?
@@ -775,6 +775,126 @@ class Test extends MY_Controller
                 'time_left' => $info['time_left'],
                 'time_server_now' => $info['time_server_now'],
                 'exam_questions' => $exams,
+            ];
+
+        }
+
+        echo json_encode($data);
+    }
+
+    /**
+     * Get Qustion
+     * Mendapatkan soal dan opsi
+     * Oleh siswa pada mode ujian online
+     */
+
+    public function get_question()
+    {
+        $this->filter(2);
+
+        $student_grade_exam_id = enc($this->input->post('student_grade_exam_id'), 1);
+        $info = $this->exam_schedule->find(enc($this->input->post('exam_schedule_id'), 1));
+
+        // cek apakah student_grade_exam_id sudah ada di exam
+        $exams = $this->exam_temp->find(false, [
+            'a.student_grade_exam_id' => $student_grade_exam_id,
+        ]);
+
+        if (count($exams)) { // jika ada (sudah ujian)
+            foreach ($exams as $k => $v) {
+                if($v['is_lock'] == 0){
+                    $exam_question = $this->exam_question_detail->find_for_student_details(enc($v['exam_question_detail_id'], 1));
+                    $this->exam_temp->lock_question(enc($v['id'], 1));
+                    $exam_question = [
+                        'is_allow' => 1,
+                        'timeleft' => $exam_question['timeleft_second'],
+                        'question' => $exam_question['question'],
+                        'opsi_a' => $exam_question['opsi_a'],
+                        'opsi_b' => $exam_question['opsi_b'],
+                        'opsi_c' => $exam_question['opsi_c'],
+                        'opsi_d' => $exam_question['opsi_d'],
+                        'opsi_e' => $exam_question['opsi_e'],
+                        'query' => $this->db->last_query(),
+                    ];
+                    break;
+                }
+            }
+            $data = [
+                'token' => $this->security->get_csrf_hash(),
+                'exam_question' => $exam_question,
+            ];
+
+        } else { // jika tidak ada (belum ujian)
+
+            $exam_questions_to_be_save = [];
+
+            if ($info['is_random'] == 1) {
+                // Soal random
+                $exam_questions_raw = $this->exam_question_detail->find_for_student_id_only(false, [
+                    'a.exam_question_id' => enc($this->input->post('exam_question_id'), 1),
+                ]);
+
+                // Jika jumlah soal == jumlah soal yang akan ditampilkan
+                if (count($exam_questions_raw) == $info['number_of_exam']) {
+                    // $exam_question_items = array_rand($exam_questions_raw, $info['number_of_exam']);
+                    $max = ($info['number_of_exam'] - 1);
+                    $index = $this->UniqueRandomNumbersWithinRange(0, $max, $info['number_of_exam']);
+                    foreach ($index as $k => $v) {
+                        $exam_question_items[] = $exam_questions_raw[$v];
+                    }
+
+                    foreach ($exam_question_items as $k => $v) {
+                        // for save to db
+                        array_push($exam_questions_to_be_save, [
+                            'student_grade_exam_id' => $student_grade_exam_id,
+                            'exam_question_detail_id' => enc($v['id'], 1),
+                        ]);
+                    }
+
+                } else { // Jika tidak
+                    $exam_question_items = array_rand($exam_questions_raw, $info['number_of_exam']);
+
+                    foreach ($exam_question_items as $k => $v) {
+                        // for save to db
+                        array_push($exam_questions_to_be_save, [
+                            'student_grade_exam_id' => $student_grade_exam_id,
+                            'exam_question_detail_id' => enc($exam_questions_raw[$v]['id'], 1),
+                        ]);
+                    }
+                }
+
+            } else {
+                // Soal tidak radom
+                $exam_questions_raw = $this->exam_question_detail->find_for_student_id_only(false, [
+                    'a.exam_question_id' => enc($this->input->post('exam_question_id'), 1),
+                ], false, 0, $info['number_of_exam']);
+
+                foreach ($exam_questions_raw as $k => $v) {
+                    // for save to db
+                    array_push($exam_questions_to_be_save, [
+                        'student_grade_exam_id' => $student_grade_exam_id,
+                        'exam_question_detail_id' => enc($v['id'], 1),
+                    ]);
+                }
+            }
+
+            $this->db->trans_begin();
+
+            $save_to_exam = $this->exam->save_batch($exam_questions_to_be_save);
+            $save_to_exam_temp = $this->exam_temp->save_batch($exam_questions_to_be_save);
+
+            $exams = $this->exam_temp->find(false, [
+                'a.student_grade_exam_id' => $student_grade_exam_id,
+            ]);
+
+            if ($this->db->trans_status() === false) {
+                $this->db->trans_rollback();
+            } else {
+                $this->db->trans_commit();
+            }
+
+            $data = [
+                'token' => $this->security->get_csrf_hash(),
             ];
 
         }
