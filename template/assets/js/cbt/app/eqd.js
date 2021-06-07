@@ -47,7 +47,6 @@ function setButtonOption() {
 }
 
 function xdelete(data) {
-    console.log('current token : ' + token);
     Swal.fire({
         title: 'Peringatan',
         text: "Apakah Anda yakin akan menghapus data ini? ",
@@ -69,7 +68,6 @@ function xdelete(data) {
                 success: function(response) {
                     // document.querySelector('#eq_list').setAttribute('data-token', response.token);
                     token = response.token;
-                    console.log('token change : ' + token);
                     if (response.status != 200) {
                         Swal.fire({
                             title: 'Peringatan',
@@ -238,7 +236,6 @@ function isJson(item) {
 
 
 function loadExamDetail(data) {
-    console.log('current token : ' + token);
     $.ajax({
         url: '../data_for_edit/' + data,
         method: 'post',
@@ -260,7 +257,6 @@ function loadExamDetail(data) {
 
             // document.querySelector('input[name=token]').value = response.token;
             token = response.token;
-            console.log('token change : ' + token);
         }
     })
 }
@@ -350,7 +346,6 @@ function SetFormSubmitCek() {
 }
 
 function save(data, method = 'save') {
-    console.log('current token : ' + token);
     $.ajax({
         url: '../' + method,
         method: 'post',
@@ -362,7 +357,6 @@ function save(data, method = 'save') {
         success: function(response) {
             // document.querySelector('#eq_list').setAttribute('data-token', response.token);
             token = response.token;
-            console.log('token change : ' + token);
             if (response.status != 200) {
                 Swal.fire({
                     title: 'Peringatan',
@@ -403,7 +397,6 @@ function load_add_form(e) {
 }
 
 function getList() {
-    console.log('current token : ' + token);
     $.ajax({
         url: '../reload/' + button_add.getAttribute('data-id'),
         method: 'get',
@@ -417,8 +410,6 @@ function getList() {
                 createUpdateTimeleft();
             });
             token = response.token
-            console.log('token change : ' + token);
-            console.log('ping me getlist');
             span_jsoal.innerHTML = response.length;
         }
     })
@@ -516,7 +507,6 @@ function createUpdateTimeleft() {
         item.onclick = () => {
             id = item.getAttribute('data-id');
             second = item.previousElementSibling.value;
-            console.log('current token : ' + token);
             $.ajax({
                 url: '../update_timeleft',
                 method: 'post',
@@ -530,7 +520,6 @@ function createUpdateTimeleft() {
                 dataType: 'json',
                 success: function(response) {
                     token = response.token
-                    console.log('token change : ' + token);
                     if (response.status != 200) {
                         Swal.fire({
                             title: 'Peringatan',
@@ -549,7 +538,6 @@ function createUpdateTimeleft() {
 }
 
 function getTimeLeftTotal() {
-    console.log('current token : ' + token);
     $.ajax({
         url: '../get_timeleft',
         method: 'post',
@@ -563,7 +551,6 @@ function getTimeLeftTotal() {
         success: function(response) {
             // eq_list.setAttribute('data-token', response.token)
             token = response.token;
-            console.log('token change : ' + token);
             tDuration.innerHTML = response.data;
         }
     })
