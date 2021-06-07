@@ -78,4 +78,11 @@
             </div>
         </div>
     </div>
+    <div id="notifFinishTime" class="col-md-12 d-none">
+        <div class="card">
+            <div class="card-body">
+               <p id="tFinishTime"></p>
+            </div>
+        </div>
+    </div>
 </div>

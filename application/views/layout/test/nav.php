@@ -13,7 +13,7 @@
             <!-- <a href="#" class="btn btn-buy"><i data-feather="shopping-bag"></i> <span>Versi 1.0</span></a> -->
         <h6 class="tx-white mg-b-0 "><?php /*echo $profile->name*/ ?></h6>
             <nav class="nav">
-                <a href="<?= base_url('login') ?>" class="nav-link"><i data-feather="power"></i></a>
+                <a href="<?= base_url('login') ?>" class="nav-link btn btn-info"><i data-feather="power"></i></a>
             </nav>
         </div><!-- navbar-right -->
     </header><!-- navbar -->

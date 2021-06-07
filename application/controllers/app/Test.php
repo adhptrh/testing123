@@ -829,13 +829,17 @@ class Test extends MY_Controller
             'a.student_grade_exam_id' => $student_grade_exam_id,
         ]);
 
-        if (count($exams)) { // jika ada (sudah ujian)
+        $total = count($exams);
+        $total_lock = 0;
+        if ($total) { // jika ada (sudah ujian)
+            
             foreach ($exams as $k => $v) {
                 if ($v['is_lock'] == 0) {
                     $exam_question = $this->exam_question_detail->find_for_student_details(enc($v['exam_question_detail_id'], 1));
                     $this->exam_temp->lock_question(enc($v['id'], 1));
                     $exam_question = [
                         'is_allow' => 1,
+                        'is_intime' => $info['intime'],
                         'id' => $exam_question['id'],
                         'exam_id' => $v['id'],
                         'timeleft' => $exam_question['timeleft_second'],
@@ -848,11 +852,33 @@ class Test extends MY_Controller
                         'query' => $this->db->last_query(),
                     ];
                     break;
+                }else{
+                    $total_lock++;
                 }
             }
+
+            if($total_lock == $total){
+                $is_done = 1;
+                $exam_question = [
+                    'is_allow' => 1,
+                    'id' => 0,
+                    'exam_id' => 0,
+                    'timeleft' => 60,
+                    'question' => 0,
+                    'opsi_a' => 0,
+                    'opsi_b' => 0,
+                    'opsi_c' => 0,
+                    'opsi_d' => 0,
+                    'opsi_e' => 0,
+                ];
+            }else{
+                $is_done = 0;
+            }
+
             $data = [
                 'token' => $this->security->get_csrf_hash(),
                 'exam_question' => $exam_question,
+                'is_done' => $is_done,
             ];
 
         } else { // jika tidak ada (belum ujian)
@@ -924,8 +950,53 @@ class Test extends MY_Controller
                 $this->db->trans_commit();
             }
 
+            $total = count($exams);
+            $total_lock = 0;
+            foreach ($exams as $k => $v) {
+                if ($v['is_lock'] == 0) {
+                    $exam_question = $this->exam_question_detail->find_for_student_details(enc($v['exam_question_detail_id'], 1));
+                    $this->exam_temp->lock_question(enc($v['id'], 1));
+                    $exam_question = [
+                        'is_allow' => 1,
+                        'is_intime' => $info['intime'],
+                        'id' => $exam_question['id'],
+                        'exam_id' => $v['id'],
+                        'timeleft' => $exam_question['timeleft_second'],
+                        'question' => $exam_question['question'],
+                        'opsi_a' => $exam_question['opsi_a'],
+                        'opsi_b' => $exam_question['opsi_b'],
+                        'opsi_c' => $exam_question['opsi_c'],
+                        'opsi_d' => $exam_question['opsi_d'],
+                        'opsi_e' => $exam_question['opsi_e'],
+                    ];
+                    break;
+                }else{
+                    $total_lock++;
+                }
+            }
+
+            if($total_lock == $total){
+                $is_done = 1;
+                $exam_question = [
+                    'is_allow' => 1,
+                    'id' => 0,
+                    'exam_id' => 0,
+                    'timeleft' => 60,
+                    'question' => 0,
+                    'opsi_a' => 0,
+                    'opsi_b' => 0,
+                    'opsi_c' => 0,
+                    'opsi_d' => 0,
+                    'opsi_e' => 0,
+                ];
+            }else{
+                $is_done = 0;
+            }
+
             $data = [
                 'token' => $this->security->get_csrf_hash(),
+                'exam_question' => $exam_question,
+                'is_done' => $is_done,
             ];
 
         }
