@@ -11,13 +11,15 @@
                 memuat...</span>
         </div>
 
-        <div id="fNotifNext" class="align-items-center alert alert-warning d-none">
-            <i data-feather="alert-circle" class="mg-r-10"></i> Waktu mengerjakan soal telah berakhir.
+        <div id="fNotifNext" class="align-items-center text-center alert alert-warning d-none">
+            <i data-feather="alert-circle" class="mg-r-10 mg-b-3"></i> 
+            <br>
+            Waktu mengerjakan soal nomor <span id="tNo">0</span> telah berakhir
         </div>
         <button style="margin-top:-15px" id="bNext" class="btn btn-sm btn-success btn-block d-none"> Soal Berikutnya</button>
 
         <div id="fNotifCountDownExamThinking" class="align-items-center alert alert-warning d-none">
-            <i data-feather="alert-circle" class="mg-r-10"></i> <span>Waktu Anda : <strong id="tTimeleft">sedang memuat
+            <i data-feather="alert-circle" class="mg-r-10"></i> <span>Soal No. <span class="tx-bold" id="tNoExamHeader">0</span>, Waktu Anda : <strong id="tTimeleft">sedang memuat
                     ...</strong></span>
         </div>
 

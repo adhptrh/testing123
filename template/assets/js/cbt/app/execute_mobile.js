@@ -3,6 +3,7 @@ let token = document.querySelector('input[name=token]').value,
     pause = false,
     x = null,
     answer = 0,
+    no = 0,
     exam = 0, // exam_temp_id
     examQuestionDetail = 0;
 
@@ -26,6 +27,8 @@ function getQuestion() {
             if (response.is_available == '1') {
                 exam = response.exam_question.exam_id;
                 examQuestionDetail = response.exam_question.id;
+                no = response.exam_question.no;
+                tNoExamHeader.innerHTML = response.exam_question.no;
                 limit = response.exam_question.timeleft;
                 tExamDetail.innerHTML = doConvert(response.exam_question.question);
                 tOpsiA.innerHTML = doConvert(response.exam_question.opsi_a);
@@ -195,6 +198,7 @@ function showButtonNext(status = 0) {
         bNext.classList.add('d-none');
         bIzin.classList.add('d-none');
     } else {
+        tNo.innerHTML = no;
         fExamDetail.classList.add('d-none');
         fNotifNext.classList.remove('d-none');
         bNext.classList.remove('d-none');

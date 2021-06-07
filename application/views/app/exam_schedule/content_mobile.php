@@ -8,14 +8,17 @@
                 </div>
 
                 <div class="media-list mg-sm-t-60">
-                    <?php foreach ($data['exam_schedule'] as $k => $v): ?>
-                    <?php $count = 0; if ( (date("d-m-Y", $v['time_server_now']) == $v['date'] && date("H:i:s", ($v['time_server_now'] + 900)) >= $v['start'] && date("H:i:s", $v['time_server_now']) <= $v['finish']) || !$data['student'] ): ?>
+                    <?php 
+                    $count = 0;
+                    foreach ($data['exam_schedule'] as $k => $v){
+                        if ( (date("d-m-Y", $v['time_server_now']) == $v['date'] && date("H:i:s", ($v['time_server_now'] + 900)) >= $v['start'] && date("H:i:s", $v['time_server_now']) <= $v['finish']) || !$data['student'] ){
+                    ?>
                     <div class="d-sm-flex mg-b-20">
                         <div class="media-body mg-sm-t-20 mg-t-0">
                             <a href="" class="d-block tx-uppercase tx-11 tx-medium mg-b-5"><?=$v['period_name'];?></a>
                             <h6><a href="" class="link-01"><?=$v['study'];?></a></h6>
                             <p class="tx-13 mg-b-0">Soal ini tersedia dalam rentang pukul <?=$v['start'];?> s.d
-                                <?=$v['finish']; $count = $count+1 ?>, dengan <?=$v['stock_of_exams'];?> butir soal </p>
+                                <?=$v['finish']; $count = $count+1 ?>, dengan <?=$v['number_of_exam'];?> butir soal </p>
                             <a class="mg-t-10 btn btn-xs btn-success"
                                 href="<?php echo base_url('app/test/confirm/' . $v['id']); ?>"><i
                                     class="fas fa-edit"></i> Ikuti
@@ -23,10 +26,13 @@
                         </div><!-- media-body -->
                     </div>
                     <hr class="mg-t-20">
-                    <?php endif;?>
-                    <?php endforeach;?>
+                    <?php 
+                                $count++;
+                            }
+                        }
+                    ?>
 
-                    <?php if ($count == 0): echo $count; ?>
+                    <?php if ($count == 0): ?>
                     <div class="d-sm-flex mg-b-20">
                         <div class="media-body mg-sm-t-20 mg-t-0">
                             Jadwal tidak tersedia, silahkan hubungi tim pengawas atau administrator.

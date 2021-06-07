@@ -834,13 +834,16 @@ class Test extends MY_Controller
 
         $total = count($exams);
         $total_lock = 0;
+        $no = 0;
         if ($total) { // jika ada (sudah ujian)
 
             foreach ($exams as $k => $v) {
+                $no++;
                 if ($v['is_lock'] == 0) {
                     $exam_question = $this->exam_question_detail->find_for_student_details(enc($v['exam_question_detail_id'], 1));
                     $this->exam_temp->lock_question(enc($v['id'], 1));
                     $exam_question = [
+                        'no' => $no,
                         'id' => $exam_question['id'],
                         'exam_id' => $v['id'],
                         'timeleft' => $exam_question['timeleft_second'],
@@ -994,6 +997,7 @@ class Test extends MY_Controller
             }else{
                 $exam_question = [
                     'id' => $exam_question['id'],
+                    'no' => 1,
                     'exam_id' => $v['id'],
                     'timeleft' => $exam_question['timeleft_second'],
                     'question' => $exam_question['question'],
