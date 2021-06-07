@@ -88,6 +88,7 @@ class Exam_temp_m extends MY_Model
             [
                 'id' => $id,
                 'is_lock' => '1',
+                'hit_at' => date('Y-m-d H:i:s'),
             ],
             true
         );

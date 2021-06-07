@@ -328,7 +328,7 @@ class Test extends MY_Controller
             if (count($is_register)) { // (1) Jika sudah
                 // Cek apakah student_grade_id sudah menyelesaikan ujian ini
                 if ($is_register[0]['finish_time'] == null) { // (2) Jika belum
-                    
+
                     if ($data['mode'] == '2') {
                         $xdata = [
                             'student_grade_exam_id' => $is_register[0]['id'],
@@ -783,6 +783,35 @@ class Test extends MY_Controller
     }
 
     /**
+     * Set Pause
+     * Memproses izin siswa - ujian-online
+     */
+
+    public function pause()
+    {
+        $this->filter(2);
+        
+        $id = enc($this->input->post('student_grade_exam_id'), 1);
+        $data = $this->student_exam->find($id);
+
+        //  cek nilai count
+        if($data['pause_count'] == 0){
+            $this->student_exam->set_pause($id);
+            $data = [
+                'is_allow' => 1,
+                'token' => $this->security->get_csrf_hash(),
+            ];
+        }else{
+            $data = [
+                'is_allow' => 0,
+                'token' => $this->security->get_csrf_hash(),
+            ];   
+        }
+
+        echo json_encode($data);
+    }
+
+    /**
      * Get Qustion
      * Mendapatkan soal dan opsi
      * Oleh siswa pada mode ujian online
@@ -802,11 +831,13 @@ class Test extends MY_Controller
 
         if (count($exams)) { // jika ada (sudah ujian)
             foreach ($exams as $k => $v) {
-                if($v['is_lock'] == 0){
+                if ($v['is_lock'] == 0) {
                     $exam_question = $this->exam_question_detail->find_for_student_details(enc($v['exam_question_detail_id'], 1));
                     $this->exam_temp->lock_question(enc($v['id'], 1));
                     $exam_question = [
                         'is_allow' => 1,
+                        'id' => $exam_question['id'],
+                        'exam_id' => $v['id'],
                         'timeleft' => $exam_question['timeleft_second'],
                         'question' => $exam_question['question'],
                         'opsi_a' => $exam_question['opsi_a'],
@@ -1045,4 +1076,106 @@ class Test extends MY_Controller
         $data['token'] = $this->security->get_csrf_hash();
         echo json_encode($data);
     }
+
+    // public function save_mobile()
+    // {
+    //     $this->filter(3);
+
+    //     $answer = $this->input->post('answer');
+    //     $exam = enc($this->input->post('exam'), 1);
+    //     $exam_question_detail_id = enc($this->input->post('exam_question_detail_id'), 1);
+    //     $student_grade_exam_id = enc($this->input->post('student_grade_exam_id'), 1);
+
+    //     // cek apakah jawaban correct
+    //     $is_correct = $this->exam_question_detail->find(false, [
+    //         'a.id' => $exam_question_detail_id,
+    //         'a.keyword' => $answer,
+    //     ]);
+
+    //     if (count($is_correct)) {
+    //         $correct = 1;
+    //     } else {
+    //         $correct = 0;
+    //     }
+
+    //     $this->db->trans_begin();
+
+    //     // Update score ======================================================================
+    //     // table : student_grade_extend_exams
+    //     $sgXe = $this->student_exam->find($student_grade_exam_id);
+
+    //     // table : exams
+    //     $e = $this->exam_temp->find($exam, false, false, 0, true);
+
+    //     $update_correct = $sgXe['correct']; // Jumlah Benar
+    //     $update_incorrect = $sgXe['incorrect']; // Jumlah Salah
+    //     $last_answer = $e['answer']; // apakah soal sudah dijawab sebelumnya? (respon true/false)
+    //     $last_is_correct = $e['is_correct']; // jawaban sebelumnya benar / salah ? (respon true/false)
+    //     $numbers_before_answer = $sgXe['numbers_before_answer']; // Jumlah soal yang sudah dijawab
+
+    //     if ($correct) { // Jika jawaban sekarang benar
+    //         if ($last_answer == null) {
+    //             $numbers_before_answer--;
+    //             $update_correct++;
+    //         } else {
+    //             if ($last_is_correct == 0) {
+    //                 $update_incorrect--;
+    //                 $update_correct++;
+    //             }
+    //         }
+    //     } else { // Jika jawaban sekarang salah
+    //         if ($last_answer == null) {
+    //             $numbers_before_answer--;
+    //             $update_incorrect++;
+    //         } else {
+    //             if ($last_is_correct == 1) {
+    //                 $update_incorrect++;
+    //                 $update_correct--;
+    //             }
+    //         }
+    //     }
+
+    //     $update = $this->student_exam->save([
+    //         'id' => $student_grade_exam_id,
+    //         'correct' => $update_correct,
+    //         'incorrect' => $update_incorrect,
+    //         'numbers_before_answer' => $numbers_before_answer,
+    //         'score' => ($update_correct / ($update_correct + $update_incorrect + $numbers_before_answer)) * 10,
+    //     ], true);
+
+    //     if ($update['status'] == '200') {
+
+    //         // table : exams
+    //         $update = $this->exam->save([
+    //             'id' => $exam,
+    //             'answer' => $answer,
+    //             'is_correct' => $correct,
+    //         ], true);
+
+    //         if ($update['status'] == '200') {
+
+    //             // table : exams_temp
+    //             $update = $this->exam_temp->save([
+    //                 'id' => $exam,
+    //                 'answer' => $answer,
+    //                 'is_correct' => $correct,
+    //             ], true);
+
+    //             if ($update['status'] == '200') {
+    //                 $this->db->trans_commit();
+    //             } else {
+    //                 $this->db->trans_rollback();
+    //             }
+    //         } else {
+    //             $this->db->trans_rollback();
+    //         }
+    //     } else {
+    //         $this->db->trans_rollback();
+    //     }
+
+    //     $data['message'] = $update['message'];
+    //     $data['status'] = $update['status'];
+    //     $data['token'] = $this->security->get_csrf_hash();
+    //     echo json_encode($data);
+    // }
 }
