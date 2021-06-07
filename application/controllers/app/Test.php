@@ -790,22 +790,22 @@ class Test extends MY_Controller
     public function pause()
     {
         $this->filter(2);
-        
+
         $id = enc($this->input->post('student_grade_exam_id'), 1);
         $data = $this->student_exam->find($id);
 
         //  cek nilai count
-        if($data['pause_count'] == 0){
+        if ($data['pause_count'] == 0) {
             $this->student_exam->set_pause($id);
             $data = [
                 'is_allow' => 1,
                 'token' => $this->security->get_csrf_hash(),
             ];
-        }else{
+        } else {
             $data = [
                 'is_allow' => 0,
                 'token' => $this->security->get_csrf_hash(),
-            ];   
+            ];
         }
 
         echo json_encode($data);
@@ -821,6 +821,9 @@ class Test extends MY_Controller
     {
         $this->filter(2);
 
+        $is_available = 1;
+        $message = 'No Message';
+
         $student_grade_exam_id = enc($this->input->post('student_grade_exam_id'), 1);
         $info = $this->exam_schedule->find(enc($this->input->post('exam_schedule_id'), 1));
 
@@ -832,14 +835,12 @@ class Test extends MY_Controller
         $total = count($exams);
         $total_lock = 0;
         if ($total) { // jika ada (sudah ujian)
-            
+
             foreach ($exams as $k => $v) {
                 if ($v['is_lock'] == 0) {
                     $exam_question = $this->exam_question_detail->find_for_student_details(enc($v['exam_question_detail_id'], 1));
                     $this->exam_temp->lock_question(enc($v['id'], 1));
                     $exam_question = [
-                        'is_allow' => 1,
-                        'is_intime' => $info['intime'],
                         'id' => $exam_question['id'],
                         'exam_id' => $v['id'],
                         'timeleft' => $exam_question['timeleft_second'],
@@ -849,18 +850,20 @@ class Test extends MY_Controller
                         'opsi_c' => $exam_question['opsi_c'],
                         'opsi_d' => $exam_question['opsi_d'],
                         'opsi_e' => $exam_question['opsi_e'],
-                        'query' => $this->db->last_query(),
                     ];
                     break;
-                }else{
+                } else {
                     $total_lock++;
                 }
             }
 
-            if($total_lock == $total){
-                $is_done = 1;
+            if ($total_lock == $total) {
+                $this->set_it_close(enc($student_grade_exam_id));
+
+                $is_available = 0;
+                $message = "Terimakasih, Anda telah menyelesaikan ujian, silahkan logout.";
+
                 $exam_question = [
-                    'is_allow' => 1,
                     'id' => 0,
                     'exam_id' => 0,
                     'timeleft' => 60,
@@ -871,14 +874,32 @@ class Test extends MY_Controller
                     'opsi_d' => 0,
                     'opsi_e' => 0,
                 ];
-            }else{
-                $is_done = 0;
+            } else {
+                if ($info['intime'] == '0') {
+                    $this->set_it_close(enc($student_grade_exam_id));
+
+                    $is_available = 0;
+                    $message = "Maaf, Anda tidak dapat melanjutkan ujian, karena waktu ujian sudah berakhir, silahkah logout";
+
+                    $exam_question = [
+                        'id' => 0,
+                        'exam_id' => 0,
+                        'timeleft' => 60,
+                        'question' => 0,
+                        'opsi_a' => 0,
+                        'opsi_b' => 0,
+                        'opsi_c' => 0,
+                        'opsi_d' => 0,
+                        'opsi_e' => 0,
+                    ];
+                }
             }
 
             $data = [
                 'token' => $this->security->get_csrf_hash(),
                 'exam_question' => $exam_question,
-                'is_done' => $is_done,
+                'is_available' => $is_available,
+                'message' => $message,
             ];
 
         } else { // jika tidak ada (belum ujian)
@@ -950,35 +971,16 @@ class Test extends MY_Controller
                 $this->db->trans_commit();
             }
 
-            $total = count($exams);
-            $total_lock = 0;
-            foreach ($exams as $k => $v) {
-                if ($v['is_lock'] == 0) {
-                    $exam_question = $this->exam_question_detail->find_for_student_details(enc($v['exam_question_detail_id'], 1));
-                    $this->exam_temp->lock_question(enc($v['id'], 1));
-                    $exam_question = [
-                        'is_allow' => 1,
-                        'is_intime' => $info['intime'],
-                        'id' => $exam_question['id'],
-                        'exam_id' => $v['id'],
-                        'timeleft' => $exam_question['timeleft_second'],
-                        'question' => $exam_question['question'],
-                        'opsi_a' => $exam_question['opsi_a'],
-                        'opsi_b' => $exam_question['opsi_b'],
-                        'opsi_c' => $exam_question['opsi_c'],
-                        'opsi_d' => $exam_question['opsi_d'],
-                        'opsi_e' => $exam_question['opsi_e'],
-                    ];
-                    break;
-                }else{
-                    $total_lock++;
-                }
-            }
+            $exam_question = $this->exam_question_detail->find_for_student_details(enc($exams[0]['exam_question_detail_id'], 1));
+            $this->exam_temp->lock_question(enc($exams[0]['id'], 1));
 
-            if($total_lock == $total){
-                $is_done = 1;
+            if ($info['intime'] == '0') {
+                $this->set_it_close(enc($student_grade_exam_id));
+
+                $is_available = 0;
+                $message = "Maaf, Anda tidak dapat melanjutkan ujian, karena waktu ujian sudah berakhir, silahkah logout";
+
                 $exam_question = [
-                    'is_allow' => 1,
                     'id' => 0,
                     'exam_id' => 0,
                     'timeleft' => 60,
@@ -990,15 +992,25 @@ class Test extends MY_Controller
                     'opsi_e' => 0,
                 ];
             }else{
-                $is_done = 0;
+                $exam_question = [
+                    'id' => $exam_question['id'],
+                    'exam_id' => $v['id'],
+                    'timeleft' => $exam_question['timeleft_second'],
+                    'question' => $exam_question['question'],
+                    'opsi_a' => $exam_question['opsi_a'],
+                    'opsi_b' => $exam_question['opsi_b'],
+                    'opsi_c' => $exam_question['opsi_c'],
+                    'opsi_d' => $exam_question['opsi_d'],
+                    'opsi_e' => $exam_question['opsi_e'],
+                ];
             }
 
             $data = [
                 'token' => $this->security->get_csrf_hash(),
                 'exam_question' => $exam_question,
-                'is_done' => $is_done,
+                'is_available' => $is_available,
+                'message' => $message,
             ];
-
         }
 
         echo json_encode($data);

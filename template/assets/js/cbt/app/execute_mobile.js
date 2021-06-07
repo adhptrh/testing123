@@ -23,32 +23,50 @@ function getQuestion() {
         success: function(response) {
             token = response.token;
 
-            if (response.is_done == '1') {
+            if (response.is_available == '1') {
+                exam = response.exam_question.exam_id;
+                examQuestionDetail = response.exam_question.id;
+                limit = response.exam_question.timeleft;
+                tExamDetail.innerHTML = doConvert(response.exam_question.question);
+                tOpsiA.innerHTML = doConvert(response.exam_question.opsi_a);
+                tOpsiB.innerHTML = doConvert(response.exam_question.opsi_b);
+                tOpsiC.innerHTML = doConvert(response.exam_question.opsi_c);
+                tOpsiD.innerHTML = doConvert(response.exam_question.opsi_d);
+                tOpsiE.innerHTML = doConvert(response.exam_question.opsi_e);
+                showTimeLeft();
+            } else {
                 showButtonNext(1);
                 notifFinishTime.classList.remove('d-none')
-                tFinishTime.innerHTML = "Terimakasih Anda telah menyelesaikan ujian, silahkan logout.";
+                tFinishTime.innerHTML = response.message;
                 fNotifCountDownExamThinking.classList.add('d-none');
                 fExamDetail.classList.add('d-none');
-            } else {
-                if (response.exam_question.is_intime == '1') {
-                    exam = response.exam_question.exam_id;
-                    examQuestionDetail = response.exam_question.id;
-                    limit = response.exam_question.timeleft;
-                    tExamDetail.innerHTML = doConvert(response.exam_question.question);
-                    tOpsiA.innerHTML = doConvert(response.exam_question.opsi_a);
-                    tOpsiB.innerHTML = doConvert(response.exam_question.opsi_b);
-                    tOpsiC.innerHTML = doConvert(response.exam_question.opsi_c);
-                    tOpsiD.innerHTML = doConvert(response.exam_question.opsi_d);
-                    tOpsiE.innerHTML = doConvert(response.exam_question.opsi_e);
-                    showTimeLeft();
-                } else {
-                    showButtonNext(1);
-                    notifFinishTime.classList.remove('d-none')
-                    tFinishTime.innerHTML = "Maaf, Anda tidak dapat melanjutkan ujian, karena waktu ujian sudah berakhir, silahkah logout";
-                    fNotifCountDownExamThinking.classList.add('d-none');
-                    fExamDetail.classList.add('d-none');
-                }
             }
+            // if (response.is_done == '1') {
+            //     showButtonNext(1);
+            //     notifFinishTime.classList.remove('d-none')
+            //     tFinishTime.innerHTML = "Terimakasih Anda telah menyelesaikan ujian, silahkan logout.";
+            //     fNotifCountDownExamThinking.classList.add('d-none');
+            //     fExamDetail.classList.add('d-none');
+            // } else {
+            //     if (response.exam_question.is_intime == '1') {
+            //         exam = response.exam_question.exam_id;
+            //         examQuestionDetail = response.exam_question.id;
+            //         limit = response.exam_question.timeleft;
+            //         tExamDetail.innerHTML = doConvert(response.exam_question.question);
+            //         tOpsiA.innerHTML = doConvert(response.exam_question.opsi_a);
+            //         tOpsiB.innerHTML = doConvert(response.exam_question.opsi_b);
+            //         tOpsiC.innerHTML = doConvert(response.exam_question.opsi_c);
+            //         tOpsiD.innerHTML = doConvert(response.exam_question.opsi_d);
+            //         tOpsiE.innerHTML = doConvert(response.exam_question.opsi_e);
+            //         showTimeLeft();
+            //     } else {
+            //         showButtonNext(1);
+            //         notifFinishTime.classList.remove('d-none')
+            //         tFinishTime.innerHTML = "Maaf, Anda tidak dapat melanjutkan ujian, karena waktu ujian sudah berakhir, silahkah logout";
+            //         fNotifCountDownExamThinking.classList.add('d-none');
+            //         fExamDetail.classList.add('d-none');
+            //     }
+            // }
         },
         fail: function() {
             console.log('fail load detail exam');
