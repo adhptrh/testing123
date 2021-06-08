@@ -23,15 +23,16 @@ function enc($id, $status = 0)
     // return $output;
 
     // --------------------------------
-    $rand = substr(md5(microtime()),rand(0,26),5);
+    // $rand = substr(md5(microtime()),rand(0,26),5);
 
-    if ($status == '0') {
-        $output = urlencode(base64_encode($rand . $id));
-    } else if ($status == '1') {
-        $output = substr(base64_decode($id), 5, 7);
-    }
+    // if ($status == '0') {
+    //     $output = urlencode(base64_encode(time() . $id));
+    // } else if ($status == '1') {
+    //     $output = substr(base64_decode($id), 10, 7);
+    // }
 
-    return $output;
+    // return $output;
+    return $id;
 
 }
 
