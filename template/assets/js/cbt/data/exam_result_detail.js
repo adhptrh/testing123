@@ -20,7 +20,7 @@ function loadDetailQuestion() {
 
     axios.get(dHref)
         .then(function(response) {
-            console.log(response);
+            // console.log(response);
             iDetail.innerHTML = response.data.question;
             iOpsi_A.innerHTML = response.data.opsi_a;
             iOpsi_B.innerHTML = response.data.opsi_b;

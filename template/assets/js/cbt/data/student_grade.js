@@ -291,7 +291,7 @@ function generate_row() {
                 setID(item2.getAttribute('data-student-grade-id'));
                 setOrder(item2.getAttribute('data-order-id'));
                 saveOrder();
-                console.log(ID);
+                // console.log(ID);
                 bOrders.forEach((item2) => {
                     item2.classList.remove('btn-success');
                     item2.classList.add('btn-outline-success');

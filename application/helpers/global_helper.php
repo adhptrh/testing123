@@ -14,13 +14,23 @@ function enc($id, $status = 0)
     $xstring = time() . $id;
 
     if ($status == '0') {
-        $output = base64_encode(openssl_encrypt($xstring, $encrypt_method, $key, 0, $iv));
+        $output = urlencode(base64_encode(openssl_encrypt($xstring, $encrypt_method, $key, 0, $iv)));
     } else if ($status == '1') {
         $data = openssl_decrypt(base64_decode($id), $encrypt_method, $key, 0, $iv);
         $output = substr($data, 10, 7);
     }
 
     return $output;
+
+    // --------------------------------
+    // if ($status == '0') {
+    //     $output = urlencode(base64_encode(time() . $id));
+    // } else if ($status == '1') {
+    //     $output = substr(base64_decode($id), 10, 7);
+    // }
+
+    // return $output;
+
 }
 
 function substrwords($text, $maxchar)
