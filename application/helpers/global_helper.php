@@ -3,33 +3,35 @@
 
 function enc($id, $status = 0)
 {
-    $secret_key = '017321';
-    $secret_iv = 'bangsaku';
+    // $secret_key = '017321';
+    // $secret_iv = 'bangsaku';
 
-    $output = false;
-    $encrypt_method = "AES-256-CBC";
-    $key = hash('sha256', $secret_key);
-    $iv = substr(hash('sha256', $secret_iv), 0, 16);
+    // $output = false;
+    // $encrypt_method = "AES-256-CBC";
+    // $key = hash('sha256', $secret_key);
+    // $iv = substr(hash('sha256', $secret_iv), 0, 16);
 
-    $xstring = time() . $id;
+    // $xstring = time() . $id;
 
-    if ($status == '0') {
-        $output = urlencode(base64_encode(openssl_encrypt($xstring, $encrypt_method, $key, 0, $iv)));
-    } else if ($status == '1') {
-        $data = openssl_decrypt(base64_decode($id), $encrypt_method, $key, 0, $iv);
-        $output = substr($data, 10, 7);
-    }
-
-    return $output;
-
-    // --------------------------------
     // if ($status == '0') {
-    //     $output = urlencode(base64_encode(time() . $id));
+    //     $output = urlencode(base64_encode(openssl_encrypt($xstring, $encrypt_method, $key, 0, $iv)));
     // } else if ($status == '1') {
-    //     $output = substr(base64_decode($id), 10, 7);
+    //     $data = openssl_decrypt(base64_decode($id), $encrypt_method, $key, 0, $iv);
+    //     $output = substr($data, 10, 7);
     // }
 
     // return $output;
+
+    // --------------------------------
+    $rand = substr(md5(microtime()),rand(0,26),5);
+
+    if ($status == '0') {
+        $output = urlencode(base64_encode($rand . $id));
+    } else if ($status == '1') {
+        $output = substr(base64_decode($id), 5, 7);
+    }
+
+    return $output;
 
 }
 
