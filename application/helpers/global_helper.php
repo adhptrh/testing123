@@ -32,6 +32,61 @@ function enc($id, $status = 0)
     // }
 
     // return $output;
+
+    // Design
+    $salt = [
+        [
+            'index' => 0,
+            'enc' => 'r9',
+        ],
+        [
+            'index' => 1,
+            'enc' => 'e8',
+        ],
+        [
+            'index' => 2,
+            'enc' => 'n7',
+        ],
+        [
+            'index' => 3,
+            'enc' => 'o6',
+        ],
+        [
+            'index' => 4,
+            'enc' => 'p5',
+        ],
+        [
+            'index' => 5,
+            'enc' => 'a4',
+        ],
+        [
+            'index' => 6,
+            'enc' => 's3',
+        ],
+        [
+            'index' => 7,
+            'enc' => 'l2',
+        ],
+        [
+            'index' => 8,
+            'enc' => 'a1',
+        ],
+        [
+            'index' => 9,
+            'enc' => 'ho',
+        ],
+    ];
+
+    // if ($status == '0') {
+    //     $data = str_split($id, 1);
+    //     $output = "";
+    //     foreach ($data as $k => $v) {
+    //         $output .= $salt[$v];
+    //     }
+    // } else if ($status == '1') {
+    //     $output = substr(base64_decode($id), 10, 7);
+    // }
+
     return $id;
 
 }

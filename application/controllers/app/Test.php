@@ -834,27 +834,77 @@ class Test extends MY_Controller
 
         $total = count($exams);
         $total_lock = 0;
-        $no = 0;
+        $no = 1;
         if ($total) { // jika ada (sudah ujian)
 
+            // Penomoran soal
             foreach ($exams as $k => $v) {
-                $no++;
+                $exams[$k]['no'] = $no++;
+            }
+
+            // Cek, kunci atau akses
+            foreach ($exams as $k => $v) {
+                $hit = $v['hit_at'];
+                $now = $v['time_server_now'];
+
                 if ($v['is_lock'] == 0) {
-                    $exam_question = $this->exam_question_detail->find_for_student_details(enc($v['exam_question_detail_id'], 1));
-                    $this->exam_temp->lock_question(enc($v['id'], 1));
-                    $exam_question = [
-                        'no' => $no,
-                        'id' => $exam_question['id'],
-                        'exam_id' => $v['id'],
-                        'timeleft' => $exam_question['timeleft_second'],
-                        'question' => $exam_question['question'],
-                        'opsi_a' => $exam_question['opsi_a'],
-                        'opsi_b' => $exam_question['opsi_b'],
-                        'opsi_c' => $exam_question['opsi_c'],
-                        'opsi_d' => $exam_question['opsi_d'],
-                        'opsi_e' => $exam_question['opsi_e'],
-                    ];
-                    break;
+                    if (is_null($v['hit_at'])) {
+                        $exam_question = $this->exam_question_detail->find_for_student_details(enc($v['exam_question_detail_id'], 1));
+                        $exam_question = [
+                            'no' => $v['no'],
+                            'id' => $exam_question['id'],
+                            'exam_id' => $v['id'],
+                            'timeleft' => $exam_question['timeleft_second'],
+                            'question' => $exam_question['question'],
+                            'opsi_a' => $exam_question['opsi_a'],
+                            'opsi_b' => $exam_question['opsi_b'],
+                            'opsi_c' => $exam_question['opsi_c'],
+                            'opsi_d' => $exam_question['opsi_d'],
+                            'opsi_e' => $exam_question['opsi_e'],
+                        ];
+                        $this->exam_temp->hit_question(enc($v['id'], 1));
+
+                        break;
+                    } else {
+                        // Menghitung jarak waktu hit dan saat ini
+                        $hit = new DateTime($hit);
+                        $now = new DateTime($now);
+
+                        $difference = $hit->diff($now);
+                        $days = $difference->format("%d") * 86400;
+                        $hours = $difference->format("%h") * 3600;
+                        $minutes = $difference->format("%i") * 60;
+                        $seconds = $difference->format("%s") * 1;
+
+                        $howlong = $days + $hours + $minutes + $seconds;
+
+                        // Sisa waktu mengerjakan
+                        $timeleft = $v['timeleft_second'] - $howlong;
+                        
+                        if ($timeleft > 0) {
+                            $exam_question = $this->exam_question_detail->find_for_student_details(enc($v['exam_question_detail_id'], 1));
+                            $exam_question = [
+                                'no' => $v['no'],
+                                'id' => $exam_question['id'],
+                                'exam_id' => $v['id'],
+                                'timeleft' => $timeleft,
+                                'question' => $exam_question['question'],
+                                'opsi_a' => $exam_question['opsi_a'],
+                                'opsi_b' => $exam_question['opsi_b'],
+                                'opsi_c' => $exam_question['opsi_c'],
+                                'opsi_d' => $exam_question['opsi_d'],
+                                'opsi_e' => $exam_question['opsi_e'],
+                            ];
+                            break;
+                        } else {
+                            $this->exam_temp->lock_question(enc($v['id'], 1));
+
+                            // Jika posisi ini adalah last-loop
+                            if($total == ($k+1)){
+                                $total_lock++;
+                            }
+                        }
+                    }
                 } else {
                     $total_lock++;
                 }
@@ -975,7 +1025,7 @@ class Test extends MY_Controller
             }
 
             $exam_question = $this->exam_question_detail->find_for_student_details(enc($exams[0]['exam_question_detail_id'], 1));
-            $this->exam_temp->lock_question(enc($exams[0]['id'], 1));
+            // $this->exam_temp->lock_question(enc($exams[0]['id'], 1));
 
             if ($info['intime'] == '0') {
                 $this->set_it_close(enc($student_grade_exam_id));
@@ -994,11 +1044,11 @@ class Test extends MY_Controller
                     'opsi_d' => 0,
                     'opsi_e' => 0,
                 ];
-            }else{
+            } else {
                 $exam_question = [
                     'id' => $exam_question['id'],
                     'no' => 1,
-                    'exam_id' => $v['id'],
+                    'exam_id' => $exams[0]['id'],
                     'timeleft' => $exam_question['timeleft_second'],
                     'question' => $exam_question['question'],
                     'opsi_a' => $exam_question['opsi_a'],
@@ -1007,6 +1057,7 @@ class Test extends MY_Controller
                     'opsi_d' => $exam_question['opsi_d'],
                     'opsi_e' => $exam_question['opsi_e'],
                 ];
+                $this->exam_temp->hit_question(enc($exams[0]['id'], 1));
             }
 
             $data = [

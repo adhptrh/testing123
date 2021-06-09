@@ -29,7 +29,8 @@ class Exam_temp_m extends MY_Model
         if ($is_student) {
             $this->db->select('a.id, a.is_del, a.exam_question_detail_id, a.answer, a.is_correct');
         } else {
-            $this->db->select('a.id, a.is_del, a.exam_question_detail_id, a.answer, a.is_lock, d.timeleft_second, a.hit_at, a.updated_at');
+            $this->db->select('a.id, a.is_del, a.exam_question_detail_id, a.answer, a.is_lock, d.timeleft_second, a.hit_at, a.updated_at')
+            ->select('now() time_server_now');
         }
 
         $this->db->from($this->name . ' a')
@@ -90,6 +91,21 @@ class Exam_temp_m extends MY_Model
             [
                 'id' => $id,
                 'is_lock' => '1',
+                'hit_at' => date('Y-m-d H:i:s'),
+            ],
+            true
+        );
+    }
+
+    /**
+     * Hit Question
+     * timestamp ketika soal pertama kali di hit pada ujian-online
+     */
+    public function hit_question($id)
+    {
+        $save = $this->save(
+            [
+                'id' => $id,
                 'hit_at' => date('Y-m-d H:i:s'),
             ],
             true
