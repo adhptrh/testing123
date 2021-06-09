@@ -23,7 +23,7 @@ class Dashboard extends MY_Controller
      * Mendapatkan profile dari session
      *
      */
-    
+
     public function index()
     {
         $this->filter(2);

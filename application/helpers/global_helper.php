@@ -35,59 +35,36 @@ function enc($id, $status = 0)
 
     // Design
     $salt = [
-        [
-            'index' => 0,
-            'enc' => 'r9',
-        ],
-        [
-            'index' => 1,
-            'enc' => 'e8',
-        ],
-        [
-            'index' => 2,
-            'enc' => 'n7',
-        ],
-        [
-            'index' => 3,
-            'enc' => 'o6',
-        ],
-        [
-            'index' => 4,
-            'enc' => 'p5',
-        ],
-        [
-            'index' => 5,
-            'enc' => 'a4',
-        ],
-        [
-            'index' => 6,
-            'enc' => 's3',
-        ],
-        [
-            'index' => 7,
-            'enc' => 'l2',
-        ],
-        [
-            'index' => 8,
-            'enc' => 'a1',
-        ],
-        [
-            'index' => 9,
-            'enc' => 'ho',
-        ],
+        'r9', // 0
+        'e8', // 1
+        'n7', // 2
+        'o6', // 3
+        'p5', // 4
+        'a4', // 5
+        's3', // 6
+        'l2', // 7
+        'a1', // 8
+        'h0', // 9
     ];
+    
+    if ($status == '0') {
+        $str = time() . $id;
+        $data = str_split($str, 1);
+        $output = "";
+        foreach ($data as $k => $v) {
+            $output .= $salt[$v];
+        }
+        return $output;
+    } else if ($status == '1') {
+        $data = str_split($id, 2);
+        $output = "";
+        foreach ($data as $k => $v) {
+            $output .= array_search($v, $salt);
+        }
+        return substr($output, 10, 7);
+    }
 
-    // if ($status == '0') {
-    //     $data = str_split($id, 1);
-    //     $output = "";
-    //     foreach ($data as $k => $v) {
-    //         $output .= $salt[$v];
-    //     }
-    // } else if ($status == '1') {
-    //     $output = substr(base64_decode($id), 10, 7);
-    // }
-
-    return $id;
+    // return $id;
 
 }
 
