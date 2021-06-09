@@ -119,7 +119,9 @@ function doConvert(data) {
     data = data.replaceAll("upload", baseURL.getAttribute('data-value') + "/upload");
     try {
         converter.setContents(JSON.parse(data));
-        return converter.root.innerHTML;
+        content = converter.root.innerHTML;
+        content = content.replace('<img', '<img class="img-fluid"');
+        return content;
     } catch (error) {
         return data;
     }
