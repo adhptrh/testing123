@@ -39,6 +39,7 @@ function getQuestion() {
                 showTimeLeft();
             } else {
                 showButtonNext(1);
+                bNextForce.classList.add('d-none')
                 notifFinishTime.classList.remove('d-none')
                 tFinishTime.innerHTML = response.message;
                 fNotifCountDownExamThinking.classList.add('d-none');
@@ -71,8 +72,9 @@ function getQuestion() {
             //     }
             // }
         },
-        fail: function() {
-            console.log('fail load detail exam');
+        error: function() {
+            // console.log('fail load detail exam');
+            loading(0);
         }
     })
 }
@@ -95,24 +97,41 @@ function showTimeLeft() {
     }, 1000);
 }
 
-function loading() {
-    showButtonNext(1);
-    fNotifCountDownExamShow.classList.add('d-none');
-    fNotifCountDownExamThinking.classList.remove('d-none');
-    fExamDetail.classList.remove('d-none');
-    tTimeleft.innerHTML = 'sedang memuat ...';
-    tExamDetail.innerHTML = 'sedang memuat ...';
-    tOpsiA.innerHTML = 'sedang memuat ...';
-    tOpsiB.innerHTML = 'sedang memuat ...';
-    tOpsiC.innerHTML = 'sedang memuat ...';
-    tOpsiD.innerHTML = 'sedang memuat ...';
-    tOpsiE.innerHTML = 'sedang memuat ...';
+function loading(status = 1) {
+    if (status == 1) {
+        showButtonNext(1);
+        fNotifCountDownExamShow.classList.add('d-none');
+        fNotifCountDownExamThinking.classList.remove('d-none');
+        fExamDetail.classList.remove('d-none');
+        tTimeleft.innerHTML = 'sedang memuat ...';
+        tExamDetail.innerHTML = 'sedang memuat ...';
+        tOpsiA.innerHTML = 'sedang memuat ...';
+        tOpsiB.innerHTML = 'sedang memuat ...';
+        tOpsiC.innerHTML = 'sedang memuat ...';
+        tOpsiD.innerHTML = 'sedang memuat ...';
+        tOpsiE.innerHTML = 'sedang memuat ...';
+        // loadIndicator.classList.remove('d-none');
+        // tLoadIndicator.innerHTML = "Memuat butir soal ...";
 
-    ftOpsiA.checked = false;
-    ftOpsiB.checked = false;
-    ftOpsiC.checked = false;
-    ftOpsiD.checked = false;
-    ftOpsiE.checked = false;
+        ftOpsiA.checked = false;
+        ftOpsiB.checked = false;
+        ftOpsiC.checked = false;
+        ftOpsiD.checked = false;
+        ftOpsiE.checked = false;
+
+    } else if (status == 0) {
+        bNextForce.classList.add('d-none');
+        fNotifCountDownExamShow.classList.add('d-none');
+        fNotifCountDownExamThinking.classList.remove('d-none');
+        fExamDetail.classList.remove('d-none');
+        tTimeleft.innerHTML = '---';
+        tExamDetail.innerHTML = '<p class="tx-center"> Gagal memuat soal, silahkan refresh halaman Anda <button onclick="reload()" class="btn btn-sm btn-warning"> <i class="fas fa-sync-alt"></i> </Button> </p>';
+        tOpsiA.innerHTML = '---';
+        tOpsiB.innerHTML = '---';
+        tOpsiC.innerHTML = '---';
+        tOpsiD.innerHTML = '---';
+        tOpsiE.innerHTML = '---';
+    }
 }
 
 function doConvert(data) {
@@ -194,14 +213,38 @@ bIzin.onclick = () => {
     })
 }
 
+bNextForce.onclick = () => {
+    pause = true;
+    Swal.fire({
+        width: '500px',
+        title: 'Peringatan',
+        text: "Waktu Anda masih tersedia, apakah Anda yakin akan melanjutkan ke soal berikutnya?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            tick = limit - 3;
+            pause = false;
+        } else {
+            pause = false;
+        }
+    })
+}
+
 function showButtonNext(status = 0) {
     if (status) {
         fNotifNext.classList.add('d-none');
         bNext.classList.add('d-none');
         bIzin.classList.add('d-none');
+        bNextForce.classList.remove('d-none');
     } else {
         tNo.innerHTML = no;
         fExamDetail.classList.add('d-none');
+        bNextForce.classList.add('d-none');
         fNotifNext.classList.remove('d-none');
         bNext.classList.remove('d-none');
         bIzin.classList.remove('d-none');
@@ -256,4 +299,8 @@ function save() {
             })
         }
     })
+}
+
+function reload() {
+    location.reload();
 }

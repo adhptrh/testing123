@@ -866,43 +866,47 @@ class Test extends MY_Controller
 
                         break;
                     } else {
-                        // Menghitung jarak waktu hit dan saat ini
-                        $hit = new DateTime($hit);
-                        $now = new DateTime($now);
+                        if (is_null($v['answer'])) {
+                            // Menghitung jarak waktu hit dan saat ini
+                            $hit = new DateTime($hit);
+                            $now = new DateTime($now);
 
-                        $difference = $hit->diff($now);
-                        $days = $difference->format("%d") * 86400;
-                        $hours = $difference->format("%h") * 3600;
-                        $minutes = $difference->format("%i") * 60;
-                        $seconds = $difference->format("%s") * 1;
+                            $difference = $hit->diff($now);
+                            $days = $difference->format("%d") * 86400;
+                            $hours = $difference->format("%h") * 3600;
+                            $minutes = $difference->format("%i") * 60;
+                            $seconds = $difference->format("%s") * 1;
 
-                        $howlong = $days + $hours + $minutes + $seconds;
+                            $howlong = $days + $hours + $minutes + $seconds;
 
-                        // Sisa waktu mengerjakan
-                        $timeleft = $v['timeleft_second'] - $howlong;
-                        
-                        if ($timeleft > 0) {
-                            $exam_question = $this->exam_question_detail->find_for_student_details(enc($v['exam_question_detail_id'], 1));
-                            $exam_question = [
-                                'no' => $v['no'],
-                                'id' => $exam_question['id'],
-                                'exam_id' => $v['id'],
-                                'timeleft' => $timeleft,
-                                'question' => $exam_question['question'],
-                                'opsi_a' => $exam_question['opsi_a'],
-                                'opsi_b' => $exam_question['opsi_b'],
-                                'opsi_c' => $exam_question['opsi_c'],
-                                'opsi_d' => $exam_question['opsi_d'],
-                                'opsi_e' => $exam_question['opsi_e'],
-                            ];
-                            break;
+                            // Sisa waktu mengerjakan
+                            $timeleft = $v['timeleft_second'] - $howlong;
+
+                            if ($timeleft > 0 && 1 == 1) {
+                                $exam_question = $this->exam_question_detail->find_for_student_details(enc($v['exam_question_detail_id'], 1));
+                                $exam_question = [
+                                    'no' => $v['no'],
+                                    'id' => $exam_question['id'],
+                                    'exam_id' => $v['id'],
+                                    'timeleft' => $timeleft,
+                                    'question' => $exam_question['question'],
+                                    'opsi_a' => $exam_question['opsi_a'],
+                                    'opsi_b' => $exam_question['opsi_b'],
+                                    'opsi_c' => $exam_question['opsi_c'],
+                                    'opsi_d' => $exam_question['opsi_d'],
+                                    'opsi_e' => $exam_question['opsi_e'],
+                                ];
+                                break;
+                            } else {
+                                $this->exam_temp->lock_question(enc($v['id'], 1));
+                            }
                         } else {
                             $this->exam_temp->lock_question(enc($v['id'], 1));
+                        }
 
-                            // Jika posisi ini adalah last-loop
-                            if($total == ($k+1)){
-                                $total_lock++;
-                            }
+                        // Jika posisi ini adalah last-loop
+                        if($total == ($k+1)){
+                            $total_lock++;
                         }
                     }
                 } else {
