@@ -72,6 +72,7 @@ function getQuestion() {
             //     }
             // }
         },
+        timeout: 10000,
         error: function() {
             // console.log('fail load detail exam');
             loading(0);
