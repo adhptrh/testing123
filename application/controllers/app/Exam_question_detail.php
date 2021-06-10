@@ -148,7 +148,7 @@ class Exam_question_detail extends MY_Controller
 
     // private function content_creation($data)
     // {
-    //     /* 
+    //     /*
     //      * DEPRECATED
     //      * Menguraikan kontent
     //      * jika ada object image kemudian disimpan di storage
@@ -346,31 +346,55 @@ class Exam_question_detail extends MY_Controller
         }
     }
 
+    private function get_keyword($str)
+    {
+        $data = [
+            ['key' => 'A', 'value' => 1],
+            ['key' => 'a', 'value' => 1],
+            ['key' => 'opsi_a', 'value' => 1],
+            ['key' => 'OPSI_A', 'value' => 1],
+            ['key' => '1', 'value' => 1],
+
+            ['key' => 'B', 'value' => 2],
+            ['key' => 'b', 'value' => 2],
+            ['key' => 'opsi_b', 'value' => 2],
+            ['key' => 'OPSI_B', 'value' => 2],
+            ['key' => '2', 'value' => 2],
+
+            ['key' => 'C', 'value' => 3],
+            ['key' => 'c', 'value' => 3],
+            ['key' => 'opsi_c', 'value' => 3],
+            ['key' => 'OPSI_C', 'value' => 3],
+            ['key' => '3', 'value' => 3],
+
+            ['key' => 'D', 'value' => 4],
+            ['key' => 'd', 'value' => 4],
+            ['key' => 'opsi_d', 'value' => 4],
+            ['key' => 'OPSI_D', 'value' => 4],
+            ['key' => '4', 'value' => 4],
+
+            ['key' => 'E', 'value' => 5],
+            ['key' => 'e', 'value' => 5],
+            ['key' => 'opsi_e', 'value' => 5],
+            ['key' => 'OPSI_E', 'value' => 5],
+            ['key' => '5', 'value' => 5],
+        ];
+
+        $key = array_search($str, array_column($data, 'key'));
+        if($key){
+            return $data[$key]['value'];
+        }else{
+            return 1;
+        }
+    }
+
     private function save_excel_process($sheetData, $exam_question_id)
     {
         $data = [];
         $key = 0;
+
         foreach ($sheetData as $k => $v) {
             if ($k >= 8 && $v[1] != '') {
-                switch ($v[7]) {
-                    case 'A':
-                        $keyword = 1;
-                        break;
-                    case 'B':
-                        $keyword = 2;
-                        break;
-                    case 'C':
-                        $keyword = 3;
-                        break;
-                    case 'R':
-                        $keyword = 4;
-                        break;
-                    case 'E':
-                        $keyword = 5;
-                        break;
-                    default:
-                        $keyword = 1;
-                }
                 $data[$key] = [
                     'exam_question_id' => $exam_question_id,
                     'question' => $v[1],
@@ -379,7 +403,7 @@ class Exam_question_detail extends MY_Controller
                     'opsi_c' => $v[4],
                     'opsi_d' => $v[5],
                     'opsi_e' => $v[6],
-                    'keyword' => $keyword,
+                    'keyword' => $this->get_keyword($v[7]),
                 ];
                 $key++;
             }
@@ -645,12 +669,13 @@ class Exam_question_detail extends MY_Controller
             'id' => enc($post['id'], 1),
             'timeleft' => $post['timeleft'],
         ]);
-        
+
         $save['token'] = $this->security->get_csrf_hash();
         echo json_encode($save);
     }
 
-    public function get_timeleft(){
+    public function get_timeleft()
+    {
         $this->filter(3);
         $post = $this->input->post('data');
         $data = $this->data->find(false, [
@@ -662,7 +687,7 @@ class Exam_question_detail extends MY_Controller
             $timeleft += $v['timeleft_second'];
         }
 
-        $mins = floor ($timeleft / 60);
+        $mins = floor($timeleft / 60);
         $secs = $timeleft % 60;
 
         echo json_encode([
